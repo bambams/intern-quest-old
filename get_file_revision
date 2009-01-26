@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Taken from the Doxygen Manual's examples.
+
+# NOTE: Code should probably be written to determine if the file is
+# up-to-date and commited or modified since the last update/commit.
+
+svn stat -v $1 | sed -n 's/^[ A-Z?\*|!]\{1,15\}/r/;s/ \{1,15\}/\/r/;s/ .*//p'
+
