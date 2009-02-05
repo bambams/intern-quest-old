@@ -5,6 +5,7 @@ CXX = g++
 CXX_CFLAGS = -Iinclude
 CXX_COMPILE = $(CXX) -c $(CXX_CFLAGS)
 CXX_LINK = $(CXX) $(LIBS)
+INCLUDES = include/main.hpp
 # Might as well call the executable something descriptive (right...) of our project. :P
 NAME = iq
 LIBS += 
@@ -32,6 +33,7 @@ ifdef WINDOWS
 	RM = del /q
 	RMDIR = rmdir /s /q
 else
+	BIN = $(NAME)
 	LIBS += `allegro-config --libs` -pthread
 	MKDIR = mkdir -p
 	RM = rm -f
@@ -58,7 +60,7 @@ clean:
 	$(RM) $(BIN)
 	$(RMDIR) $(OBJDIR)
 
-# PHONYs are targets that don't actually have any results, IIRC.
+# .PHONYs are targets that don't actually correspond to a file on the file system.
 # Add all header files to PHONY dependencies.
-PHONY: default include/main.hpp
+.PHONY: clean default $(INCLUDES)
 
