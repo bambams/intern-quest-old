@@ -1,115 +1,64 @@
-#######################################################################
-#
-# Instructions:
-#
-# make
-#   Compiles all .c and .cpp files in the src directory to .o
-#   files in the obj directory, and links them into an
-#   executable named 'game' or 'game.exe' in the currect directory.
-#
-# make clean
-#   Removes all .o files from the obj directory.
-#
-# make veryclean
-#   Removes all .o files and the game executable.
-#
-# Optional parameters:
-#
-# STATICLINK=1
-#   Compiles/removes a statically linked version of the game without
-#   DLL dependencies. The static object files are put in obj/static
-#   and the executable has '_static' appended to the name.
-#
-# NAME=game_name
-#   Sets the name of the game executable. By default the game
-#   executable is called 'game' or 'game.exe'.
-#
-# If you use add-on libraries, add them to the lines starting with
-# 'LIBS='. Make sure you enter the libraries in both lines, for the
-# normal and static version!
-#
-#######################################################################
 
-CC = gcc
+# Initial macros (are they called macros in Makefiles?).
+# We're going to be using GCC / MinGW for now so `g++' is sufficient for all platforms.
 CXX = g++
-LD = g++
-CFLAGS = -Iinclude -O3 -s -W -Wall
+CXX_CFLAGS = -Iinclude
+CXX_COMPILE = $(CXX) -c $(CXX_CFLAGS)
+CXX_LINK = $(CXX) $(LIBS)
+# Might as well call the executable something descriptive (right...) of our project. :P
+EXE = iq
+LIBS += 
+OBJDIR = obj
 
-# Add-on libraries go here
-ifdef STATICLINK
-	LIBS =
-else
-	LIBS =
-endif
+# List all .o files here.
+OBJ += $(OBJDIR)/main.o
 
-
-ifndef NAME
-	NAME = game
-endif
-
+# Some conditional stuff stolen from the SpeedHack Makefile.
 ifndef WINDOWS
-ifdef MINGDIR
-	WINDOWS = 1
-endif
+	ifdef MINGDIR
+		WINDOWS = 1
+	endif
 endif
 
 ifdef WINDOWS
+	LIBS += -lalleg
+
+	ifdef MINGDIR
+		# Link pthreads for Win32 library -- GNU without exceptions.
+		LIBS += -lpthreadGC
+	endif
+
+	MKDIR = mkdir
 	RM = del /q
-	CFLAGS += -D__GTHREAD_HIDE_WIN32API
-	LFLAGS = -Wl,--subsystem,windows
-	ifdef STATICLINK
-		CFLAGS += -DSTATICLINK
-		LIBS += -lalleg_s -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lole32 -ldinput -lddraw -ldxguid -lwinmm -ldsound
-		OBJDIR = obj/static
-		BIN = $(NAME)_static.exe
-	else
-		LIBS += -lalleg
-		OBJDIR = obj
-		BIN = $(NAME).exe
-	endif
+	RMDIR = rmdir /s /q
 else
+	LIBS += `allegro-config --libs` -pthread
+	MKDIR = mkdir -p
 	RM = rm -f
-	ifdef STATICLINK
-		LIBS += `allegro-config --libs --static` -lXrender
-		OBJDIR = obj/static
-		BIN = $(NAME)_static
-	else
-		LIBS += `allegro-config --libs`
-		OBJDIR = obj
-		BIN = $(NAME)
-	endif
+	RMDIR = rm -fR
 endif
 
-OBJ_CPP := $(addprefix $(OBJDIR)/, $(subst src/,,$(patsubst %.cpp,%.o,$(wildcard src/*.cpp))))
-OBJ_C := $(addprefix $(OBJDIR)/, $(subst src/,,$(patsubst %.c,%.o,$(wildcard src/*.c))))
+# The default will make sure all subdirectories exist, compile, and link the project.
+default: $(OBJDIR) $(EXE)
 
-all: game
+# Link the game (create the executable).
+$(EXE): $(OBJ)
+	$(CXX_LINK) -o $@ $?
 
-$(OBJDIR)/%.o: src/%.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+# -- Compile the source files --
+$(OBJDIR)/main.o: src/main.cpp include/main.hpp
+	$(CXX_COMPILE) -o $@ $<
 
-$(OBJDIR)/%.o: src/%.cpp
-	$(CXX) $(CFLAGS) -o $@ -c $<
+# -- Make necessary directories --
+$(OBJDIR):
+	$(MKDIR) $@
 
-game: $(OBJ_C) $(OBJ_CPP)
-	$(LD) -o $(BIN) $(OBJ_C) $(OBJ_CPP) $(LIBS) $(LFLAGS)
-
+# -- Cleanup --
 clean:
-ifdef WINDOWS
-ifneq ($(OBJ_C),)
-	-$(RM) $(subst /,\,$(OBJ_C))
-endif
-ifneq ($(OBJ_CPP),)
-	-$(RM) $(subst /,\,$(OBJ_CPP))
-endif
-else
-ifneq ($(OBJ_C),)
-	-$(RM) $(OBJ_C)
-endif
-ifneq ($(OBJ_CPP),)
-	-$(RM) $(OBJ_CPP)
-endif
-endif
+	$(RM) $(EXE)
+	$(RMDIR) $(OBJDIR)
 
-veryclean: clean
-	-$(RM) $(BIN)
+# PHONYs are targets that don't actually have any results, IIRC.
+# Add all header files to PHONY dependencies.
+PHONY: default include/main.hpp
+
