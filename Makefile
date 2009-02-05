@@ -6,7 +6,7 @@ CXX_CFLAGS = -Iinclude
 CXX_COMPILE = $(CXX) -c $(CXX_CFLAGS)
 CXX_LINK = $(CXX) $(LIBS)
 # Might as well call the executable something descriptive (right...) of our project. :P
-EXE = iq
+NAME = iq
 LIBS += 
 OBJDIR = obj
 
@@ -22,7 +22,7 @@ endif
 
 ifdef WINDOWS
 	LIBS += -lalleg
-
+	BIN = $(NAME).exe
 	ifdef MINGDIR
 		# Link pthreads for Win32 library -- GNU without exceptions.
 		LIBS += -lpthreadGC
@@ -39,12 +39,12 @@ else
 endif
 
 # The default will make sure all subdirectories exist, compile, and link the project.
-default: $(OBJDIR) $(EXE)
+default: $(OBJDIR) $(NAME)
 
 # Link the game (create the executable).
-$(EXE): $(OBJ)
-	$(CXX_LINK) -o $@ $?
-
+$(NAME): $(OBJ)
+	$(CXX) -o $(BIN) $(OBJ) $(LIBS)
+	
 # -- Compile the source files --
 $(OBJDIR)/main.o: src/main.cpp include/main.hpp
 	$(CXX_COMPILE) -o $@ $<
@@ -55,7 +55,7 @@ $(OBJDIR):
 
 # -- Cleanup --
 clean:
-	$(RM) $(EXE)
+	$(RM) $(BIN)
 	$(RMDIR) $(OBJDIR)
 
 # PHONYs are targets that don't actually have any results, IIRC.
