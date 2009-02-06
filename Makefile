@@ -34,7 +34,7 @@ ifdef WINDOWS
 	RMDIR = rmdir /s /q
 else
 	BIN = $(NAME)
-	LIBS += `allegro-config --libs` -pthread
+	LIBS += `allegro-config --libs` -lpthread
 	MKDIR = mkdir -p
 	RM = rm -f
 	RMDIR = rm -fR
