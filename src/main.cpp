@@ -5,32 +5,32 @@ int main(int argc, char *argv[])
 {
 	boost::shared_ptr<BITMAP> b;
 
-    // Try to initialize game.
-    if(initialize() != 0)
-        exit(-1);
+	// Try to initialize game.
+	if(initialize() != 0)
+		exit(-1);
 
-    // Initalize semaphore.
-    sem_init(&g_semaphore, 0, 1);
+	// Initalize semaphore.
+	sem_init(&g_semaphore, 0, 1);
 
-    // Create and clear screen buffer.
-    b.reset(create_bitmap(800, 600), destroy_bitmap);
-    clear(b.get());
+	// Create and clear screen buffer.
+	b.reset(create_bitmap(800, 600), destroy_bitmap);
+	clear(b.get());
 
-    // Main game loop.
-    while(!(key[KEY_ESC] || g_close_button_pressed))
-    {
-        // Sleep until next frame.
-        sem_wait(&g_semaphore);
+	// Main game loop.
+	while(!(key[KEY_ESC] || g_close_button_pressed))
+	{
+		// Sleep until next frame.
+		sem_wait(&g_semaphore);
 
-        // Logic loop. Changes to the game happen here.
-        logic();
+		// Logic loop. Changes to the game happen here.
+		logic();
 
-        /*
-         * Draw. Here we draw the current frame first to a buffer in main memory and
-         * then to the video memory (screen).
-         */
-        draw(b);
-    }
+		/*
+		 * Draw. Here we draw the current frame first to a buffer in main memory and
+		 * then to the video memory (screen).
+		 */
+		draw(b);
+	}
 
 	return(0);
 }
@@ -40,8 +40,8 @@ END_OF_MAIN()
 
 void add_frame(void)
 {
-    // Wake up game.
-    sem_post(&g_semaphore);
+	// Wake up game.
+	sem_post(&g_semaphore);
 }
 END_OF_FUNCTION(add_frame)
 
@@ -148,22 +148,22 @@ END_OF_FUNCTION(tick)
 
 void update_time(void)
 {
-    if(g_seconds == SECS_PER_MIN)
-    {
-        g_minutes++;
-        g_seconds = 0;
-    }
+	if(g_seconds == SECS_PER_MIN)
+	{
+		g_minutes++;
+		g_seconds = 0;
+	}
 
-    if(g_minutes == MINS_PER_HOUR)
-    {
-        g_hours++;
-        g_minutes = 0;
-    }
+	if(g_minutes == MINS_PER_HOUR)
+	{
+		g_hours++;
+		g_minutes = 0;
+	}
 
-    if(g_hours == HOURS_PER_DAY)
-    {
-        g_days++;
-        g_hours = 0;
-    }
+	if(g_hours == HOURS_PER_DAY)
+	{
+		g_days++;
+		g_hours = 0;
+	}
 }
 
