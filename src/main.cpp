@@ -104,14 +104,14 @@ int initialize(iq::app &app)
 		return(-1);
 	}
 
-	enable_hardware_cursor();
-
 	if(install_mouse() < 0)
 	{
 		printf("%s [to install the mouse routines]. %s.\n",
 				msg, allegro_error);
-		//return(-1);
+		return(-1);
 	}
+
+	enable_hardware_cursor();
 
 	if(install_timer() != 0)
 	{

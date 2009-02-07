@@ -50,14 +50,14 @@ $(BIN): $(OBJECTS)
 	$(CXX) -o $@ $? $(LIBS)
 
 # -- Compile the source files --
-$(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp
+$(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp $(INCDIR)/iq/app.hpp $(OBJDIR)
 	$(CXX_COMPILE) -o $@ $<
 
-$(OBJDIR)/iq/app.o: $(SRCDIR)/iq/app.cpp $(INCDIR)/iq.hpp $(INCDIR)/iq/app.hpp
+$(OBJDIR)/iq/app.o: $(SRCDIR)/iq/app.cpp $(INCDIR)/iq.hpp $(INCDIR)/iq/app.hpp $(OBJDIR)/iq
 	$(CXX_COMPILE) -o $@ $<
 
 # -- Make necessary directories --
-$(OBJDIR)/iq: $(OBJDIR)
+$(OBJDIR)/iq:
 	$(MKDIR) $@
 
 $(OBJDIR):
