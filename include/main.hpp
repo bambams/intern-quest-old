@@ -9,6 +9,7 @@
 	#include <iostream>
 	#include <semaphore.h>
 
+	#define NUM_DIMENSIONS 2
 	#define WHITE makecol(255, 255, 255)
 
 const int SECS_PER_MIN = 60;

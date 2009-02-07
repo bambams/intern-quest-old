@@ -32,6 +32,12 @@ int main(int argc, char *argv[])
 		draw(b);
 	}
 
+	/*
+	 * Destroy semaphore (I'm not sure yet how, it possible, to get the
+	 * semaphore into a smart pointer).
+	 */
+	sem_destroy(&g_semaphore);
+
 	return(0);
 }
 END_OF_MAIN()
@@ -69,7 +75,10 @@ void draw(boost::shared_ptr<BITMAP> b)
 
 int initialize(void)
 {
+	int i, len;
 	const char* msg = "If at first you don't succeed,...you fail";
+	const int X = 0, Y = 1;
+	int resolutions[][NUM_DIMENSIONS] = {{1024, 768}, {800, 600}, {640, 480}};
 
 	if(allegro_init() != 0)
 	{
@@ -91,10 +100,21 @@ int initialize(void)
 
 	set_color_depth(32);
 
-	if(set_gfx_mode(GFX_AUTODETECT_WINDOWED, 800, 600, 0, 0) != 0)
+	for(i=0, len=sizeof(resolutions)/sizeof(int)/NUM_DIMENSIONS; i<len; i++)
+		if(set_gfx_mode(GFX_AUTODETECT_WINDOWED, resolutions[i][X], resolutions[i][Y], 0, 0) == 0)
+			break;
+
+	if(i == len)
 	{
-		printf("%s [to set the graphics mode]. %s.\n", msg, allegro_error);
-		return(-1);
+		for(i=0; i<len; i++)
+			if(set_gfx_mode(GFX_AUTODETECT, resolutions[i][X], resolutions[i][Y], 0, 0) == 0)
+				break;
+
+		if(i == len)
+		{
+			printf("%s [to set the graphics mode]. %s.\n", msg, allegro_error);
+			return(-1);
+		}
 	}
 
 	if(set_display_switch_mode(SWITCH_BACKGROUND) != 0)
