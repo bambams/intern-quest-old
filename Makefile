@@ -4,15 +4,15 @@
 CXX = g++
 CXX_CFLAGS = -Iinclude
 CXX_COMPILE = $(CXX) -c $(CXX_CFLAGS)
-CXX_LINK = $(CXX) $(LIBS)
-INCLUDES = include/main.hpp
-# Might as well call the executable something descriptive (right...) of our project. :P
-NAME = iq
+#CXX_LINK = $(CXX) $(LIBS)
+INCDIR = include
 LIBS += 
+NAME = iq
 OBJDIR = obj
+SRCDIR = src
 
 # List all .o files here.
-OBJ += $(OBJDIR)/main.o
+OBJECTS += $(OBJDIR)/main.o
 
 # Some conditional stuff stolen from the SpeedHack Makefile.
 ifndef WINDOWS
@@ -41,14 +41,14 @@ else
 endif
 
 # The default will make sure all subdirectories exist, compile, and link the project.
-default: $(OBJDIR) $(NAME)
+default: $(OBJDIR) $(BIN)
 
 # Link the game (create the executable).
-$(NAME): $(OBJ)
-	$(CXX) -o $(BIN) $(OBJ) $(LIBS)
+$(BIN): $(OBJECTS)
+	$(CXX) -o $@ $? $(LIBS)
 	
 # -- Compile the source files --
-$(OBJDIR)/main.o: src/main.cpp include/main.hpp
+$(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp
 	$(CXX_COMPILE) -o $@ $<
 
 # -- Make necessary directories --
@@ -61,6 +61,5 @@ clean:
 	$(RMDIR) $(OBJDIR)
 
 # .PHONYs are targets that don't actually correspond to a file on the file system.
-# Add all header files to PHONY dependencies.
-.PHONY: clean default $(INCLUDES)
+.PHONY: clean default
 
