@@ -3,10 +3,11 @@
 
 int main(int argc, char *argv[])
 {
+	iq::app app(argc, argv);
 	boost::shared_ptr<BITMAP> b;
 
 	// Try to initialize game.
-	if(initialize() != 0)
+	if(initialize(app) != 0)
 		exit(-1);
 
 	// Initalize semaphore.
@@ -23,13 +24,13 @@ int main(int argc, char *argv[])
 		sem_wait(&g_semaphore);
 
 		// Logic loop. Changes to the game happen here.
-		logic();
+		logic(app);
 
 		/*
-		 * Draw. Here we draw the current frame first to a buffer in main memory and
-		 * then to the video memory (screen).
+		 * Draw. Here we draw the current frame first to a buffer in main
+		 * memory and then to the video memory (screen).
 		 */
-		draw(b);
+		draw(app, b);
 	}
 
 	/*
@@ -61,11 +62,18 @@ END_OF_FUNCTION(close_button_callback)
 
 
 
-void draw(boost::shared_ptr<BITMAP> b)
+void draw(iq::app &app, boost::shared_ptr<BITMAP> b)
 {
-	textprintf_ex(b.get(), font, 20, 20, WHITE, -1, "frame-count: %d", g_total_frames);
-	textprintf_ex(b.get(), font, 20, 40, WHITE, -1, "time: %03d:%02d:%02d:%02d", g_days, g_hours, g_minutes, g_seconds);
-	textprintf_ex(b.get(), font, 20, 60, WHITE, -1, "fps: %d", g_frames_per_second);
+	textprintf_ex(b.get(), font, 20, 20, WHITE, -1,
+			"frame-count: %d",
+			g_total_frames);
+	textprintf_ex(b.get(), font, 20, 40, WHITE, -1,
+			"time: %03d:%02d:%02d:%02d",
+			g_days, g_hours,
+			g_minutes, g_seconds);
+	textprintf_ex(b.get(), font, 20, 60, WHITE, -1,
+			"fps: %d",
+			g_frames_per_second);
 
 	blit(b.get(), screen, 0, 0, 0, 0, 800, 600);
 	clear(b.get());
@@ -73,12 +81,16 @@ void draw(boost::shared_ptr<BITMAP> b)
 
 
 
-int initialize(void)
+int initialize(iq::app &app)
 {
 	int i, len;
 	const char* msg = "If at first you don't succeed,...you fail";
 	const int X = 0, Y = 1;
-	int resolutions[][NUM_DIMENSIONS] = {{1024, 768}, {800, 600}, {640, 480}};
+	int r[][NUM_DIMENSIONS] = {
+	                              {1024, 768},
+	                              {800, 600},
+	                              {640, 480}
+	                          };
 
 	if(allegro_init() != 0)
 	{
@@ -92,6 +104,15 @@ int initialize(void)
 		return(-1);
 	}
 
+	enable_hardware_cursor();
+
+	if(install_mouse() < 0)
+	{
+		printf("%s [to install the mouse routines]. %s.\n",
+				msg, allegro_error);
+		//return(-1);
+	}
+
 	if(install_timer() != 0)
 	{
 		printf("%s [to install the timer routines].", msg);
@@ -100,21 +121,32 @@ int initialize(void)
 
 	set_color_depth(32);
 
-	for(i=0, len=sizeof(resolutions)/sizeof(int)/NUM_DIMENSIONS; i<len; i++)
-		if(set_gfx_mode(GFX_AUTODETECT_WINDOWED, resolutions[i][X], resolutions[i][Y], 0, 0) == 0)
+	for(i=0, len=sizeof(r)/sizeof(int)/NUM_DIMENSIONS; i<len; i++)
+	{
+		if(set_gfx_mode(GFX_AUTODETECT_WINDOWED,
+				r[i][X], r[i][Y], 0, 0) == 0)
+		{
 			break;
+		}
+	}
 
 	if(i == len)
 	{
 		for(i=0; i<len; i++)
-			if(set_gfx_mode(GFX_AUTODETECT, resolutions[i][X], resolutions[i][Y], 0, 0) == 0)
+			if(set_gfx_mode(GFX_AUTODETECT, r[i][X], r[i][Y], 0, 0) == 0)
 				break;
 
 		if(i == len)
 		{
-			printf("%s [to set the graphics mode]. %s.\n", msg, allegro_error);
+			printf("%s [to set the graphics mode]. %s.\n",
+					msg, allegro_error);
 			return(-1);
 		}
+	}
+
+	if(show_os_cursor(MOUSE_CURSOR_ARROW) != 0)
+	{
+		printf("%s [to show the operating system mouse cursor].\n", msg);
 	}
 
 	if(set_display_switch_mode(SWITCH_BACKGROUND) != 0)
@@ -146,7 +178,7 @@ int initialize(void)
 
 
 
-void logic(void)
+void logic(iq::app &app)
 {
 	update_time();
 

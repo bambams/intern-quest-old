@@ -1,6 +1,7 @@
 
 # Initial macros (are they called macros in Makefiles?).
-# We're going to be using GCC / MinGW for now so `g++' is sufficient for all platforms.
+# We're going to be using GCC / MinGW for now so `g++' is sufficient for all
+# platforms.
 CXX = g++
 CXX_CFLAGS = -Iinclude
 CXX_COMPILE = $(CXX) -c $(CXX_CFLAGS)
@@ -12,7 +13,7 @@ OBJDIR = obj
 SRCDIR = src
 
 # List all .o files here.
-OBJECTS += $(OBJDIR)/main.o
+OBJECTS += $(OBJDIR)/main.o $(OBJDIR)/iq/app.o
 
 # Some conditional stuff stolen from the SpeedHack Makefile.
 ifndef WINDOWS
@@ -40,26 +41,34 @@ else
 	RMDIR = rm -fR
 endif
 
-# The default will make sure all subdirectories exist, compile, and link the project.
-default: $(OBJDIR) $(BIN)
+# The default will make sure all subdirectories exist, compile, and link the
+# project.
+default: $(OBJDIR) $(OBJDIR)/iq $(BIN)
 
 # Link the game (create the executable).
 $(BIN): $(OBJECTS)
 	$(CXX) -o $@ $? $(LIBS)
-	
+
 # -- Compile the source files --
 $(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp
 	$(CXX_COMPILE) -o $@ $<
 
+$(OBJDIR)/iq/app.o: $(SRCDIR)/iq/app.cpp $(INCDIR)/iq.hpp $(INCDIR)/iq/app.hpp
+	$(CXX_COMPILE) -o $@ $<
+
 # -- Make necessary directories --
+$(OBJDIR)/iq: $(OBJDIR)
+	$(MKDIR) $@
+
 $(OBJDIR):
 	$(MKDIR) $@
 
 # -- Cleanup --
 clean:
-	$(RM) $(BIN)
-	$(RMDIR) $(OBJDIR)
+	$(RMDIR) $(OBJDIR) $(OBJDIR)/iq
+	$(RM) $(BIN) $(OBJECTS)
 
-# .PHONYs are targets that don't actually correspond to a file on the file system.
+# .PHONYs are targets that don't actually correspond to a file on the file
+# system.
 .PHONY: clean default
 

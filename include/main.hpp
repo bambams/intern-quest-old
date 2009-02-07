@@ -7,6 +7,7 @@
 	#include <cstdio>
 	#include <cstdlib>
 	#include <iostream>
+	#include <iq.hpp>
 	#include <semaphore.h>
 
 	#define NUM_DIMENSIONS 2
@@ -31,10 +32,10 @@ unsigned short int             g_days = 0;
 
 void add_frame(void);
 void close_button_handler(void);
-void draw(boost::shared_ptr<BITMAP>);
-int initialize(void);
-void logic(void);
-int main(int, char **);
+void draw(iq::app &, boost::shared_ptr<BITMAP>);
+int initialize(iq::app &);
+void logic(iq::app &);
+int main(int, char *[]);
 void tick(void);
 void update_time(void);
 
