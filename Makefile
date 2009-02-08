@@ -3,7 +3,7 @@
 # We're going to be using GCC / MinGW for now so `g++' is sufficient for all
 # platforms.
 CXX = g++
-CXX_CFLAGS = -Iinclude
+CXX_CFLAGS = -g3 -Iinclude -Wall
 CXX_COMPILE = $(CXX) -c $(CXX_CFLAGS)
 #CXX_LINK = $(CXX) $(LIBS)
 INCDIR = include
@@ -13,7 +13,7 @@ OBJDIR = obj
 SRCDIR = src
 
 # List all .o files here.
-OBJECTS += $(OBJDIR)/main.o $(OBJDIR)/iq/app.o
+OBJECTS += $(OBJDIR)/main.o $(OBJDIR)/iq/app.o $(OBJDIR)/iq/timer.o
 
 # Some conditional stuff stolen from the SpeedHack Makefile.
 ifndef WINDOWS
@@ -47,13 +47,16 @@ default: $(OBJDIR) $(OBJDIR)/iq $(BIN)
 
 # Link the game (create the executable).
 $(BIN): $(OBJECTS)
-	$(CXX) -o $@ $? $(LIBS)
+	$(CXX) -o $@ $(OBJECTS) $(LIBS)
 
 # -- Compile the source files --
-$(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp $(INCDIR)/iq/app.hpp $(OBJDIR)
+$(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp $(INCDIR)/iq/app.hpp
 	$(CXX_COMPILE) -o $@ $<
 
-$(OBJDIR)/iq/app.o: $(SRCDIR)/iq/app.cpp $(INCDIR)/iq.hpp $(INCDIR)/iq/app.hpp $(OBJDIR)/iq
+$(OBJDIR)/iq/app.o: $(SRCDIR)/iq/app.cpp $(INCDIR)/iq/app.hpp
+	$(CXX_COMPILE) -o $@ $<
+
+$(OBJDIR)/iq/timer.o: $(SRCDIR)/iq/timer.cpp $(INCDIR)/iq/timer.hpp
 	$(CXX_COMPILE) -o $@ $<
 
 # -- Make necessary directories --

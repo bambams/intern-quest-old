@@ -1,9 +1,15 @@
 
-#ifndef IQ_IQ_APP
-	#define IQ_IQ_APP
+#ifndef IQ_APP_HPP
+	#define IQ_APP_HPP
 
+	#include <allegro.h>
+	#include <boost/shared_ptr.hpp>
+	#include <iostream>
 	#include <map>
+	#include <semaphore.h>
 	#include <string>
+
+	#define NUM_DIMENSIONS 2
 
 namespace iq
 {
@@ -20,13 +26,23 @@ namespace iq
 	private:
 		
 	protected:
-		std::map<std::string, std::string> argv;
 	public:
+		std::map<std::string, std::string> argv;
+		bool close_button_pressed;
 		bool os_cursor;
+		boost::shared_ptr<BITMAP> scrbuf;
+		boost::shared_ptr<sem_t> sem;
+		int target_fps;
 
 		app(int, char *[]);
+		~app(void);
 
+		void deinitialize(void);
+		void initialize(void);
 		void parse_args(int argc, char *[]);
+
+		static void add_frame(void *);
+		static void close_button_handler(void *);
 	};
 }
 
