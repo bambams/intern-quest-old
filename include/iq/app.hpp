@@ -32,7 +32,7 @@
 
 namespace iq
 {
-	/*
+	/**
 	 * \brief An application class to hold application state data.
 	 * \details Intended to be passed around the application to avoid
 	 *          global state. Any sort of data that needs to be available
