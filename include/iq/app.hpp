@@ -61,7 +61,7 @@ namespace iq
 
 		void deinitialize(void);
 		void initialize(void);
-		void parse_args(int argc, char *[]);
+		void parse_args(int, char *[]);
 
 		static void add_frame(void *);
 		//static void close_button_handler(void *);
