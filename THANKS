@@ -1,0 +1,15 @@
+# This file was created to try to keep track of people that helped out on this
+# project. We do apologize if you helped and we forgot to add you. As you can
+# imagine, it's hard to keep track of every person that helps out. Feel free
+# to drop us a line and remind us. ^_^
+
+#identity                          \s{2,}  description
+
+elias on irc.freenode.net \#allegro        Helped with figuring out a solution
+                                           to be a little less global with the
+                                           close_button_handler process.
+
+SiegeLord on irc.freenodet.net \#allegro   Help with a quick solution for the
+                                           textual length of an unsigned, non-
+                                           zero integer, used by the timer.
+
