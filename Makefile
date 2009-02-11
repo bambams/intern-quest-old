@@ -3,7 +3,7 @@
 # We're going to be using GCC / MinGW for now so `g++' is sufficient for all
 # platforms.
 CXX = g++
-CXX_CFLAGS = -g3 -Iinclude -Wall
+CXX_CFLAGS = -g3 -Iinclude -pg -Wall
 CXX_COMPILE = $(CXX) -c $(CXX_CFLAGS)
 #CXX_LINK = $(CXX) $(LIBS)
 INCDIR = include
@@ -50,13 +50,13 @@ $(BIN): $(OBJECTS)
 	$(CXX) -o $@ $(OBJECTS) $(LIBS)
 
 # -- Compile the source files --
-$(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp $(INCDIR)/iq/app.hpp
+$(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp $(INCDIR)/iq/app.hpp $(INCDIR)/iq.hpp
 	$(CXX_COMPILE) -o $@ $<
 
-$(OBJDIR)/iq/app.o: $(SRCDIR)/iq/app.cpp $(INCDIR)/iq/app.hpp
+$(OBJDIR)/iq/app.o: $(SRCDIR)/iq/app.cpp $(INCDIR)/iq/app.hpp $(INCDIR)/iq.hpp
 	$(CXX_COMPILE) -o $@ $<
 
-$(OBJDIR)/iq/timer.o: $(SRCDIR)/iq/timer.cpp $(INCDIR)/iq/timer.hpp
+$(OBJDIR)/iq/timer.o: $(SRCDIR)/iq/timer.cpp $(INCDIR)/iq/timer.hpp $(INCDIR)/iq.hpp
 	$(CXX_COMPILE) -o $@ $<
 
 # -- Make necessary directories --
