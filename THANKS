@@ -1,15 +1,24 @@
+# vi: syntax=off
 # This file was created to try to keep track of people that helped out on this
 # project. We do apologize if you helped and we forgot to add you. As you can
 # imagine, it's hard to keep track of every person that helps out. Feel free
 # to drop us a line and remind us. ^_^
 
-#identity                          \s{2,}  description
-
-elias on irc.freenode.net \#allegro        Helped with figuring out a solution
-                                           to be a little less global with the
-                                           close_button_handler process.
-
-SiegeLord on irc.freenodet.net \#allegro   Help with a quick solution for the
-                                           textual length of an unsigned, non-
-                                           zero integer, used by the timer.
+#identity description
+"Google Inc.
+code.google.com
+docs.google.com
+images.google.com
+mail.google.com
+www.google.com" "For providing all of its amazing services, including, but
+                 not limited to, Google Code, Google Docs, Google Image
+                 Search, Google Mail, and Google Search."
+"irc.freenode.net" "For hosting #allegro and many other wonderful
+                    communities."
+"elias
+on irc.freenode.net" "Helped with figuring out a solution to be a little less
+                   global with the close_button_handler process."
+"SiegeLord
+on irc.freenode.net" "Help with a quick solution for the textual length of an
+                     unsigned, non-zero integer, used by the timer."
 

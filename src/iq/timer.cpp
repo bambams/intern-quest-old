@@ -118,7 +118,7 @@ namespace iq
 
 	std::string timer::to_str(void) const
 	{
-		int val[] = {this->days(), this->hours(), this->mins(), this->secs()};
+		unsigned int val[] = {this->days(), this->hours(), this->mins(), this->secs()};
 		const char sep = ':';
 		const std::streamsize paddedsize = 2;
 		std::streamsize strsize;
@@ -128,7 +128,7 @@ namespace iq
 		strsize = ss.width(3);
 		ss << val[0];
 
-		for(int i=1, len=sizeof(val)/sizeof(int); i<len; i++)
+		for(int i=1, len=sizeof(val)/sizeof(unsigned int); i<len; i++)
 		{
 			ss << sep;
 
