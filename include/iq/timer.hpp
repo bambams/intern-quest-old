@@ -4,7 +4,6 @@
 
 	#include <allegro.h>
 	#include <boost/shared_ptr.hpp>
-	#include <cmath>
 	#include <cstdio>
 	#include <iostream>
 	#include <string>
