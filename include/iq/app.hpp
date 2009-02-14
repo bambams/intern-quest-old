@@ -29,6 +29,7 @@
 		}while(0)
 */
 	#define NUM_DIMENSIONS 2
+	#define WHITE makecol(255, 255, 255)
 
 namespace iq
 {
@@ -46,10 +47,13 @@ namespace iq
 		
 	protected:
 	public:
+		enum substate {SETUP, GAMEPLAY, SCRIPTED, CREDITS};
+
 		std::map<std::string, std::string> argv;
 		bool os_cursor;
 		boost::shared_ptr<BITMAP> scrbuf;
 		boost::shared_ptr<sem_t> sem;
+		substate substate;
 		int target_fps;
 		boost::shared_ptr<iq::timer> timer;
 		bool verbose;
@@ -60,7 +64,17 @@ namespace iq
 		~app(void);
 
 		void deinitialize(void);
+		void draw(void);
+		void draw_setup(void);
+		void draw_gameplay(void);
+		void draw_scripted(void);
+		void draw_credits(void);
 		void initialize(void);
+		void logic(void);
+		void logic_setup(void);
+		void logic_gameplay(void);
+		void logic_scripted(void);
+		void logic_credits(void);
 		void parse_args(int, char *[]);
 
 		static void add_frame(void *);
