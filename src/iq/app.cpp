@@ -59,6 +59,25 @@ namespace iq
 		IQ_APP_TRACE("} //iq::app::deinitialize()");
 	}
 
+	void app::draw(void)
+	{
+		IQ_APP_TRACE("iq::app::draw() {");
+
+		//textprintf_ex(this->scrbuf.get(), font, 20, 20, WHITE, -1,
+				//"frame-count: %d",
+				//g_total_frames);
+		textprintf_ex(this->scrbuf.get(), font, 20, 40, WHITE, -1,
+				"time: %s", this->timer->to_str().c_str());
+		//textprintf_ex(app->scrbuf.get(), font, 20, 60, WHITE, -1,
+				//"fps: %d",
+				//g_frames_per_second);
+
+		blit(this->scrbuf.get(), screen, 0, 0, 0, 0, 800, 600);
+		clear(this->scrbuf.get());
+
+		IQ_APP_TRACE("} //iq::app::draw()");
+	}
+
 	void app::initialize(void)
 	{
 		IQ_APP_TRACE("iq::app::initialize(void) {");
@@ -171,6 +190,18 @@ namespace iq
 		sem_init(this->sem.get(), 0, 1);
 
 		IQ_APP_TRACE("} //iq::app::initialize(void)");
+	}
+
+	void app::logic(void)
+	{
+		IQ_APP_TRACE("iq::app::logic() {");
+
+/*
+		g_total_frames++;
+		g_frames_this_second++;
+*/
+
+		IQ_APP_TRACE("} //iq::app::logic()");
 	}
 
 	void app::parse_args(int argc, char *argv[])

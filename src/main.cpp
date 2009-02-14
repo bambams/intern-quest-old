@@ -29,46 +29,18 @@ int main(int argc, char *argv[])
 		sem_wait(app->sem.get());
 
 		// Logic loop. Changes to the game happen here.
-		logic(app);
+		app->logic();
 
 		/*
 		 * Draw. Here we draw the current frame first to a buffer in main
 		 * memory and then to the video memory (screen).
 		 */
-		draw(app);
+		app->draw();
 	}
 
 	return(0);
 }
 END_OF_MAIN()
-
-
-
-void draw(boost::shared_ptr<iq::app> app)
-{
-//	textprintf_ex(app->scrbuf.get(), font, 20, 20, WHITE, -1,
-//			"frame-count: %d",
-//			g_total_frames);
-	textprintf_ex(app->scrbuf.get(), font, 20, 40, WHITE, -1,
-			"time: %s", app->timer->to_str().c_str());
-//	textprintf_ex(app->scrbuf.get(), font, 20, 60, WHITE, -1,
-//			"fps: %d",
-//			g_frames_per_second);
-
-	blit(app->scrbuf.get(), screen, 0, 0, 0, 0, 800, 600);
-	clear(app->scrbuf.get());
-}
-
-
-
-void logic(boost::shared_ptr<iq::app> app)
-{
-/*	update_time();
-
-	g_total_frames++;
-	g_frames_this_second++;
-*/
-}
 
 
 
