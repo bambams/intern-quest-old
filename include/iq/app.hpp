@@ -44,16 +44,22 @@ namespace iq
 	class app
 	{
 	private:
-		
 	protected:
+		// Method pointer for draw and logic.
+		typedef void (app::*void_method_void)(void);
+
+		void_method_void drawptr;
+		void_method_void logicptr;
+
 	public:
-		enum substate {SETUP, GAMEPLAY, SCRIPTED, CREDITS};
+		// `state' wouldn't work for a typename and variable name so gamestate is what it became...
+		enum gamestate {SETUP, GAMEPLAY, SCRIPTED, CREDITS};
 
 		std::map<std::string, std::string> argv;
 		bool os_cursor;
 		boost::shared_ptr<BITMAP> scrbuf;
 		boost::shared_ptr<sem_t> sem;
-		substate substate;
+		gamestate state;
 		int target_fps;
 		boost::shared_ptr<iq::timer> timer;
 		bool verbose;
@@ -76,6 +82,7 @@ namespace iq
 		void logic_scripted(void);
 		void logic_credits(void);
 		void parse_args(int, char *[]);
+		void set_state(gamestate);
 
 		static void add_frame(void *);
 		//static void close_button_handler(void *);
