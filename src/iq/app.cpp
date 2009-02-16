@@ -13,6 +13,12 @@ namespace iq
 		this->target_fps = 30;
 		this->verbose = false;
 
+		/*
+		 * This will eventually start at SETUP, but there currently is no
+		 * setup. :P
+		 */
+		this->set_state(GAMEPLAY);
+
 		this->parse_args(argc, argv);
 		this->initialize();
 
@@ -40,7 +46,7 @@ namespace iq
 	}
 	END_OF_FUNCTION(app::add_frame)
 
-	void app::close_button_handler(void /*void *self*/)
+	void app::close_button_handler(void)
 	{
 		IQ_APP_TRACE("iq::app::close_button_handler(void) {");
 
@@ -63,6 +69,22 @@ namespace iq
 	{
 		IQ_APP_TRACE("iq::app::draw() {");
 
+		(this->*(this->drawptr))();
+
+		IQ_APP_TRACE("} //iq::app::draw()");
+	}
+
+	void app::draw_credits(void)
+	{
+		IQ_APP_TRACE("iq::app::draw_credits() {");
+
+		IQ_APP_TRACE("} //iq::app::draw_credits()");
+	}
+
+	void app::draw_gameplay(void)
+	{
+		IQ_APP_TRACE("iq::app::draw_gameplay() {");
+
 		//textprintf_ex(this->scrbuf.get(), font, 20, 20, WHITE, -1,
 				//"frame-count: %d",
 				//g_total_frames);
@@ -75,7 +97,21 @@ namespace iq
 		blit(this->scrbuf.get(), screen, 0, 0, 0, 0, 800, 600);
 		clear(this->scrbuf.get());
 
-		IQ_APP_TRACE("} //iq::app::draw()");
+		IQ_APP_TRACE("} //iq::app::draw_gameplay()");
+	}
+
+	void app::draw_scripted(void)
+	{
+		IQ_APP_TRACE("iq::app::draw_scripted() {");
+
+		IQ_APP_TRACE("} //iq::app::draw_scripted()");
+	}
+
+	void app::draw_setup(void)
+	{
+		IQ_APP_TRACE("iq::app::draw_setup() {");
+
+		IQ_APP_TRACE("} //iq::app::draw_setup()");
 	}
 
 	void app::initialize(void)
@@ -196,12 +232,42 @@ namespace iq
 	{
 		IQ_APP_TRACE("iq::app::logic() {");
 
+		(this->*(this->logicptr))();
+
+		IQ_APP_TRACE("} //iq::app::logic()");
+	}
+
+	void app::logic_credits(void)
+	{
+		IQ_APP_TRACE("iq::app::logic_credits() {");
+
+		IQ_APP_TRACE("} //iq::app::logic_credits()");
+	}
+
+	void app::logic_gameplay(void)
+	{
+		IQ_APP_TRACE("iq::app::logic_gameplay() {");
+
 /*
 		g_total_frames++;
 		g_frames_this_second++;
 */
 
-		IQ_APP_TRACE("} //iq::app::logic()");
+		IQ_APP_TRACE("} //iq::app::logic_gameplay()");
+	}
+
+	void app::logic_scripted(void)
+	{
+		IQ_APP_TRACE("iq::app::logic_scripted() {");
+
+		IQ_APP_TRACE("} //iq::app::logic_scripted()");
+	}
+
+	void app::logic_setup(void)
+	{
+		IQ_APP_TRACE("iq::app::logic_setup() {");
+
+		IQ_APP_TRACE("} //iq::app::logic_setup()");
 	}
 
 	void app::parse_args(int argc, char *argv[])
@@ -230,6 +296,31 @@ namespace iq
 		}
 
 		IQ_APP_TRACE("} //iq::app::sem_destroy(sem_t)");
+	}
+
+	void app::set_state(gamestate state)
+	{
+		this->state = state;
+
+		switch(state)
+		{
+		case CREDITS:
+			this->drawptr = &app::draw_credits;
+			this->logicptr = &app::logic_credits;
+			break;
+		case GAMEPLAY:
+			this->drawptr = &app::draw_gameplay;
+			this->logicptr = &app::logic_gameplay;
+			break;
+		case SCRIPTED:
+			this->drawptr = &app::draw_scripted;
+			this->logicptr = &app::logic_scripted;
+			break;
+		case SETUP:
+			this->drawptr = &app::draw_setup;
+			this->logicptr = &app::logic_setup;
+			break;
+		}
 	}
 }
 
