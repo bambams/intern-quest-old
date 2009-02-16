@@ -5,7 +5,7 @@
 CXX = g++
 CXX_CFLAGS = -g3 -Iinclude -pg -Wall
 CXX_COMPILE = $(CXX) -c $(CXX_CFLAGS)
-#CXX_LINK = $(CXX) $(LIBS)
+#CXX_LINK = $(CXX) $(CXX_CFLAGS) $(LIBS)
 INCDIR = include
 LIBS += 
 NAME = iq
@@ -47,7 +47,7 @@ default: $(OBJDIR) $(OBJDIR)/iq $(BIN)
 
 # Link the game (create the executable).
 $(BIN): $(OBJECTS)
-	$(CXX) -o $@ $(OBJECTS) $(LIBS)
+	$(CXX) $(CXX_CFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
 # -- Compile the source files --
 $(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp $(INCDIR)/iq/app.hpp $(INCDIR)/iq.hpp
@@ -69,7 +69,7 @@ $(OBJDIR):
 # -- Cleanup --
 clean:
 	$(RMDIR) $(OBJDIR) $(OBJDIR)/iq
-	$(RM) $(BIN) $(OBJECTS)
+	$(RM) $(BIN) $(OBJECTS) gmon.out
 
 # .PHONYs are targets that don't actually correspond to a file on the file
 # system.
