@@ -13,8 +13,6 @@ namespace iq
 	{
 		this->running = false;
 		this->ticks = 0;
-	
-		install_param_int_ex(timer::tick, this, BPS_TO_TIMER(1));
 	}
 	
 	timer::~timer(void)

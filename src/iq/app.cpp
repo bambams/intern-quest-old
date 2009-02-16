@@ -13,16 +13,16 @@ namespace iq
 		this->target_fps = 30;
 		this->verbose = false;
 
+		this->parse_args(argc, argv);
+		this->initialize();
+
+		this->timer.reset(new iq::timer());
+
 		/*
 		 * This will eventually start at SETUP, but there currently is no
 		 * setup. :P
 		 */
 		this->set_state(GAMEPLAY);
-
-		this->parse_args(argc, argv);
-		this->initialize();
-
-		this->timer.reset(new iq::timer());
 
 		IQ_APP_TRACE("} //iq::app::app(int, char *[])");
 	}
@@ -305,18 +305,27 @@ namespace iq
 		switch(state)
 		{
 		case CREDITS:
+			this->timer->stop();
+
 			this->drawptr = &app::draw_credits;
 			this->logicptr = &app::logic_credits;
 			break;
 		case GAMEPLAY:
+			this->timer->reset();
+			this->timer->start();
+
 			this->drawptr = &app::draw_gameplay;
 			this->logicptr = &app::logic_gameplay;
 			break;
 		case SCRIPTED:
+			this->timer->stop();
+
 			this->drawptr = &app::draw_scripted;
 			this->logicptr = &app::logic_scripted;
 			break;
 		case SETUP:
+			this->timer->stop();
+
 			this->drawptr = &app::draw_setup;
 			this->logicptr = &app::logic_setup;
 			break;
