@@ -2,8 +2,8 @@
 #ifndef IQ_HPP
 	#define IQ_HPP
 
-	#include <iq/app.hpp>
-	#include <iq/timer.hpp>
+	#include <app.hpp>
+	#include <timer.hpp>
 
 namespace iq
 {

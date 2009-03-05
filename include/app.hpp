@@ -5,7 +5,7 @@
 	#include <allegro.h>
 	#include <boost/shared_ptr.hpp>
 	#include <iostream>
-	#include <iq/timer.hpp>
+	#include <timer.hpp>
 	#include <map>
 	#include <semaphore.h>
 	#include <string>
