@@ -13,7 +13,7 @@ OBJDIR = obj
 SRCDIR = src
 
 # List all .o files here.
-OBJECTS += $(OBJDIR)/main.o $(OBJDIR)/iq/app.o $(OBJDIR)/iq/timer.o
+OBJECTS += $(OBJDIR)/main.o $(OBJDIR)/app.o $(OBJDIR)/timer.o
 
 # Some conditional stuff stolen from the SpeedHack Makefile.
 ifndef WINDOWS
@@ -43,32 +43,29 @@ endif
 
 # The default will make sure all subdirectories exist, compile, and link the
 # project.
-default: $(OBJDIR) $(OBJDIR)/iq $(BIN)
+default: $(OBJDIR) $(BIN)
 
 # Link the game (create the executable).
 $(BIN): $(OBJECTS)
 	$(CXX) $(CXX_CFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
 # -- Compile the source files --
-$(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp $(INCDIR)/iq/app.hpp $(INCDIR)/iq.hpp
+$(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp $(INCDIR)/app.hpp $(INCDIR)/iq.hpp
 	$(CXX_COMPILE) -o $@ $<
 
-$(OBJDIR)/iq/app.o: $(SRCDIR)/iq/app.cpp $(INCDIR)/iq/app.hpp $(INCDIR)/iq.hpp
+$(OBJDIR)/app.o: $(SRCDIR)/app.cpp $(INCDIR)/app.hpp $(INCDIR)/iq.hpp
 	$(CXX_COMPILE) -o $@ $<
 
-$(OBJDIR)/iq/timer.o: $(SRCDIR)/iq/timer.cpp $(INCDIR)/iq/timer.hpp $(INCDIR)/iq.hpp
+$(OBJDIR)/timer.o: $(SRCDIR)/timer.cpp $(INCDIR)/timer.hpp $(INCDIR)/iq.hpp
 	$(CXX_COMPILE) -o $@ $<
 
 # -- Make necessary directories --
-$(OBJDIR)/iq:
-	$(MKDIR) $@
-
 $(OBJDIR):
 	$(MKDIR) $@
 
 # -- Cleanup --
 clean:
-	$(RMDIR) $(OBJDIR) $(OBJDIR)/iq
+	$(RMDIR) $(OBJDIR)
 	$(RM) $(BIN) $(OBJECTS) gmon.out
 
 # .PHONYs are targets that don't actually correspond to a file on the file
