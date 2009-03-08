@@ -8,7 +8,6 @@ namespace iq
 }
 
 	#include <animation.hpp>
-	#include <frame.hpp>
 
 namespace iq
 {
