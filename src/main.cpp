@@ -10,32 +10,66 @@ int main(int argc, char *argv[])
 	try
 	{
 		app.reset(new iq::app(argc, argv));
-	}
-	catch(int ex)
-	{
-		std::cout << "Exception of type `int' caught in main(). Value '" << ex << "'. Aborting..." << std::endl;
-		exit(-1);
-	}
-	catch(...)
-	{
-		std::cout << "Unknown exception caught in main(). Aborting..." << std::endl;
-		exit(-1);
-	}
 
-	// Main game loop.
-	while(!(key[KEY_Q] || key[KEY_ESC] || iq::app::close_button_pressed))
+/*
+ * h4x: testing animation.
+ */
+boost::shared_ptr<BITMAP> bitmap;
+boost::shared_ptr<iq::animation> playeranimation;
+boost::shared_ptr<iq::spritesheet> playersheet;
+int x, y;
+
+playersheet.reset(new iq::spritesheet("media/player.bmp", 3, 4));
+playeranimation.reset(new iq::animation(playersheet, 1));
+
+bitmap = playeranimation->begin(300, app->ms);
+
+allegro_message("screen_w=%d screen_h=%d\nplayer_w=%d player_h=%d", app->scrbuf->w, app->scrbuf->h, playeranimation->width(), playeranimation->height());
+
+x = (app->scrbuf->w / 2) - (playeranimation->width() / 2);
+y = (app->scrbuf->h / 2) - (playeranimation->height() / 2);
+
+		// Main game loop.
+		while(!(key[KEY_Q] || key[KEY_ESC] || iq::app::close_button_pressed))
+		{
+			// Sleep until next frame.
+			sem_wait(app->sem.get());
+
+			// Logic loop. Changes to the game happen here.
+			app->logic();
+
+/*
+ * h4x: testing animation.
+ */
+blit(bitmap.get(), app->scrbuf.get(), 0, 0, x, y, bitmap->w, bitmap->h);
+bitmap = playeranimation->next(app->ms);
+
+			/*
+			 * Draw. Here we draw the current frame first to a buffer in main
+			 * memory and then to the video memory (screen).
+			 */
+			app->draw();
+		}
+	}
+	catch(std::invalid_argument &ex)
 	{
-		// Sleep until next frame.
-		sem_wait(app->sem.get());
-
-		// Logic loop. Changes to the game happen here.
-		app->logic();
-
-		/*
-		 * Draw. Here we draw the current frame first to a buffer in main
-		 * memory and then to the video memory (screen).
-		 */
-		app->draw();
+		allegro_message("An invalid argument was passed: %s\n", ex.what());
+	}
+	catch(std::range_error &ex)
+	{
+		allegro_message("A range error occurred: %s\n", ex.what());
+	}
+	catch(std::logic_error &ex)
+	{
+		allegro_message("A logic error occurred: %s\n", ex.what());
+	}
+	catch(std::runtime_error &ex)
+	{
+		allegro_message("A runtime error occurred: %s\n", ex.what());
+	}
+	catch(std::exception &ex)
+	{
+		allegro_message("An exception occurred: %s\n", ex.what());
 	}
 
 	return(0);

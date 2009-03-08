@@ -13,6 +13,7 @@ namespace iq
 	#include <timer.hpp>
 	#include <map>
 	#include <semaphore.h>
+	#include <stdexcept>
 	#include <string>
 
 	#ifdef IQ_APP_TRACE
@@ -61,11 +62,12 @@ namespace iq
 		enum gamestate {SETUP, GAMEPLAY, SCRIPTED, CREDITS};
 
 		std::map<std::string, std::string> argv;
+		unsigned int ms;
 		bool os_cursor;
 		boost::shared_ptr<BITMAP> scrbuf;
 		boost::shared_ptr<sem_t> sem;
 		gamestate state;
-		int target_fps;
+		unsigned int target_fps;
 		boost::shared_ptr<iq::timer> timer;
 		bool verbose;
 

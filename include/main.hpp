@@ -13,6 +13,7 @@
 	#include <list>
 	#include <semaphore.h>
 	#include <spritesheet.hpp>
+	#include <stdexcept>
 
 	#define NUM_DIMENSIONS 2
 
