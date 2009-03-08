@@ -19,14 +19,14 @@ namespace iq
 	private:
 	protected:
 	public:
-		spritesheet(std::string, const int, const int);
-		spritesheet(boost::shared_ptr<BITMAP>, const int, const int);
+		spritesheet(std::string, const unsigned int, const unsigned int);
+		spritesheet(boost::shared_ptr<BITMAP>, const unsigned int, const unsigned int);
 
 		boost::shared_ptr<BITMAP> bitmap;
-		int h;
-		int w;
+		unsigned int h;
+		unsigned int w;
 
-		void load(std::string, const int, const int);
+		void load(std::string, const unsigned int, const unsigned int);
 	};
 }
 

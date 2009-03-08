@@ -28,7 +28,7 @@ iq::spritesheet sheet1(playerbmp, 3, 4);
 
 boost::shared_ptr<iq::spritesheet> sheet(new iq::spritesheet(std::string("media/player.bmp"), 3, 4));
 
-boost::shared_ptr<iq::animation> animation(new iq::animation(sheet, 0));
+boost::shared_ptr<iq::animation> animation(new iq::animation(sheet, 0, 50, 20));
 
 //blit(sheet->bitmap.get(), screen, 0, 0, 0, 0, sheet->bitmap->w, sheet->bitmap->h);
 

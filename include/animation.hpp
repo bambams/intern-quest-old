@@ -21,9 +21,12 @@ namespace iq
 		//std::vector< boost::shared_ptr<iq::frame> > frames;
 		std::vector< boost::shared_ptr<BITMAP> > frames;
 	public:
-		animation(boost::shared_ptr<iq::spritesheet>, const int);
+		animation(boost::shared_ptr<iq::spritesheet>, const unsigned int);
+		animation(boost::shared_ptr<iq::spritesheet>, const unsigned int, const unsigned int, const unsigned int);
 
-		void load(boost::shared_ptr<iq::spritesheet>, const int);
+		boost::shared_ptr<BITMAP> frame(const unsigned int) const;
+		void load(boost::shared_ptr<iq::spritesheet>, const unsigned int);
+		void load(boost::shared_ptr<iq::spritesheet>, const unsigned int, const unsigned int, const unsigned int);
 
 		boost::shared_ptr<BITMAP> operator[](const unsigned int) const;
 	};
