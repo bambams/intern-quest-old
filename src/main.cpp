@@ -22,7 +22,7 @@ int x, y;
 playersheet.reset(new iq::spritesheet("media/player.bmp", 3, 4));
 playeranimation.reset(new iq::animation(playersheet, 1));
 
-bitmap = playeranimation->begin(300, app->ms);
+bitmap = playeranimation->begin(275, app->ms);
 
 allegro_message("screen_w=%d screen_h=%d\nplayer_w=%d player_h=%d", app->scrbuf->w, app->scrbuf->h, playeranimation->width(), playeranimation->height());
 
@@ -41,7 +41,7 @@ y = (app->scrbuf->h / 2) - (playeranimation->height() / 2);
 /*
  * h4x: testing animation.
  */
-blit(bitmap.get(), app->scrbuf.get(), 0, 0, x, y, bitmap->w, bitmap->h);
+masked_blit(bitmap.get(), app->scrbuf.get(), 0, 0, x, y, bitmap->w, bitmap->h);
 bitmap = playeranimation->next(app->ms);
 
 			/*
