@@ -22,6 +22,21 @@ int main(int argc, char *argv[])
 		exit(-1);
 	}
 
+boost::shared_ptr<BITMAP> playerbmp(load_bitmap("media/player.bmp", NULL), destroy_bitmap);
+
+iq::spritesheet sheet1(playerbmp, 3, 4);
+
+boost::shared_ptr<iq::spritesheet> sheet(new iq::spritesheet(std::string("media/player.bmp"), 3, 4));
+
+boost::shared_ptr<iq::animation> animation(new iq::animation(sheet, 0));
+
+//blit(sheet->bitmap.get(), screen, 0, 0, 0, 0, sheet->bitmap->w, sheet->bitmap->h);
+
+int x = 0;
+
+for(int i=0; i<3; i++, x+=54*2)
+blit(((*animation)[i]).get(), screen, 0, 0, x, 0, ((*animation)[i])->w, ((*animation)[i])->h);
+
 	// Main game loop.
 	while(!(key[KEY_Q] || key[KEY_ESC] || iq::app::close_button_pressed))
 	{
@@ -29,13 +44,13 @@ int main(int argc, char *argv[])
 		sem_wait(app->sem.get());
 
 		// Logic loop. Changes to the game happen here.
-		app->logic();
+//		app->logic();
 
 		/*
 		 * Draw. Here we draw the current frame first to a buffer in main
 		 * memory and then to the video memory (screen).
 		 */
-		app->draw();
+//		app->draw();
 	}
 
 	return(0);
