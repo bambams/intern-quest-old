@@ -5,7 +5,8 @@ namespace iq
 {
 	bool app::close_button_pressed = false;
 
-	app::app(int argc, char *argv[])
+	app::app(int argc, char *argv[]):
+		ms(0)
 	{
 		IQ_APP_TRACE("iq::app::app(int, char *[]) {");
 
@@ -36,11 +37,15 @@ namespace iq
 		IQ_APP_TRACE("} //iq::app::~app()");
 	}
 
-	void app::add_frame(void *self)
+	void app::add_frame(void *app)
 	{
 		IQ_APP_TRACE("iq::app::add_frame(void) {");
 
-		sem_post(((iq::app *)self)->sem.get());
+		iq::app *self = (iq::app *)app;
+
+		sem_post(self->sem.get());
+
+		self->ms = self->ms + (1000 / self->target_fps);
 
 		IQ_APP_TRACE("} //iq::app::add_frame(void)");
 	}
@@ -129,29 +134,29 @@ namespace iq
 
 		if(allegro_init() != 0)
 		{
-			printf("%s [to initialize Allegro]. %s.\n", msg, allegro_error);
-			throw(-1);
+			//printf("%s [to initialize Allegro]. %s.\n", msg, allegro_error);
+			throw std::runtime_error(std::string("Failed to initialize Allegro. ") + allegro_error + ".");
 		}
 
 		if(install_keyboard() != 0)
 		{
-			printf("%s [to install the keyboard routines].\n", msg);
-			throw(-1);
+			//printf("%s [to install the keyboard routines].\n", msg);
+			throw std::runtime_error("Failed to install the keyboard routines.");
 		}
 
 		if(install_mouse() < 0)
 		{
-			printf("%s [to install the mouse routines]. %s.\n",
-					msg, allegro_error);
-			throw(-1);
+			//printf("%s [to install the mouse routines]. %s.\n",
+					//msg, allegro_error);
+			throw std::runtime_error(std::string("Failed to install the mouse routines. ") + allegro_error + ".");
 		}
 
 		enable_hardware_cursor();
 
 		if(install_timer() != 0)
 		{
-			printf("%s [to install the timer routines].", msg);
-			throw(-1);
+			//printf("%s [to install the timer routines].", msg);
+			throw std::runtime_error("Failed to install the timer routines.");
 		}
 
 		set_color_depth(32);
@@ -173,18 +178,18 @@ namespace iq
 
 			if(i == len)
 			{
-				printf("%s [to set the graphics mode]. %s.\n",
-						msg, allegro_error);
-				throw(-1);
+				//printf("%s [to set the graphics mode]. %s.\n",
+						//msg, allegro_error);
+				throw std::runtime_error(std::string("Failed to set the graphics mode. ") + allegro_error + ".");
 			}
 		}
 
-		this->scrbuf.reset(create_bitmap(800, 600), destroy_bitmap);
+		this->scrbuf.reset(create_bitmap(r[i][X], r[i][Y]), destroy_bitmap);
 
 		if(this->scrbuf.get() == NULL)
 		{
-			printf("%s [to create a screen buffer].\n", msg);
-			throw(-1);
+			//printf("%s [to create a screen buffer].\n", msg);
+			throw std::runtime_error("Failed to create a screen buffer.");
 		}
 
 		clear(this->scrbuf.get());
@@ -196,9 +201,9 @@ namespace iq
 
 		if(set_display_switch_mode(SWITCH_BACKGROUND) != 0)
 		{
-			printf("%s [to set display switch mode]. %s.\n",
-					msg, allegro_error);
-			throw(-1);
+			//printf("%s [to set display switch mode]. %s.\n",
+					//msg, allegro_error);
+			throw std::runtime_error(std::string("Failed to set display switch mode. ") + allegro_error + ".");
 		}
 
 		//LOCK_VARIABLE(g_close_button_pressed);
@@ -217,8 +222,8 @@ namespace iq
 
 		if(install_param_int_ex(app::add_frame, this, BPS_TO_TIMER(this->target_fps)) != 0)
 		{
-			printf("%s [to install the add_frame timer].\n", msg);
-			throw(-1);
+			//printf("%s [to install the main application timer].\n", msg);
+			throw std::runtime_error("Failed to install the main application timer.");
 		}
 
 		set_close_button_callback(app::close_button_handler);
