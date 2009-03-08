@@ -24,8 +24,6 @@ playeranimation.reset(new iq::animation(playersheet, 1));
 
 bitmap = playeranimation->begin(275, app->ms);
 
-allegro_message("screen_w=%d screen_h=%d\nplayer_w=%d player_h=%d", app->scrbuf->w, app->scrbuf->h, playeranimation->width(), playeranimation->height());
-
 x = (app->scrbuf->w / 2) - (playeranimation->width() / 2);
 y = (app->scrbuf->h / 2) - (playeranimation->height() / 2);
 
