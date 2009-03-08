@@ -13,7 +13,7 @@ OBJDIR = obj
 SRCDIR = src
 
 # List all .o files here.
-OBJECTS += $(OBJDIR)/main.o $(OBJDIR)/app.o $(OBJDIR)/timer.o
+OBJECTS += $(OBJDIR)/animation.o $(OBJDIR)/app.o $(OBJDIR)/main.o $(OBJDIR)/spritesheet.o $(OBJDIR)/tile.o $(OBJDIR)/timer.o
 
 # Some conditional stuff stolen from the SpeedHack Makefile.
 ifndef WINDOWS
@@ -50,13 +50,22 @@ $(BIN): $(OBJECTS)
 	$(CXX) $(CXX_CFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
 # -- Compile the source files --
-$(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp $(INCDIR)/app.hpp $(INCDIR)/iq.hpp
+$(OBJDIR)/animation.o: $(SRCDIR)/animation.cpp $(INCDIR)/animation.hpp 
 	$(CXX_COMPILE) -o $@ $<
 
-$(OBJDIR)/app.o: $(SRCDIR)/app.cpp $(INCDIR)/app.hpp $(INCDIR)/iq.hpp
+$(OBJDIR)/app.o: $(SRCDIR)/app.cpp $(INCDIR)/app.hpp 
 	$(CXX_COMPILE) -o $@ $<
 
-$(OBJDIR)/timer.o: $(SRCDIR)/timer.cpp $(INCDIR)/timer.hpp $(INCDIR)/iq.hpp
+$(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp
+	$(CXX_COMPILE) -o $@ $<
+
+$(OBJDIR)/spritesheet.o: $(SRCDIR)/spritesheet.cpp $(INCDIR)/spritesheet.hpp
+	$(CXX_COMPILE) -o $@ $<
+
+$(OBJDIR)/tile.o: $(SRCDIR)/tile.cpp $(INCDIR)/tile.hpp 
+	$(CXX_COMPILE) -o $@ $<
+
+$(OBJDIR)/timer.o: $(SRCDIR)/timer.cpp $(INCDIR)/timer.hpp 
 	$(CXX_COMPILE) -o $@ $<
 
 # -- Make necessary directories --
