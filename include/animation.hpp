@@ -25,6 +25,7 @@ namespace iq
 		void check_frame_index(const unsigned int) const;
 		void check_ms(const unsigned int) const;
 		void check_ms_per_frame(void) const;
+		void set_last_frame(const unsigned int);
 		void set_last_ms(const unsigned int);
 		void set_ms_per_frame(const unsigned int);
 	public:

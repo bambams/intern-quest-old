@@ -139,7 +139,13 @@ namespace iq
 		past = (ms - this->last_ms) / this->ms_per_frame;
 		i = (this->last_frame + past) % this->frames.size();
 
-		this->set_last_ms(ms);
+printf("ms=%d    last_ms=%d    past=%d    i=%d\n", ms, this->last_ms, past, i);
+
+		if(i != this->last_frame)
+		{
+			this->set_last_ms(ms);
+			this->set_last_frame(i);
+		}
 
 		return(this->frames[i]);
 	}
@@ -147,6 +153,12 @@ namespace iq
 	const boost::shared_ptr<BITMAP> animation::operator[](const unsigned int i) const
 	{
 		return(this->frame(i));
+	}
+
+	void animation::set_last_frame(const unsigned int i)
+	{
+		this->check_frame_index(i);
+		this->last_frame = i;
 	}
 
 	void animation::set_last_ms(const unsigned int ms)
