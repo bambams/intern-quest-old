@@ -22,20 +22,32 @@ int main(int argc, char *argv[])
 		exit(-1);
 	}
 
-boost::shared_ptr<BITMAP> playerbmp(load_bitmap("media/player.bmp", NULL), destroy_bitmap);
+	boost::shared_ptr<BITMAP> playerbmp(load_bitmap("media/player.bmp", NULL), destroy_bitmap);
 
-iq::spritesheet sheet1(playerbmp, 3, 4);
+	iq::spritesheet sheet1(playerbmp, 3, 4);
 
-boost::shared_ptr<iq::spritesheet> sheet(new iq::spritesheet(std::string("media/player.bmp"), 3, 4));
+	boost::shared_ptr<iq::spritesheet> sheet(new iq::spritesheet(std::string("media/player.bmp"), 3, 4));
 
-boost::shared_ptr<iq::animation> animation(new iq::animation(sheet, 0, 50, 20));
+	allegro_message("Click OK to view the animation frames as 50x20.");
 
-//blit(sheet->bitmap.get(), screen, 0, 0, 0, 0, sheet->bitmap->w, sheet->bitmap->h);
+	boost::shared_ptr<iq::animation> animation(new iq::animation(sheet, 0, 50, 20));
 
-int x = 0;
+	for(int i=0, x=0; i<3; i++, x+=110*2)
+		blit(((*animation)[i]).get(), screen, 0, 0, x, 0, ((*animation)[i])->w, ((*animation)[i])->h);
 
-for(int i=0; i<3; i++, x+=54*2)
-blit(((*animation)[i]).get(), screen, 0, 0, x, 0, ((*animation)[i])->w, ((*animation)[i])->h);
+	allegro_message("Click OK to view the animation frames in their native dimensions.");
+
+	animation.reset(new iq::animation(sheet, 0));
+
+	for(int i=0, x=0; i<3; i++, x+=110*2)
+		blit(((*animation)[i]).get(), screen, 0, 0, x, 0, ((*animation)[i])->w, ((*animation)[i])->h);
+
+	allegro_message("Click OK to view the animation frames at twice their native dimensions.");
+
+	animation.reset(new iq::animation(sheet, 0, 110, 144));
+
+	for(int i=0, x=0; i<3; i++, x+=110*2)
+		blit(((*animation)[i]).get(), screen, 0, 0, x, 0, ((*animation)[i])->w, ((*animation)[i])->h);
 
 	// Main game loop.
 	while(!(key[KEY_Q] || key[KEY_ESC] || iq::app::close_button_pressed))
