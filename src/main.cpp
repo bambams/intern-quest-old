@@ -14,18 +14,20 @@ int main(int argc, char *argv[])
 /*
  * h4x: testing animation.
  */
+typedef std::vector<std::string> string_vector;
+
 boost::shared_ptr<BITMAP> bitmap;
-boost::shared_ptr<iq::animation> playeranimation;
-boost::shared_ptr<iq::spritesheet> playersheet;
+boost::shared_ptr<iq::entity> player(new iq::entity("config/intern.xml"));
 int x, y;
+const boost::shared_ptr<string_vector> animation_keys = player->animation_keys();
 
-playersheet.reset(new iq::spritesheet("media/intern.bmp", 3, 4));
-playeranimation.reset(new iq::animation(playersheet, 1));
+for(string_vector::iterator i=animation_keys->begin(); i != animation_keys->end(); i++)
+	std::cout << *i << std::endl;
 
-bitmap = playeranimation->begin(275, app->ms);
+bitmap = player->begin_animation("walk_down", app->ms)->second->frame(0);
 
-x = (app->scrbuf->w / 2) - (playeranimation->width() / 2);
-y = (app->scrbuf->h / 2) - (playeranimation->height() / 2);
+x = (app->scrbuf->w / 2) - (player->w / 2);
+y = (app->scrbuf->h / 2) - (player->h / 2);
 
 		// Main game loop.
 		while(!(key[KEY_Q] || key[KEY_ESC] || iq::app::close_button_pressed))
@@ -39,8 +41,8 @@ y = (app->scrbuf->h / 2) - (playeranimation->height() / 2);
 /*
  * h4x: testing animation.
  */
+bitmap = player->current_frame(app->ms);
 masked_blit(bitmap.get(), app->scrbuf.get(), 0, 0, x, y, bitmap->w, bitmap->h);
-bitmap = playeranimation->next(app->ms);
 
 			/*
 			 * Draw. Here we draw the current frame first to a buffer in main
@@ -51,22 +53,27 @@ bitmap = playeranimation->next(app->ms);
 	}
 	catch(std::invalid_argument &ex)
 	{
+		printf("An invalid argument was passed: %s\n", ex.what());
 		allegro_message("An invalid argument was passed: %s\n", ex.what());
 	}
 	catch(std::range_error &ex)
 	{
+		printf("A range error occurred: %s\n", ex.what());
 		allegro_message("A range error occurred: %s\n", ex.what());
 	}
 	catch(std::logic_error &ex)
 	{
+		printf("A logic error occurred: %s\n", ex.what());
 		allegro_message("A logic error occurred: %s\n", ex.what());
 	}
 	catch(std::runtime_error &ex)
 	{
+		printf("A runtime error occurred: %s\n", ex.what());
 		allegro_message("A runtime error occurred: %s\n", ex.what());
 	}
 	catch(std::exception &ex)
 	{
+		printf("An exception occurred: %s\n", ex.what());
 		allegro_message("An exception occurred: %s\n", ex.what());
 	}
 

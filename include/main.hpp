@@ -9,6 +9,7 @@
 	#include <cstdio>
 	#include <cstdlib>
 	#include <ctile.hpp>
+	#include <entity.hpp>
 	#include <iostream>
 	#include <list>
 	#include <semaphore.h>
