@@ -24,8 +24,9 @@ namespace iq
 		static unsigned int after_hours(const unsigned int);
 		static unsigned int after_mins(const unsigned int);
 	public:
-		static const unsigned int MINS_PER_HOUR;
 		static const unsigned int HOURS_PER_DAY;
+		static const unsigned int MSECS_PER_SEC;
+		static const unsigned int MINS_PER_HOUR;
 		static const unsigned int SECS_PER_MIN;
 		static const unsigned int SECS_PER_HOUR;
 		static const unsigned int SECS_PER_DAY;

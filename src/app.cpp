@@ -45,7 +45,7 @@ namespace iq
 
 		sem_post(self->sem.get());
 
-		self->ms = self->ms + (1000 / self->target_fps);
+		self->ms = self->ms + (timer::MSECS_PER_SEC / self->target_fps);
 
 		IQ_APP_TRACE("} //iq::app::add_frame(void)");
 	}

@@ -5,10 +5,11 @@ namespace iq
 {
 	const unsigned int timer::HOURS_PER_DAY = 24;
 	const unsigned int timer::MINS_PER_HOUR = 60;
+	const unsigned int timer::MSECS_PER_SEC = 1000;
 	const unsigned int timer::SECS_PER_MIN = 60;
 	const unsigned int timer::SECS_PER_HOUR = 60 * 60;
 	const unsigned int timer::SECS_PER_DAY = (60 * 60) * 24;
-	
+
 	timer::timer(void)
 	{
 		this->running = false;
