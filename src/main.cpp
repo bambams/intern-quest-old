@@ -21,6 +21,8 @@ boost::shared_ptr<iq::entity> player(new iq::entity("config/intern.xml"));
 int x, y;
 const boost::shared_ptr<string_vector> animation_keys = player->animation_keys();
 
+std::cout << "animation_keys_size=" << animation_keys->size() << std::endl;
+
 for(string_vector::iterator i=animation_keys->begin(); i != animation_keys->end(); i++)
 	std::cout << *i << std::endl;
 

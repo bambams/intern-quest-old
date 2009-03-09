@@ -29,7 +29,7 @@ namespace iq
 		boost::shared_ptr< std::vector<std::string> > keys(new std::vector<std::string>(this->animations->size()));
 
 		for(entity::animation_map::iterator i=this->animations->begin(); i != this->animations->end(); i++)
-			(*keys)[j] = i->first;
+			(*keys)[j++] = i->first;
 
 		return(keys);
 	}
