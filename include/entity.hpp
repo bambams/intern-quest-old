@@ -25,6 +25,9 @@ namespace iq
 	protected:
 		animation_map::const_iterator current_animation_iterator;
 		boost::shared_ptr<animation_map> animations;
+
+		void load_animation(const unsigned int &, const TiXmlElement * const, const boost::shared_ptr<iq::spritesheet>, const boost::shared_ptr<unsigned int>);
+		void load_spritesheet(const TiXmlElement * const);
 	public:
 		unsigned int h, w;
 		int x, y;
@@ -37,8 +40,6 @@ namespace iq
 		const boost::shared_ptr<BITMAP> current_frame(const unsigned int) const;
 		const animation_map::const_iterator current_animation(void) const;
 		void load(const std::string &);
-		void load_animation(const unsigned int &, const TiXmlElement * const, const boost::shared_ptr<iq::spritesheet>, const boost::shared_ptr<unsigned int>);
-		void load_spritesheet(const TiXmlElement * const);
 	};
 }
 
