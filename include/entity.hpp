@@ -37,7 +37,8 @@ namespace iq
 		const boost::shared_ptr<BITMAP> current_frame(const unsigned int) const;
 		const animation_map::const_iterator current_animation(void) const;
 		void load(const std::string &);
-		void load_spritesheet(const TiXmlElement *);
+		void load_animation(const unsigned int &, const TiXmlElement * const, const boost::shared_ptr<iq::spritesheet>, const boost::shared_ptr<unsigned int>);
+		void load_spritesheet(const TiXmlElement * const);
 	};
 }
 

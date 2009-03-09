@@ -14,8 +14,6 @@ int main(int argc, char *argv[])
 /*
  * h4x: testing animation.
  */
-typedef std::vector<std::string> string_vector;
-
 boost::shared_ptr<BITMAP> bitmap;
 boost::shared_ptr<iq::entity> intern(new iq::entity("config/intern.xml"));
 boost::shared_ptr<iq::entity> intern_alt(new iq::entity("config/intern-alt.xml"));
@@ -44,7 +42,7 @@ bitmap = intern->current_frame(app->ms);
 masked_blit(bitmap.get(), app->scrbuf.get(), 0, 0, x, y, bitmap->w, bitmap->h);
 
 bitmap = intern_alt->current_frame(app->ms);
-masked_blit(bitmap.get(), app->scrbuf.get(), 0, 0, x_alt, y, bitmap->w, bitmap->h);
+masked_blit(bitmap.get(), app->scrbuf.get(), 0, 0, 512/*x_alt*/, y, bitmap->w, bitmap->h);
 
 			/*
 			 * Draw. Here we draw the current frame first to a buffer in main

@@ -74,32 +74,53 @@ namespace iq
 		this->load_spritesheet(element);
 	}
 
-	void entity::load_spritesheet(const TiXmlElement *spritesheet)
+	void entity::load_animation(const unsigned int &i, const TiXmlElement * const animation_element, const boost::shared_ptr<iq::spritesheet> sheet, const boost::shared_ptr<unsigned int> sheet_ms_per_frame)
+	{
+		boost::shared_ptr<iq::animation> animation;
+		std::string value;
+		const TiXmlNode *node = NULL;
+		unsigned int ms_per_frame;
+
+		if(animation_element->Attribute("ms_per_frame", (int *)&ms_per_frame) == NULL && sheet_ms_per_frame.get() == NULL)
+			throw std::runtime_error("Entity XML spritesheet element and animation element missing ms_per_frame attribute.");
+		else
+			ms_per_frame = *sheet_ms_per_frame;
+
+		if((node = animation_element->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
+			throw std::runtime_error("Entity XML animation node missing key (name) as text node.");
+
+		animation.reset(new iq::animation(ms_per_frame, sheet, i));
+
+		value = node->ToText()->Value();
+		boost::algorithm::trim(value);
+
+		if(value.length() == 0)
+			throw std::runtime_error("Entity XML animation node text node (key/name) is empty.");
+
+		(*this->animations)[value] = animation;
+	}
+
+	void entity::load_spritesheet(const TiXmlElement * const spritesheet_element)
 	{
 		boost::shared_ptr<unsigned int> sheet_ms_per_frame(new unsigned int());
-		boost::shared_ptr<iq::animation> animation;
 		boost::shared_ptr<iq::spritesheet> sheet;
 		const char *file = NULL;
 		unsigned int h, w;
-		unsigned int ms_per_frame;
-		std::string value;
 		const TiXmlElement *element = NULL;
-		const TiXmlNode *node = NULL;
-		//const TiXmlText *text = NULL;
 
-		if((file = spritesheet->Attribute("file")) == NULL)
+		if((file = spritesheet_element->Attribute("file")) == NULL)
 			throw std::runtime_error("Entity XML spritesheet element missing file attribute.");
 
-		if(spritesheet->Attribute("height", (int *)&h) == NULL)
+		if(spritesheet_element->Attribute("height", (int *)&h) == NULL)
 			throw std::runtime_error("Entity XML spritesheet element missing height attribute.");
 
-		if(spritesheet->Attribute("width", (int *)&w) == NULL)
+		if(spritesheet_element->Attribute("width", (int *)&w) == NULL)
 			throw std::runtime_error("Entity XML spritesheet element missing width attribute.");
 
-		if(spritesheet->Attribute("ms_per_frame", (int *)sheet_ms_per_frame.get()) == NULL)
+		if(spritesheet_element->Attribute("ms_per_frame", (int *)sheet_ms_per_frame.get()) == NULL)
 			sheet_ms_per_frame.reset((unsigned int *)NULL);
 
-		if((element = spritesheet->FirstChildElement("animation")) == NULL)
+		if((element = spritesheet_element->FirstChildElement("animation")) == NULL)
 			throw std::runtime_error("Entity XML spritesheet element missing animation element(s).");
 
 		sheet.reset(new iq::spritesheet(file, w, h));
@@ -109,23 +130,7 @@ namespace iq
 			if(element == NULL)
 				throw std::runtime_error("Entity XML spritesheet element missing animation element(s).");
 
-			if(element->Attribute("ms_per_frame", (int *)&ms_per_frame) == NULL && sheet_ms_per_frame.get() == NULL)
-				throw std::runtime_error("Entity XML spritesheet element and animation element missing ms_per_frame attribute.");
-			else
-				ms_per_frame = *sheet_ms_per_frame;
-
-			if((node = element->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
-				throw std::runtime_error("Entity XML animation node missing key (name) as text node.");
-
-			animation.reset(new iq::animation(ms_per_frame, sheet, i));
-
-			value = node->ToText()->Value();
-			boost::algorithm::trim(value);
-
-			if(value.length() == 0)
-				throw std::runtime_error("Entity XML animation node text node (key/name) is empty.");
-
-			(*this->animations)[value] = animation;
+			this->load_animation(i, element, sheet, sheet_ms_per_frame);
 
 			element = element->NextSiblingElement("animation");
 		}
