@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <entity name="intern">
-	<spritesheet file="media/intern.bmp" width="2" height="8" ms_per_frame="300">
+	<spritesheet file="media/intern-alt.bmp" width="2" height="8" ms_per_frame="300">
 		<animation index="0">walk_up</animation>
 		<animation index="1">walk_right</animation>
 		<animation index="2">walk_down</animation>

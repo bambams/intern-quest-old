@@ -17,19 +17,16 @@ int main(int argc, char *argv[])
 typedef std::vector<std::string> string_vector;
 
 boost::shared_ptr<BITMAP> bitmap;
-boost::shared_ptr<iq::entity> player(new iq::entity("config/intern.xml"));
-int x, y;
-const boost::shared_ptr<string_vector> animation_keys = player->animation_keys();
+boost::shared_ptr<iq::entity> intern(new iq::entity("config/intern.xml"));
+boost::shared_ptr<iq::entity> intern_alt(new iq::entity("config/intern-alt.xml"));
+int x, y, x_alt;
 
-std::cout << "animation_keys_size=" << animation_keys->size() << std::endl;
+intern->begin_animation("walk_down", app->ms);
+intern_alt->begin_animation("walk_down", app->ms);
 
-for(string_vector::iterator i=animation_keys->begin(); i != animation_keys->end(); i++)
-	std::cout << *i << std::endl;
-
-bitmap = player->begin_animation("walk_down", app->ms)->second->frame(0);
-
-x = (app->scrbuf->w / 2) - (player->w / 2);
-y = (app->scrbuf->h / 2) - (player->h / 2);
+x = (app->scrbuf->w / 2 / 2) - (intern->w / 2);
+y = (app->scrbuf->h / 2 / 2) - (intern->h / 2);
+x_alt = (app->scrbuf->w / 2) + (app->scrbuf->w / 2 / 2) - (intern_alt->w / 2);
 
 		// Main game loop.
 		while(!(key[KEY_Q] || key[KEY_ESC] || iq::app::close_button_pressed))
@@ -43,8 +40,11 @@ y = (app->scrbuf->h / 2) - (player->h / 2);
 /*
  * h4x: testing animation.
  */
-bitmap = player->current_frame(app->ms);
+bitmap = intern->current_frame(app->ms);
 masked_blit(bitmap.get(), app->scrbuf.get(), 0, 0, x, y, bitmap->w, bitmap->h);
+
+bitmap = intern_alt->current_frame(app->ms);
+masked_blit(bitmap.get(), app->scrbuf.get(), 0, 0, x_alt, y, bitmap->w, bitmap->h);
 
 			/*
 			 * Draw. Here we draw the current frame first to a buffer in main
