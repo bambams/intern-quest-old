@@ -44,8 +44,7 @@ namespace iq
 		unsigned int                secs(void) const;
 		bool                        start(void);
 		void                        stop(void);
-		//boost::shared_ptr<char>     to_str(int &) const;
-		std::string                 to_str(void) const;
+		const std::string           to_str(void) const;
 		float                       total_days(void) const;
 		float                       total_hours(void) const;
 		float                       total_mins(void) const;

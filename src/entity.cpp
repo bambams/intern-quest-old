@@ -95,7 +95,7 @@ namespace iq
 		}
 	}
 
-	void entity::load_animation(const unsigned int &i, const TiXmlElement * const animation_element, const boost::shared_ptr<iq::spritesheet> sheet, const boost::shared_ptr<unsigned int> anim_w, const boost::shared_ptr<unsigned int> anim_h, const boost::shared_ptr<unsigned int> sheet_ms_per_frame)
+	void entity::load_animation(const unsigned int i, const TiXmlElement * const animation_element, const boost::shared_ptr<iq::spritesheet> sheet, const boost::shared_ptr<unsigned int> anim_w, const boost::shared_ptr<unsigned int> anim_h, const boost::shared_ptr<unsigned int> sheet_ms_per_frame)
 	{
 		boost::shared_ptr<iq::animation> animation;
 		std::string value;

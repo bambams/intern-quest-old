@@ -6,7 +6,9 @@ namespace iq
 	bool app::close_button_pressed = false;
 
 	app::app(int argc, char *argv[]):
-		ms(0)
+		fts(0),
+		ms(0),
+		total_frames(0)
 	{
 		IQ_APP_TRACE("iq::app::app(int, char *[]) {");
 
@@ -47,6 +49,8 @@ namespace iq
 		iq::app *self = (iq::app *)app;
 
 		sem_post(self->sem.get());
+		self->fts++;
+		self->total_frames++;
 
 		self->ms = self->ms + (timer::MSECS_PER_SEC / self->target_fps);
 
@@ -156,7 +160,7 @@ masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, x - this->security_guard->w,
 		IQ_APP_TRACE("iq::app::initialize(void) {");
 
 		int i, len;
-		const char* msg = "If at first you don't succeed,...you fail";
+		const char * const msg = "If at first you don't succeed,...you fail";
 		const int X = 0, Y = 1;
 		int r[][NUM_DIMENSIONS] = {
 		                              {1024, 768},

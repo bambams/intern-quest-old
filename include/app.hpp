@@ -65,6 +65,7 @@ namespace iq
 
 		std::map<std::string, std::string> argv;
 		boost::shared_ptr<iq::entity> boss;
+		unsigned int fts; // frames this second.
 		boost::shared_ptr<iq::entity> intern;
 		unsigned int ms;
 		bool os_cursor;
@@ -74,6 +75,7 @@ namespace iq
 		gamestate state;
 		unsigned int target_fps;
 		boost::shared_ptr<iq::timer> timer;
+		unsigned int total_frames;
 		bool verbose;
 
 		static bool close_button_pressed;

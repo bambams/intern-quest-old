@@ -92,30 +92,7 @@ namespace iq
 		this->running = false;
 	}
 
-/*	boost::shared_ptr<char> timer::to_str(int &size) const
-	{
-		const char *fmt = "%03d:%02d:%02d:%02d";
-		const int minsize = 12 + 1;
-		int days = this->days();
-		boost::shared_ptr<char> str;
-
-		if((size = snprintf(NULL, 0, fmt, days, this->hours(), this->mins(),
-				this->secs()) + 1) < minsize)
-		{
-			size = minsize;
-		}
-
-		str.reset(new char[size]);
-
-		snprintf(str.get(), size, fmt, days, this->hours(), this->mins(),
-				this->secs());
-
-		str.get()[size] = 0;
-
-		return(str);
-	}*/
-
-	std::string timer::to_str(void) const
+	const std::string timer::to_str(void) const
 	{
 		unsigned int val[] = {this->days(), this->hours(), this->mins(), this->secs()};
 		const char sep = ':';

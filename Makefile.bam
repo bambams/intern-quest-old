@@ -13,7 +13,7 @@ OBJDIR = obj
 SRCDIR = src
 
 # List all .o files here.
-OBJECTS += $(OBJDIR)/animation.o $(OBJDIR)/app.o $(OBJDIR)/entity.o $(OBJDIR)/main.o $(OBJDIR)/spritesheet.o $(OBJDIR)/tile.o $(OBJDIR)/timer.o
+OBJECTS += $(OBJDIR)/animation.o $(OBJDIR)/app.o $(OBJDIR)/entity.o $(OBJDIR)/main.o $(OBJDIR)/spritesheet.o $(OBJDIR)/tile.o $(OBJDIR)/tilemap.o $(OBJDIR)/timer.o
 
 # Some conditional stuff stolen from the SpeedHack Makefile.
 ifndef WINDOWS
@@ -66,6 +66,9 @@ $(OBJDIR)/spritesheet.o: $(SRCDIR)/spritesheet.cpp $(INCDIR)/spritesheet.hpp
 	$(CXX_COMPILE) -o $@ $<
 
 $(OBJDIR)/tile.o: $(SRCDIR)/tile.cpp $(INCDIR)/tile.hpp 
+	$(CXX_COMPILE) -o $@ $<
+
+$(OBJDIR)/tilemap.o: $(SRCDIR)/tilemap.cpp $(INCDIR)/tilemap.hpp 
 	$(CXX_COMPILE) -o $@ $<
 
 $(OBJDIR)/timer.o: $(SRCDIR)/timer.cpp $(INCDIR)/timer.hpp 
