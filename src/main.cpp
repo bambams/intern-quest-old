@@ -42,7 +42,7 @@ bitmap = intern->current_frame(app->ms);
 masked_blit(bitmap.get(), app->scrbuf.get(), 0, 0, x, y, bitmap->w, bitmap->h);
 
 bitmap = intern_alt->current_frame(app->ms);
-masked_blit(bitmap.get(), app->scrbuf.get(), 0, 0, 512/*x_alt*/, y, bitmap->w, bitmap->h);
+masked_blit(bitmap.get(), app->scrbuf.get(), 0, 0, x+bitmap->w/*x_alt*/, y, bitmap->w, bitmap->h);
 
 			/*
 			 * Draw. Here we draw the current frame first to a buffer in main
