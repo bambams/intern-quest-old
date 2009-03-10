@@ -40,6 +40,8 @@ namespace iq
 		const boost::shared_ptr<BITMAP> current_frame(const unsigned int) const;
 		const animation_map::const_iterator current_animation(void) const;
 		void load(const std::string &);
+		const int screen_x(void) const;
+		const int screen_y(void) const;
 	};
 }
 

@@ -9,6 +9,7 @@ namespace iq
 
 	#include <allegro.h>
 	#include <boost/shared_ptr.hpp>
+	#include <entity.hpp>
 	#include <iostream>
 	#include <timer.hpp>
 	#include <map>
@@ -63,9 +64,12 @@ namespace iq
 		enum gamestate {SETUP, GAMEPLAY, SCRIPTED, CREDITS};
 
 		std::map<std::string, std::string> argv;
+		boost::shared_ptr<iq::entity> boss;
+		boost::shared_ptr<iq::entity> intern;
 		unsigned int ms;
 		bool os_cursor;
 		boost::shared_ptr<BITMAP> scrbuf;
+		boost::shared_ptr<iq::entity> security_guard;
 		boost::shared_ptr<sem_t> sem;
 		gamestate state;
 		unsigned int target_fps;

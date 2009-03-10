@@ -17,6 +17,9 @@ namespace iq
 		this->parse_args(argc, argv);
 		this->initialize();
 
+		this->boss.reset(new iq::entity("config/boss.xml"));
+		this->intern.reset(new iq::entity("config/intern.xml"));
+		this->security_guard.reset(new iq::entity("config/security.xml"));
 		this->timer.reset(new iq::timer());
 
 		/*
@@ -89,6 +92,35 @@ namespace iq
 	void app::draw_gameplay(void)
 	{
 		IQ_APP_TRACE("iq::app::draw_gameplay() {");
+
+/*
+ * h4x: temporary just to see the screen dimensions and center.
+ */
+rectfill(this->scrbuf.get(), 0, 0, this->scrbuf->w, this->scrbuf->h, WHITE);
+
+for(int i=0; i<3; i++)
+{
+	hline(this->scrbuf.get(), 0, this->scrbuf->h / 2 - 1 + i, this->scrbuf->w, RED);
+	vline(this->scrbuf.get(), this->scrbuf->w / 2 - 1 + i, 0, this->scrbuf->h, RED);
+	rect(this->scrbuf.get(), 0+i, 0+i, this->scrbuf->w - 1 - i, this->scrbuf->h - 1 - i, RED);
+}
+
+/*
+ * h4x: temporary just to draw animations and have something pretty to look
+ * at. ^_^
+ */
+boost::shared_ptr<BITMAP> bitmap;
+int x = (this->scrbuf->w / 2) - (this->intern->w / 2);
+int y = (this->scrbuf->h / 2) - (this->intern->h / 2);
+
+bitmap = this->boss->current_frame(this->ms);
+masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, x + this->boss->w, y, bitmap->w, bitmap->h);
+
+bitmap = this->intern->current_frame(this->ms);
+masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, x, y, bitmap->w, bitmap->h);
+
+bitmap = this->security_guard->current_frame(this->ms);
+masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, x - this->security_guard->w, y, bitmap->w, bitmap->h);
 
 		//textprintf_ex(this->scrbuf.get(), font, 20, 20, WHITE, -1,
 				//"frame-count: %d",
@@ -318,6 +350,14 @@ namespace iq
 		case GAMEPLAY:
 			this->timer->reset();
 			this->timer->start();
+
+/*
+ * h4x: just demonstrating animations. This should be removed eventually
+ * (unless it turns out to be correct :P).
+ */
+this->boss->begin_animation("walk_right", this->ms);
+this->intern->begin_animation("walk_down", this->ms);
+this->security_guard->begin_animation("walk_left", this->ms);
 
 			this->m_drawptr = &app::draw_gameplay;
 			this->m_logicptr = &app::logic_gameplay;

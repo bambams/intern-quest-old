@@ -17,9 +17,10 @@ namespace iq
 	private:
 	protected:
 		boost::shared_ptr<BITMAP> m_bitmap;
-		int m_id;
 	public:
 		tile(boost::shared_ptr<BITMAP>);
+
+		const boost::shared_ptr<BITMAP> bitmap(void) const;
 	};
 }
 

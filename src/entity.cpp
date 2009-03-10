@@ -10,6 +10,7 @@ namespace iq
 		x(0),
 		y(0)
 	{
+		this->m_current_animation_iterator = this->m_animations->end();
 		this->load(path);
 	}
 
@@ -20,6 +21,7 @@ namespace iq
 		x(0),
 		y(0)
 	{
+		this->m_current_animation_iterator = this->m_animations->end();
 		this->load(path);
 	}
 
@@ -48,6 +50,9 @@ namespace iq
 
 	const entity::animation_map::const_iterator entity::current_animation(void) const
 	{
+		if(this->m_current_animation_iterator == this->m_animations->end())
+			throw std::logic_error("No entity animation has been started yet. Cannot get current animation.");
+
 		return(this->m_current_animation_iterator);
 	}
 
@@ -166,6 +171,16 @@ namespace iq
 
 			element = element->NextSiblingElement("animation");
 		}
+	}
+
+	const int entity::screen_x(void) const
+	{
+		throw std::logic_error("iq::entity::screen_x not implemented yet.");
+	}
+
+	const int entity::screen_y(void) const
+	{
+		throw std::logic_error("iq::entity::screen_y not implemented yet.");
 	}
 }
 
