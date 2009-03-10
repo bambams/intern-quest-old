@@ -99,7 +99,7 @@ namespace iq
 				//"fps: %d",
 				//g_frames_per_second);
 
-		blit(this->scrbuf.get(), screen, 0, 0, 0, 0, 800, 600);
+		blit(this->scrbuf.get(), screen, 0, 0, 0, 0, this->scrbuf->w, this->scrbuf->h);
 		clear(this->scrbuf.get());
 
 		IQ_APP_TRACE("} //iq::app::draw_gameplay()");
