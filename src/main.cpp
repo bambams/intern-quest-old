@@ -17,10 +17,12 @@ int main(int argc, char *argv[])
 boost::shared_ptr<BITMAP> bitmap;
 boost::shared_ptr<iq::entity> intern(new iq::entity("config/intern.xml"));
 boost::shared_ptr<iq::entity> intern_alt(new iq::entity("config/intern-alt.xml"));
+boost::shared_ptr<iq::entity> intern_alt2(new iq::entity("config/intern-alt2.xml"));
 int x, y, x_alt;
 
 intern->begin_animation("walk_down", app->ms);
 intern_alt->begin_animation("walk_down", app->ms);
+intern_alt2->begin_animation("walk_down", app->ms);
 
 x = (app->scrbuf->w / 2 / 2) - (intern->w / 2);
 y = (app->scrbuf->h / 2 / 2) - (intern->h / 2);
@@ -43,6 +45,9 @@ masked_blit(bitmap.get(), app->scrbuf.get(), 0, 0, x, y, bitmap->w, bitmap->h);
 
 bitmap = intern_alt->current_frame(app->ms);
 masked_blit(bitmap.get(), app->scrbuf.get(), 0, 0, x+bitmap->w/*x_alt*/, y, bitmap->w, bitmap->h);
+
+bitmap = intern_alt2->current_frame(app->ms);
+masked_blit(bitmap.get(), app->scrbuf.get(), 0, 0, x+bitmap->w+bitmap->w/*x_alt*/, y, bitmap->w, bitmap->h);
 
 			/*
 			 * Draw. Here we draw the current frame first to a buffer in main
