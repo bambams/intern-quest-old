@@ -17,10 +17,10 @@ namespace iq
 	{
 	private:
 	protected:
-		unsigned int ms_per_frame;
-		unsigned int last_ms;
-		unsigned int last_frame;
-		std::vector< boost::shared_ptr<BITMAP> > frames;
+		unsigned int m_ms_per_frame;
+		unsigned int m_last_ms;
+		unsigned int m_last_frame;
+		std::vector< boost::shared_ptr<BITMAP> > m_frames;
 
 		void check_frame_index(const unsigned int) const;
 		void check_ms(const unsigned int) const;
@@ -37,13 +37,13 @@ namespace iq
 		const boost::shared_ptr<BITMAP> begin(const unsigned int);
 		const boost::shared_ptr<BITMAP> begin(const unsigned int, const unsigned int);
 		const boost::shared_ptr<BITMAP> frame(const unsigned int) const;
-		const unsigned int height(void) const;
+		const unsigned int h(void) const;
 		void load(const boost::shared_ptr<iq::spritesheet>, const unsigned int);
 		void load(const unsigned int, const boost::shared_ptr<iq::spritesheet>, const unsigned int);
 		void load(const boost::shared_ptr<iq::spritesheet>, const unsigned int, const unsigned int, const unsigned int);
 		void load(const unsigned int, const boost::shared_ptr<iq::spritesheet>, const unsigned int, const unsigned int, const unsigned int);
 		const boost::shared_ptr<BITMAP> next(const unsigned int);
-		const unsigned int width(void) const;
+		const unsigned int w(void) const;
 
 		const boost::shared_ptr<BITMAP> operator[](const unsigned int) const;
 	};

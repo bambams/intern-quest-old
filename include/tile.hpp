@@ -8,6 +8,7 @@ namespace iq
 }
 
 	#include <animation.hpp>
+	#include <boost/shared_ptr.hpp>
 
 namespace iq
 {
@@ -15,9 +16,10 @@ namespace iq
 	{
 	private:
 	protected:
-		
+		boost::shared_ptr<BITMAP> m_bitmap;
+		int m_id;
 	public:
-		
+		tile(boost::shared_ptr<BITMAP>);
 	};
 }
 

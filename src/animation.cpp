@@ -4,28 +4,28 @@
 namespace iq
 {
 	animation::animation(const boost::shared_ptr<iq::spritesheet> sheet, const unsigned int i):
-		ms_per_frame(0),
-		last_ms(0)
+		m_ms_per_frame(0),
+		m_last_ms(0)
 	{
 		this->load(sheet, i);
 	}
 
 	animation::animation(const unsigned int ms_per_frame, const boost::shared_ptr<iq::spritesheet> sheet, const unsigned int i):
-		last_ms(0)
+		m_last_ms(0)
 	{
 		this->set_ms_per_frame(ms_per_frame);
 		this->load(ms_per_frame, sheet, i);
 	}
 
 	animation::animation(const boost::shared_ptr<iq::spritesheet> sheet, const unsigned int i, const unsigned int anim_w, const unsigned int anim_h):
-		ms_per_frame(0),
-		last_ms(0)
+		m_ms_per_frame(0),
+		m_last_ms(0)
 	{
 		this->load(sheet, i, anim_w, anim_h);
 	}
 
 	animation::animation(const unsigned int ms_per_frame, const boost::shared_ptr<iq::spritesheet> sheet, const unsigned int i, const unsigned int anim_w, const unsigned int anim_h):
-		last_ms(0)
+		m_last_ms(0)
 	{
 		this->set_ms_per_frame(ms_per_frame);
 		this->load(ms_per_frame, sheet, i, anim_w, anim_h);
@@ -33,19 +33,19 @@ namespace iq
 
 	void animation::check_frame_index(const unsigned int i) const
 	{
-		if(i >= this->frames.size())
+		if(i >= this->m_frames.size())
 			throw std::range_error("Animation frame index out of range.");
 	}
 
 	void animation::check_ms(const unsigned int ms) const
 	{
-		if(this->last_ms > ms)
+		if(this->m_last_ms > ms)
 			throw std::invalid_argument("The current time exceeds the last animation frame time.");
 	}
 
 	void animation::check_ms_per_frame(void) const
 	{
-		if(this->ms_per_frame == 0)
+		if(this->m_ms_per_frame == 0)
 			throw std::logic_error("iq::animation::ms_per_frame is uninitialized.");
 	}
 
@@ -54,7 +54,7 @@ namespace iq
 		this->check_ms_per_frame();
 		this->set_last_ms(ms);
 
-		return(this->frames[0]);
+		return(this->m_frames[0]);
 	}
 
 	const boost::shared_ptr<BITMAP> animation::begin(const unsigned int ms_per_frame, const unsigned int ms)
@@ -62,19 +62,19 @@ namespace iq
 		this->set_ms_per_frame(ms_per_frame);
 		this->set_last_ms(ms);
 
-		return(this->frames[0]);
+		return(this->m_frames[0]);
 	}
 
 	const boost::shared_ptr<BITMAP> animation::frame(const unsigned int i) const
 	{
 		this->check_frame_index(i);
 
-		return(this->frames[i]);
+		return(this->m_frames[i]);
 	}
 
-	const unsigned int animation::height(void) const
+	const unsigned int animation::h(void) const
 	{
-		return(this->frames[0]->h);
+		return(this->m_frames[0]->h);
 	}
 
 	void animation::load(const boost::shared_ptr<iq::spritesheet> sheet, const unsigned int i)
@@ -106,7 +106,7 @@ namespace iq
 		if(w == 0 || h == 0)
 			throw std::invalid_argument("Spritesheet has invalid dimensions for an animation.");
 
-		this->frames.resize(sheet->w);
+		this->m_frames.resize(sheet->w);
 		y = h * i;
 
 		for(unsigned int j=0, x=0; j<sheet->w; j++, x += w)
@@ -118,7 +118,7 @@ namespace iq
 
 			stretch_blit(sheet->bitmap.get(), frame.get(), x, y, w, h, 0, 0, anim_w, anim_h);
 
-			this->frames[j] = frame;
+			this->m_frames[j] = frame;
 		}
 	}
 
@@ -136,18 +136,18 @@ namespace iq
 		this->check_ms_per_frame();
 		this->check_ms(ms);
 
-		past = (ms - this->last_ms) / this->ms_per_frame;
-		i = (this->last_frame + past) % this->frames.size();
+		past = (ms - this->m_last_ms) / this->m_ms_per_frame;
+		i = (this->m_last_frame + past) % this->m_frames.size();
 
-printf("ms=%d    last_ms=%d    past=%d    i=%d\n", ms, this->last_ms, past, i);
+printf("ms=%d    last_ms=%d    past=%d    i=%d\n", ms, this->m_last_ms, past, i);
 
-		if(i != this->last_frame)
+		if(i != this->m_last_frame)
 		{
 			this->set_last_ms(ms);
 			this->set_last_frame(i);
 		}
 
-		return(this->frames[i]);
+		return(this->m_frames[i]);
 	}
 
 	const boost::shared_ptr<BITMAP> animation::operator[](const unsigned int i) const
@@ -158,14 +158,14 @@ printf("ms=%d    last_ms=%d    past=%d    i=%d\n", ms, this->last_ms, past, i);
 	void animation::set_last_frame(const unsigned int i)
 	{
 		this->check_frame_index(i);
-		this->last_frame = i;
+		this->m_last_frame = i;
 	}
 
 	void animation::set_last_ms(const unsigned int ms)
 	{
 		this->check_ms_per_frame();
 		this->check_ms(ms);
-		this->last_ms = ms;
+		this->m_last_ms = ms;
 	}
 
 	void animation::set_ms_per_frame(const unsigned int ms_per_frame)
@@ -173,12 +173,12 @@ printf("ms=%d    last_ms=%d    past=%d    i=%d\n", ms, this->last_ms, past, i);
 		if(ms_per_frame == 0)
 			throw std::range_error("0 is not a valid value for iq::animation::ms_per_frame.");
 
-		this->ms_per_frame = ms_per_frame;
+		this->m_ms_per_frame = ms_per_frame;
 	}
 
-	const unsigned int animation::width(void) const
+	const unsigned int animation::w(void) const
 	{
-		return(this->frames[0]->w);
+		return(this->m_frames[0]->w);
 	}
 }
 

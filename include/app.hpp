@@ -34,7 +34,9 @@ namespace iq
             std::cout << msg << std::endl;    \
 		}while(0)
 */
+	#define BLUE makecol(0, 0, 255)
 	#define NUM_DIMENSIONS 2
+	#define RED makecol(255, 0, 0)
 	#define WHITE makecol(255, 255, 255)
 
 namespace iq
@@ -54,9 +56,8 @@ namespace iq
 		// Method pointer for draw and logic.
 		typedef void (app::*void_method_void)(void);
 
-		void_method_void drawptr;
-		void_method_void logicptr;
-
+		void_method_void m_drawptr;
+		void_method_void m_logicptr;
 	public:
 		// `state' wouldn't work for a typename and variable name so gamestate is what it became...
 		enum gamestate {SETUP, GAMEPLAY, SCRIPTED, CREDITS};

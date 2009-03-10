@@ -16,6 +16,9 @@
 	#include <spritesheet.hpp>
 	#include <stdexcept>
 
+	#define BLUE makecol(0, 0, 255)
+	#define RED makecol(255, 0, 0)
+	#define WHITE makecol(255, 255, 255)
 	#define NUM_DIMENSIONS 2
 
 int main(int, char *[]);

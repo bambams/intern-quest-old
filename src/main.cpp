@@ -36,11 +36,13 @@ y = (app->scrbuf->h / 2) - (intern->h / 2);
 			// Logic loop. Changes to the game happen here.
 			app->logic();
 
+rectfill(app->scrbuf.get(), 0, 0, app->scrbuf->w, app->scrbuf->h, WHITE);
+
 for(int i=0; i<3; i++)
 {
-	hline(app->scrbuf.get(), 0, app->scrbuf->h / 2 - 1 + i, app->scrbuf->w, makecol(155, 0, 0));
-	vline(app->scrbuf.get(), app->scrbuf->w / 2 - 1 + i, 0, app->scrbuf->h, makecol(155, 0, 0));
-	rect(app->scrbuf.get(), 0+i, 0+i, app->scrbuf->w - 1 - i, app->scrbuf->h - 1 - i, makecol(155, 0, 0));
+	hline(app->scrbuf.get(), 0, app->scrbuf->h / 2 - 1 + i, app->scrbuf->w, RED);
+	vline(app->scrbuf.get(), app->scrbuf->w / 2 - 1 + i, 0, app->scrbuf->h, RED);
+	rect(app->scrbuf.get(), 0+i, 0+i, app->scrbuf->w - 1 - i, app->scrbuf->h - 1 - i, RED);
 }
 
 /*

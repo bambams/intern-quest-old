@@ -23,8 +23,8 @@ namespace iq
 		typedef std::map<std::string, boost::shared_ptr<iq::animation> > animation_map;
 	private:
 	protected:
-		animation_map::const_iterator current_animation_iterator;
-		boost::shared_ptr<animation_map> animations;
+		animation_map::const_iterator m_current_animation_iterator;
+		boost::shared_ptr<animation_map> m_animations;
 
 		void load_animation(const unsigned int &, const TiXmlElement * const, const boost::shared_ptr<iq::spritesheet>, const boost::shared_ptr<unsigned int>, const boost::shared_ptr<unsigned int>, const boost::shared_ptr<unsigned int>);
 		void load_spritesheet(const TiXmlElement * const);

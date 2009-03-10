@@ -4,7 +4,7 @@
 namespace iq
 {
 	entity::entity(const std::string &path):
-		animations(new entity::animation_map()),
+		m_animations(new entity::animation_map()),
 		h(0),
 		w(0),
 		x(0),
@@ -14,7 +14,7 @@ namespace iq
 	}
 
 	entity::entity(const std::string &path, const unsigned int w, const unsigned int h):
-		animations(new entity::animation_map()),
+		m_animations(new entity::animation_map()),
 		h(h),
 		w(w),
 		x(0),
@@ -26,9 +26,9 @@ namespace iq
 	const boost::shared_ptr< std::vector<std::string> > entity::animation_keys(void) const
 	{
 		int j=0;
-		boost::shared_ptr< std::vector<std::string> > keys(new std::vector<std::string>(this->animations->size()));
+		boost::shared_ptr< std::vector<std::string> > keys(new std::vector<std::string>(this->m_animations->size()));
 
-		for(entity::animation_map::iterator i=this->animations->begin(); i != this->animations->end(); i++)
+		for(entity::animation_map::iterator i=this->m_animations->begin(); i != this->m_animations->end(); i++)
 			(*keys)[j++] = i->first;
 
 		return(keys);
@@ -36,19 +36,19 @@ namespace iq
 
 	const entity::animation_map::const_iterator entity::begin_animation(const std::string &key, const unsigned int ms)
 	{
-		animation_map::const_iterator animation_iterator = this->animations->find(key);
+		animation_map::const_iterator animation_iterator = this->m_animations->find(key);
 
-		if(animation_iterator == this->animations->end())
+		if(animation_iterator == this->m_animations->end())
 			throw std::range_error("Invalid animation key '" + key + "'.");
 
-		this->current_animation_iterator = animation_iterator;
+		this->m_current_animation_iterator = animation_iterator;
 
-		return(this->current_animation_iterator);
+		return(this->m_current_animation_iterator);
 	}
 
 	const entity::animation_map::const_iterator entity::current_animation(void) const
 	{
-		return(this->current_animation_iterator);
+		return(this->m_current_animation_iterator);
 	}
 
 	const boost::shared_ptr<BITMAP> entity::current_frame(const unsigned int ms) const
@@ -83,7 +83,7 @@ namespace iq
 
 		if(this->h == 0 && this->w == 0)
 		{
-			bitmap = this->animations->begin()->second->frame(0);
+			bitmap = this->m_animations->begin()->second->frame(0);
 
 			this->h = bitmap->h;
 			this->w = bitmap->w;
@@ -118,7 +118,7 @@ namespace iq
 		if(value.length() == 0)
 			throw std::runtime_error("Entity XML animation node text node (key/name) is empty.");
 
-		(*this->animations)[value] = animation;
+		(*this->m_animations)[value] = animation;
 	}
 
 	void entity::load_spritesheet(const TiXmlElement * const spritesheet_element)

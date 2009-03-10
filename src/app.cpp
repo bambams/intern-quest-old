@@ -74,7 +74,7 @@ namespace iq
 	{
 		IQ_APP_TRACE("iq::app::draw() {");
 
-		(this->*(this->drawptr))();
+		(this->*(this->m_drawptr))();
 
 		IQ_APP_TRACE("} //iq::app::draw()");
 	}
@@ -93,7 +93,7 @@ namespace iq
 		//textprintf_ex(this->scrbuf.get(), font, 20, 20, WHITE, -1,
 				//"frame-count: %d",
 				//g_total_frames);
-		textprintf_ex(this->scrbuf.get(), font, 20, 40, WHITE, -1,
+		textprintf_ex(this->scrbuf.get(), font, 20, 40, BLUE, -1,
 				"time: %s", this->timer->to_str().c_str());
 		//textprintf_ex(app->scrbuf.get(), font, 20, 60, WHITE, -1,
 				//"fps: %d",
@@ -237,7 +237,7 @@ namespace iq
 	{
 		IQ_APP_TRACE("iq::app::logic() {");
 
-		(this->*(this->logicptr))();
+		(this->*(this->m_logicptr))();
 
 		IQ_APP_TRACE("} //iq::app::logic()");
 	}
@@ -312,27 +312,27 @@ namespace iq
 		case CREDITS:
 			this->timer->stop();
 
-			this->drawptr = &app::draw_credits;
-			this->logicptr = &app::logic_credits;
+			this->m_drawptr = &app::draw_credits;
+			this->m_logicptr = &app::logic_credits;
 			break;
 		case GAMEPLAY:
 			this->timer->reset();
 			this->timer->start();
 
-			this->drawptr = &app::draw_gameplay;
-			this->logicptr = &app::logic_gameplay;
+			this->m_drawptr = &app::draw_gameplay;
+			this->m_logicptr = &app::logic_gameplay;
 			break;
 		case SCRIPTED:
 			this->timer->stop();
 
-			this->drawptr = &app::draw_scripted;
-			this->logicptr = &app::logic_scripted;
+			this->m_drawptr = &app::draw_scripted;
+			this->m_logicptr = &app::logic_scripted;
 			break;
 		case SETUP:
 			this->timer->stop();
 
-			this->drawptr = &app::draw_setup;
-			this->logicptr = &app::logic_setup;
+			this->m_drawptr = &app::draw_setup;
+			this->m_logicptr = &app::logic_setup;
 			break;
 		}
 	}
