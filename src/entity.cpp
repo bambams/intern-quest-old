@@ -58,6 +58,7 @@ namespace iq
 
 	void entity::load(const std::string &path)
 	{
+		boost::shared_ptr<BITMAP> bitmap;
 		boost::shared_ptr<TiXmlDocument> doc(new TiXmlDocument(path));
 		unsigned int w, h;
 		TiXmlElement *root = NULL;
@@ -79,6 +80,14 @@ namespace iq
 			throw std::runtime_error("Entity XML root element missing spritesheet element.");
 
 		this->load_spritesheet(element);
+
+		if(this->h == 0 && this->w == 0)
+		{
+			bitmap = this->animations->begin()->second->frame(0);
+
+			this->h = bitmap->h;
+			this->w = bitmap->w;
+		}
 	}
 
 	void entity::load_animation(const unsigned int &i, const TiXmlElement * const animation_element, const boost::shared_ptr<iq::spritesheet> sheet, const boost::shared_ptr<unsigned int> anim_w, const boost::shared_ptr<unsigned int> anim_h, const boost::shared_ptr<unsigned int> sheet_ms_per_frame)
