@@ -6,6 +6,9 @@ namespace iq
 	class tile;
 }
 
+#include <boost/shared_ptr.hpp>
+#include <allegro.h>
+
 namespace iq
 {
 	class tile
@@ -17,6 +20,6 @@ namespace iq
 			tile(boost::shared_ptr<BITMAP>image, bool Passability);
 			void passable(bool Passability);
 			bool passable(){ return isPassable;}
-	}
+	};
 }
 #endif

@@ -9,9 +9,9 @@ namespace iq
 		this->isPassable = Passability;
 	}
 
-	const boost::shared_ptr<BITMAP> tile::tileImage(void) const
+	void tile::passable(bool Passability)
 	{
-		return(this->m_bitmap);
+		this->isPassable = Passability;
 	}
 }
 
