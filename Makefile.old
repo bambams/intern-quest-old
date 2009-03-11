@@ -63,7 +63,7 @@ ifdef WINDOWS
 
 		ifdef MINGDIR
 			# Link with pthreads for Win32's GNU library (which I believe applies to GNU ports like MinGW).
-			LIBS += -pthreadGC
+			LIBS += -lpthreadGC2
 		else
 			# Link with pthreads for Win32's Visual Studio library.
 			LIBS += -pthreadVC
@@ -76,7 +76,7 @@ ifdef WINDOWS
 
 		ifdef MINGDIR
 			# Link with pthreads for Win32's GNU library (which I believe applies to GNU ports like MinGW).
-			LIBS += -pthreadGC
+			LIBS += -lpthreadGC2
 		else
 			# Link with pthreads for Win32's Visual Studio library.
 			LIBS += -pthreadVC

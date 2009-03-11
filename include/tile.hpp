@@ -1,28 +1,22 @@
-
-#ifndef IQ_TILE_HPP
-	#define IQ_TILE_HPP
+#ifndef TILE_HPP
+#define TILE_HPP
 
 namespace iq
 {
 	class tile;
 }
 
-	#include <animation.hpp>
-	#include <boost/shared_ptr.hpp>
-
 namespace iq
 {
 	class tile
 	{
-	private:
-	protected:
-		boost::shared_ptr<BITMAP> m_bitmap;
-	public:
-		tile(boost::shared_ptr<BITMAP>);
-
-		const boost::shared_ptr<BITMAP> bitmap(void) const;
-	};
+		protected:
+			boost::shared_ptr<BITMAP> tileImage;
+			bool isPassable;
+		public:
+			tile(boost::shared_ptr<BITMAP>image, bool Passability);
+			void passable(bool Passability);
+			bool passable(){ return isPassable;}
+	}
 }
-
 #endif
-

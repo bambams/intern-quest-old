@@ -18,12 +18,17 @@ namespace iq
 	{
 	private:
 	protected:
+		const std::string xmlPath;
 	public:
-		std::vector< std::vector<iq::tile> > tiles;
+		
+
+
 
 		tilemap(const std::string &);
 
+		const unsigned int h(void) const;
 		void load(const std::string &);
+		const unsigned int w(void) const;
 	};
 }
 

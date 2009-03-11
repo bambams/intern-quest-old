@@ -3,12 +3,13 @@
 
 namespace iq
 {
-	tile::tile(boost::shared_ptr<BITMAP> bitmap)
+	tile::tile(boost::shared_ptr<BITMAP> img, bool Passability)
 	{
-		this->m_bitmap = bitmap;
+		this->tileImage = img;
+		this->isPassable = Passability;
 	}
 
-	const boost::shared_ptr<BITMAP> tile::bitmap(void) const
+	const boost::shared_ptr<BITMAP> tile::tileImage(void) const
 	{
 		return(this->m_bitmap);
 	}
