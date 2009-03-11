@@ -62,6 +62,15 @@ namespace iq
 
 		this->m_current_animation_iterator = animation_iterator;
 
+if(key == "walk_up")
+	this->m_facing = entity::FACING_UP;
+else if(key == "walk_right")
+	this->m_facing = entity::FACING_RIGHT;
+else if(key == "walk_down")
+	this->m_facing = entity::FACING_DOWN;
+else if(key == "walk_left")
+	this->m_facing = entity::FACING_LEFT;
+
 		return(this->m_current_animation_iterator);
 	}
 
@@ -76,6 +85,11 @@ namespace iq
 	const boost::shared_ptr<BITMAP> entity::current_frame(const unsigned int ms) const
 	{
 		return(this->current_animation()->second->next(ms));
+	}
+
+	const entity::facing_direction entity::facing(void) const
+	{
+		return(this->m_facing);
 	}
 
 	const unsigned int entity::h(void) const
@@ -101,11 +115,12 @@ namespace iq
 	{
 		boost::shared_ptr<BITMAP> bitmap;
 		const TiXmlElement *element = NULL;
+		const char *str = NULL;
 
-		if(entity->Attribute("name") == NULL)
+		if((str = entity->Attribute("name")) == NULL)
 			throw std::runtime_error("Entity XML missing required name attribute.");
 
-		this->m_name = entity->Attribute("name");
+		this->m_name = str;
 		entity->Attribute("height", (int *)&this->m_h);
 		entity->Attribute("width", (int *)&m_w);
 		entity->Attribute("speed", (int *)&m_speed);

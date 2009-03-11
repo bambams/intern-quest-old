@@ -14,6 +14,21 @@ namespace iq
 	#include <string>
 	#include <sstream>
 
+	/*
+	 * MACRO to output trace information to help debug where the timer class
+	 * goes wrong. If it's going wrong. :P To enable, uncomment the
+	 * do...while(0), which is required to prevent subtle bugs, and add a
+	 * backslash (\) to the end of the define line to continue the MACRO onto
+	 * the do...while lines. You can Google for ways to avoid MACRO bugs or
+	 * search www.allegro.cc, which is where I picked up the tip.
+	 */
+	#define IQ_TIMER_TRACE(msg)               
+/*		do                                    \
+		{                                     \
+			std::cout << msg << std::endl;    \
+		}while(0)
+*/
+
 namespace iq
 {
 	class timer
@@ -35,7 +50,6 @@ namespace iq
 		int ticks;
 
 		timer(void);
-		~timer(void);
 
 		unsigned int                days(void) const;
 		unsigned int                hours(void) const;

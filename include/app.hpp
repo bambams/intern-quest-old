@@ -34,9 +34,10 @@ namespace iq
 	#define IQ_APP_TRACE(msg)                 
 /*		do                                    \
 		{                                     \
-            std::cout << msg << std::endl;    \
+			std::cout << msg << std::endl;    \
 		}while(0)
 */
+
 	#define BLUE makecol(0, 0, 255)
 	#define NUM_DIMENSIONS 2
 	#define RED makecol(255, 0, 0)
@@ -72,12 +73,13 @@ namespace iq
 		enum gamestate {SETUP, GAMEPLAY, SCRIPTED, CREDITS};
 
 		std::map<std::string, std::string> argv;
+//		boost::shared_ptr<iq::tilemap> demo_map;
 		std::map<std::string, boost::shared_ptr<iq::entity> > entities;
 		unsigned int fts; // frames this second.
 		unsigned int ms;
 		bool os_cursor;
+		boost::shared_ptr<iq::entity> player;
 		boost::shared_ptr<BITMAP> scrbuf;
-//		boost::shared_ptr<iq::tilemap> demo_map;
 		boost::shared_ptr<sem_t> sem;
 		gamestate state;
 		unsigned int target_fps;

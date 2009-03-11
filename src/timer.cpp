@@ -16,10 +16,6 @@ namespace iq
 		this->ticks = 0;
 	}
 	
-	timer::~timer(void)
-	{
-	}
-	
 	unsigned int timer::after_days(const unsigned int total_secs)
 	{
 		return(total_secs - (timer::days(total_secs) * timer::SECS_PER_DAY));
@@ -139,7 +135,11 @@ namespace iq
 	
 	void timer::tick(void *self)
 	{
+		IQ_TIMER_TRACE("timer::tick(void *) {");
+
 		((timer *)self)->ticks++;
+
+		IQ_TIMER_TRACE("} //timer::tick(void *)");
 	}
 	END_OF_FUNCTION(timer::tick)
 }

@@ -20,9 +20,17 @@ namespace iq
 		this->target_fps = 30;
 		this->verbose = false;
 
-		this->parse_args(argc, argv);
-		this->initialize();
-		this->load();
+		try
+		{
+			this->parse_args(argc, argv);
+			this->initialize();
+			this->load();
+		}
+		catch(...)
+		{
+			this->deinitialize();
+			throw;
+		}
 
 //		this->demo_map.reset(new iq::tilemap("config/tilemap.xml"));
 
@@ -298,16 +306,25 @@ for(std::map<std::string, boost::shared_ptr<iq::entity> >::iterator i=this->enti
 	{
 		boost::shared_ptr<iq::entity> entity;
 		const TiXmlElement *element = NULL;
-		const char *file = NULL;
+		std::string player;
+		const char *str = NULL;
+
+		if((str = entities->Attribute("player")) == NULL)
+			throw std::runtime_error("Entities XML element missing required attribute 'player'.");
+		else
+			player = str;
 
 		if((element = entities->FirstChildElement("entity")) != NULL)
 		{
 			do
 			{
-				if((file = element->Attribute("file")) != NULL)
-					entity.reset(new iq::entity(file));
+				if((str = element->Attribute("file")) != NULL)
+					entity.reset(new iq::entity(str));
 				else
 					entity.reset(new iq::entity(element));
+
+				if(entity->name() == player)
+					this->player = entity;
 
 				if(this->entities.find(entity->name()) != this->entities.end())
 					throw std::runtime_error("Dupliciate entity '" + entity->name() + "' found in XML. Duplicates are not allowed.");
@@ -336,6 +353,18 @@ for(std::map<std::string, boost::shared_ptr<iq::entity> >::iterator i=this->enti
 	void app::logic_gameplay(void)
 	{
 		IQ_APP_TRACE("iq::app::logic_gameplay() {");
+
+/*
+ * h4x: QnD for a demonstration. :D
+ */
+if(key[KEY_UP] && this->player->facing() != entity::FACING_UP)
+	this->player->begin_animation("walk_up", this->ms);
+if(key[KEY_RIGHT] && this->player->facing() != entity::FACING_RIGHT)
+	this->player->begin_animation("walk_right", this->ms);
+if(key[KEY_DOWN] && this->player->facing() != entity::FACING_DOWN)
+	this->player->begin_animation("walk_down", this->ms);
+if(key[KEY_LEFT] && this->player->facing() != entity::FACING_LEFT)
+	this->player->begin_animation("walk_left", this->ms);
 
 /*
 		g_total_frames++;
