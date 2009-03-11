@@ -276,7 +276,6 @@ for(std::map<std::string, boost::shared_ptr<iq::entity> >::iterator i=this->enti
 	{
 		boost::shared_ptr<TiXmlDocument> doc(new TiXmlDocument(this->m_file));
 		const TiXmlElement *root = NULL;
-		const TiXmlElement *element = NULL;
 
 		if(!doc->LoadFile())
 			throw std::runtime_error("Failed to load app from XML document '" + this->m_file + "'.");
@@ -284,7 +283,14 @@ for(std::map<std::string, boost::shared_ptr<iq::entity> >::iterator i=this->enti
 		if((root = doc->RootElement()) == NULL)
 			throw std::runtime_error("App XML missing root element.");
 
-		if((element = root->FirstChildElement("entities")) != NULL)
+		this->load(root);
+	}
+
+	void app::load(const TiXmlElement * const app)
+	{
+		const TiXmlElement *element = NULL;
+
+		if((element = app->FirstChildElement("entities")) != NULL)
 			this->load_entities(element);
 	}
 

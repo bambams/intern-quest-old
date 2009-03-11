@@ -98,6 +98,7 @@ namespace iq
 		void draw_credits(void);
 		void initialize(void);
 		void load(void);
+		void load(const TiXmlElement * const);
 		void logic(void);
 		void logic_setup(void);
 		void logic_gameplay(void);
