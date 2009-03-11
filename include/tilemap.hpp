@@ -18,15 +18,12 @@ namespace iq
 	{
 	private:
 	protected:
-		unsigned int m_w, m_h;
 	public:
 		std::vector< std::vector<iq::tile> > tiles;
 
 		tilemap(const std::string &);
 
-		const unsigned int h(void) const;
 		void load(const std::string &);
-		const unsigned int w(void) const;
 	};
 }
 
