@@ -32,7 +32,7 @@ namespace iq
 			throw;
 		}
 
-//		this->demo_map.reset(new iq::tilemap("config/tilemap.xml"));
+		this->demo_map.reset(new iq::tilemap("config/tilemap.xml"));
 
 		this->timer.reset(new iq::timer());
 

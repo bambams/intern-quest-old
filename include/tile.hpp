@@ -17,7 +17,7 @@ namespace iq
 			boost::shared_ptr<BITMAP> tileImage;
 			bool isPassable;
 		public:
-			tile(boost::shared_ptr<BITMAP>image, bool Passability);
+			tile(boost::shared_ptr<BITMAP> image, bool Passability);
 			void passable(bool Passability);
 			bool passable(){ return isPassable;}
 	};

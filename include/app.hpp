@@ -73,7 +73,7 @@ namespace iq
 		enum gamestate {SETUP, GAMEPLAY, SCRIPTED, CREDITS};
 
 		std::map<std::string, std::string> argv;
-//		boost::shared_ptr<iq::tilemap> demo_map;
+		boost::shared_ptr<iq::tilemap> demo_map;
 		std::map<std::string, boost::shared_ptr<iq::entity> > entities;
 		unsigned int fts; // frames this second.
 		unsigned int ms;
