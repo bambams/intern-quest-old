@@ -26,7 +26,7 @@ namespace iq
 			unsigned int numLayers;
 			unsigned int MapWidth;			//in tiles
 			unsigned int MapHeight; 		//in tiles
-			std::vector<std::vector<std::vector<TILE>>>TileLayer;
+			std::vector< std::vector< std::vector<tile> > > TileLayer;
 	
 	public:
 		

@@ -16,6 +16,8 @@ namespace iq
 	#include <semaphore.h>
 	#include <stdexcept>
 	#include <string>
+	#include <tilemap.hpp>
+	#include <tinyxml.h>
 
 	#ifdef IQ_APP_TRACE
 		#error OMFG, IQ_APP_TRACE already exists! \o/
@@ -57,21 +59,25 @@ namespace iq
 		// Method pointer for draw and logic.
 		typedef void (app::*void_method_void)(void);
 
+		const static std::string DEFAULT_FILE;
+
+		std::string m_file;
+
 		void_method_void m_drawptr;
 		void_method_void m_logicptr;
+
+		void load_entities(const TiXmlElement * const);
 	public:
 		// `state' wouldn't work for a typename and variable name so gamestate is what it became...
 		enum gamestate {SETUP, GAMEPLAY, SCRIPTED, CREDITS};
 
 		std::map<std::string, std::string> argv;
-		boost::shared_ptr<iq::entity> boss;
+		std::map<std::string, boost::shared_ptr<iq::entity> > entities;
 		unsigned int fts; // frames this second.
-		boost::shared_ptr<iq::entity> intern;
 		unsigned int ms;
 		bool os_cursor;
 		boost::shared_ptr<BITMAP> scrbuf;
-		boost::shared_ptr<iq::entity> security_guard;
-		boost::shared_ptr<iq::tilemap>demo_map;
+//		boost::shared_ptr<iq::tilemap> demo_map;
 		boost::shared_ptr<sem_t> sem;
 		gamestate state;
 		unsigned int target_fps;
@@ -91,6 +97,7 @@ namespace iq
 		void draw_scripted(void);
 		void draw_credits(void);
 		void initialize(void);
+		void load(void);
 		void logic(void);
 		void logic_setup(void);
 		void logic_gameplay(void);

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<entity name="intern">
+<entity name="intern" speed="20">
 	<spritesheet file="media/intern.bmp" width="4" height="4" ms_per_frame="250">
 		<animation index="0">walk_up</animation>
 		<animation index="1">walk_right</animation>

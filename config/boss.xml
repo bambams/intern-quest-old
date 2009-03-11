@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<entity name="boss">
+<entity name="boss" speed="15">
 	<spritesheet file="media/boss.bmp" width="4" height="4" ms_per_frame="250">
 		<animation index="0">walk_up</animation>
 		<animation index="1">walk_right</animation>

@@ -3,23 +3,40 @@
 
 namespace iq
 {
+	const entity::facing_direction entity::DEFAULT_FACING = entity::FACING_DOWN;
+	const unsigned int entity::DEFAULT_SPEED = 18;
+
 	entity::entity(const std::string &path):
 		m_animations(new entity::animation_map()),
-		h(0),
-		w(0),
-		x(0),
-		y(0)
+		m_facing(entity::DEFAULT_FACING),
+		m_h(0),
+		m_w(0),
+		m_x(0),
+		m_y(0)
 	{
 		this->m_current_animation_iterator = this->m_animations->end();
 		this->load(path);
 	}
 
+	entity::entity(const TiXmlElement * const entity):
+		m_animations(new entity::animation_map()),
+		m_facing(entity::DEFAULT_FACING),
+		m_h(0),
+		m_w(0),
+		m_x(0),
+		m_y(0)
+	{
+		this->m_current_animation_iterator = this->m_animations->end();
+		this->load(entity);
+	}
+
 	entity::entity(const std::string &path, const unsigned int w, const unsigned int h):
 		m_animations(new entity::animation_map()),
-		h(h),
-		w(w),
-		x(0),
-		y(0)
+		m_facing(entity::DEFAULT_FACING),
+		m_h(h),
+		m_w(w),
+		m_x(0),
+		m_y(0)
 	{
 		this->m_current_animation_iterator = this->m_animations->end();
 		this->load(path);
@@ -61,13 +78,15 @@ namespace iq
 		return(this->current_animation()->second->next(ms));
 	}
 
+	const unsigned int entity::h(void) const
+	{
+		return(this->m_h);
+	}
+
 	void entity::load(const std::string &path)
 	{
-		boost::shared_ptr<BITMAP> bitmap;
 		boost::shared_ptr<TiXmlDocument> doc(new TiXmlDocument(path));
-		unsigned int w, h;
 		TiXmlElement *root = NULL;
-		TiXmlElement *element = NULL;
 
 		if(!doc->LoadFile())
 			throw std::runtime_error("Failed to load entity XML document '" + path + "'.");
@@ -75,23 +94,33 @@ namespace iq
 		if((root = doc->RootElement()) == NULL)
 			throw std::runtime_error("Entity XML document '" + path + "' missing root element.");
 
-		if(root->Attribute("height", (int *)&h) != NULL)
-			this->h = h;
+		this->load(root);
+	}
 
-		if(root->Attribute("width", (int *)&w) != NULL)
-			this->w = w;
+	void entity::load(const TiXmlElement * const entity)
+	{
+		boost::shared_ptr<BITMAP> bitmap;
+		const TiXmlElement *element = NULL;
 
-		if((element = root->FirstChildElement("spritesheet")) == NULL)
-			throw std::runtime_error("Entity XML root element missing spritesheet element.");
+		if(entity->Attribute("name") == NULL)
+			throw std::runtime_error("Entity XML missing required name attribute.");
+
+		this->m_name = entity->Attribute("name");
+		entity->Attribute("height", (int *)&this->m_h);
+		entity->Attribute("width", (int *)&m_w);
+		entity->Attribute("speed", (int *)&m_speed);
+
+		if((element = entity->FirstChildElement("spritesheet")) == NULL)
+			throw std::runtime_error("Entity XML entity element missing spritesheet element.");
 
 		this->load_spritesheet(element);
 
-		if(this->h == 0 && this->w == 0)
+		if(this->m_h == 0 && this->m_w == 0)
 		{
 			bitmap = this->m_animations->begin()->second->frame(0);
 
-			this->h = bitmap->h;
-			this->w = bitmap->w;
+			this->m_h = bitmap->h;
+			this->m_w = bitmap->w;
 		}
 	}
 
@@ -173,14 +202,39 @@ namespace iq
 		}
 	}
 
-	const int entity::screen_x(void) const
+	const std::string entity::name(void) const
+	{
+		return(this->m_name);
+	}
+
+	const unsigned int entity::screen_x(void) const
 	{
 		throw std::logic_error("iq::entity::screen_x not implemented yet.");
 	}
 
-	const int entity::screen_y(void) const
+	const unsigned int entity::screen_y(void) const
 	{
 		throw std::logic_error("iq::entity::screen_y not implemented yet.");
+	}
+
+	const unsigned int entity::speed(void) const
+	{
+		return(this->m_speed);
+	}
+
+	const unsigned int entity::w(void) const
+	{
+		return(this->m_w);
+	}
+
+	const unsigned int entity::x(void) const
+	{
+		return(this->m_x);
+	}
+
+	const unsigned int entity::y(void) const
+	{
+		return(this->m_y);
 	}
 }
 

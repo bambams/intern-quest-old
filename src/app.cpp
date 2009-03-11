@@ -4,13 +4,17 @@
 namespace iq
 {
 	bool app::close_button_pressed = false;
+	const std::string app::DEFAULT_FILE = "config/config.xml";
 
 	app::app(int argc, char *argv[]):
+		m_file(DEFAULT_FILE),
 		fts(0),
 		ms(0),
 		total_frames(0)
 	{
 		IQ_APP_TRACE("iq::app::app(int, char *[]) {");
+
+		boost::shared_ptr<iq::entity> entity;
 
 		this->sem.reset(new sem_t(), app::sem_destroy);
 		this->target_fps = 30;
@@ -18,11 +22,10 @@ namespace iq
 
 		this->parse_args(argc, argv);
 		this->initialize();
+		this->load();
 
-		this->demo_map.reset(new iq::tilemap("config/tilemap.xml"));
-		this->boss.reset(new iq::entity("config/boss.xml"));
-		this->intern.reset(new iq::entity("config/intern.xml"));
-		this->security_guard.reset(new iq::entity("config/security.xml"));
+//		this->demo_map.reset(new iq::tilemap("config/tilemap.xml"));
+
 		this->timer.reset(new iq::timer());
 
 		/*
@@ -115,17 +118,16 @@ for(int i=0; i<3; i++)
  * at. ^_^
  */
 boost::shared_ptr<BITMAP> bitmap;
-int x = (this->scrbuf->w / 2) - (this->intern->w / 2);
-int y = (this->scrbuf->h / 2) - (this->intern->h / 2);
+int j=0, n[] = {-55, 0, +55};
 
-bitmap = this->boss->current_frame(this->ms);
-masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, x + this->boss->w, y, bitmap->w, bitmap->h);
+int x = (this->scrbuf->w / 2);
+int y = (this->scrbuf->h / 2);
 
-bitmap = this->intern->current_frame(this->ms);
-masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, x, y, bitmap->w, bitmap->h);
-
-bitmap = this->security_guard->current_frame(this->ms);
-masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, x - this->security_guard->w, y, bitmap->w, bitmap->h);
+for(std::map<std::string, boost::shared_ptr<iq::entity> >::iterator i=this->entities.begin(); i != this->entities.end(); i++, j++)
+{
+	bitmap = i->second->current_frame(this->ms);
+	masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, x - (i->second->w() / 2) + n[j], y - (i->second->h() / 2), bitmap->w, bitmap->h);
+}
 
 		//textprintf_ex(this->scrbuf.get(), font, 20, 20, WHITE, -1,
 				//"frame-count: %d",
@@ -270,6 +272,45 @@ masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, x - this->security_guard->w,
 		IQ_APP_TRACE("} //iq::app::initialize(void)");
 	}
 
+	void app::load(void)
+	{
+		boost::shared_ptr<TiXmlDocument> doc(new TiXmlDocument(this->m_file));
+		const TiXmlElement *root = NULL;
+		const TiXmlElement *element = NULL;
+
+		if(!doc->LoadFile())
+			throw std::runtime_error("Failed to load app from XML document '" + this->m_file + "'.");
+
+		if((root = doc->RootElement()) == NULL)
+			throw std::runtime_error("App XML missing root element.");
+
+		if((element = root->FirstChildElement("entities")) != NULL)
+			this->load_entities(element);
+	}
+
+	void app::load_entities(const TiXmlElement * const entities)
+	{
+		boost::shared_ptr<iq::entity> entity;
+		const TiXmlElement *element = NULL;
+		const char *file = NULL;
+
+		if((element = entities->FirstChildElement("entity")) != NULL)
+		{
+			do
+			{
+				if((file = element->Attribute("file")) != NULL)
+					entity.reset(new iq::entity(file));
+				else
+					entity.reset(new iq::entity(element));
+
+				if(this->entities.find(entity->name()) != this->entities.end())
+					throw std::runtime_error("Dupliciate entity '" + entity->name() + "' found in XML. Duplicates are not allowed.");
+
+				this->entities[entity->name()] = entity;
+			}while((element = element->NextSiblingElement("entity")) != NULL);
+		}
+	}
+
 	void app::logic(void)
 	{
 		IQ_APP_TRACE("iq::app::logic() {");
@@ -344,6 +385,13 @@ masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, x - this->security_guard->w,
 	{
 		this->state = state;
 
+/*
+ * h4x: just demonstrating animations. This should be removed eventually
+ * (unless it turns out to be correct :P).
+ */
+int j=0;
+const char *anim[] = {"walk_left", "walk_down", "walk_right"};
+
 		switch(state)
 		{
 		case CREDITS:
@@ -360,9 +408,8 @@ masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, x - this->security_guard->w,
  * h4x: just demonstrating animations. This should be removed eventually
  * (unless it turns out to be correct :P).
  */
-this->boss->begin_animation("walk_right", this->ms);
-this->intern->begin_animation("walk_down", this->ms);
-this->security_guard->begin_animation("walk_left", this->ms);
+for(std::map<std::string, boost::shared_ptr<iq::entity> >::iterator i=this->entities.begin(); i != this->entities.end(); i++, j++)
+	i->second->begin_animation(anim[j], this->ms);
 
 			this->m_drawptr = &app::draw_gameplay;
 			this->m_logicptr = &app::logic_gameplay;
