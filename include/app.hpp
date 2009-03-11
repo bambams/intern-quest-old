@@ -71,6 +71,7 @@ namespace iq
 		bool os_cursor;
 		boost::shared_ptr<BITMAP> scrbuf;
 		boost::shared_ptr<iq::entity> security_guard;
+		boost::shared_ptr<iq::tilemap>demo_map;
 		boost::shared_ptr<sem_t> sem;
 		gamestate state;
 		unsigned int target_fps;

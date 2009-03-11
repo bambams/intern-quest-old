@@ -19,6 +19,7 @@ namespace iq
 		this->parse_args(argc, argv);
 		this->initialize();
 
+		this->demo_map.reset(new iq::tilemap("config/tilemap.xml"));
 		this->boss.reset(new iq::entity("config/boss.xml"));
 		this->intern.reset(new iq::entity("config/intern.xml"));
 		this->security_guard.reset(new iq::entity("config/security.xml"));

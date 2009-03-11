@@ -18,12 +18,18 @@ namespace iq
 	{
 	private:
 	protected:
-		const std::string xmlPath;
+			std::string MapTextureFile;		//needs renaming
+			boost::shared_ptr<BITMAP> MapTexture;
+			unsigned int MapTextureWidth;
+			unsigned int MapTextureHeight;
+			unsigned int TileSize;			//in pixels (duh)
+			unsigned int numLayers;
+			unsigned int MapWidth;			//in tiles
+			unsigned int MapHeight; 		//in tiles
+			std::vector<std::vector<std::vector<TILE>>>TileLayer;
+	
 	public:
 		
-
-
-
 		tilemap(const std::string &);
 
 		const unsigned int h(void) const;
