@@ -11,22 +11,25 @@ namespace iq
 	#include <boost/shared_ptr.hpp>
 	#include <stdexcept>
 	#include <string>
+	#include <types.hpp>
 
 namespace iq
 {
+	typedef boost::shared_ptr<spritesheet> spritesheet_ptr;
+
 	class spritesheet
 	{
 	private:
 	protected:
 	public:
-		spritesheet(const std::string &, const unsigned int, const unsigned int);
-		spritesheet(const boost::shared_ptr<BITMAP>, const unsigned int, const unsigned int);
+		spritesheet(const std::string &, const iq::uint, const iq::uint);
+		spritesheet(const iq::BITMAP_ptr, const iq::uint, const iq::uint);
 
-		boost::shared_ptr<BITMAP> bitmap;
-		unsigned int h;
-		unsigned int w;
+		iq::BITMAP_ptr bitmap;
+		iq::uint h;
+		iq::uint w;
 
-		void load(const std::string &, const unsigned int, const unsigned int);
+		void load(const std::string &, const iq::uint, const iq::uint);
 	};
 }
 

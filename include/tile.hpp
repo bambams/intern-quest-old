@@ -1,16 +1,21 @@
 #ifndef TILE_HPP
-#define TILE_HPP
+	#define TILE_HPP
 
 namespace iq
 {
 	class tile;
 }
 
-#include <boost/shared_ptr.hpp>
-#include <allegro.h>
+	#include <allegro.h>
+	#include <boost/shared_ptr.hpp>
+	#include <types.hpp>
+	#include <vector>
 
 namespace iq
 {
+	typedef boost::shared_ptr<tile> tile_ptr;
+	typedef std::vector<tile> tile_vector;
+
 	class tile
 	{
 		protected:

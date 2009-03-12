@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[])
 {
-	boost::shared_ptr<iq::app> app;
+	iq::app_ptr app;
 
 	std::cout.setf(std::ios::unitbuf);
 

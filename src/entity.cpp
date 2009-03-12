@@ -4,10 +4,10 @@
 namespace iq
 {
 	const entity::facing_direction entity::DEFAULT_FACING = entity::FACING_DOWN;
-	const unsigned int entity::DEFAULT_SPEED = 18;
+	const iq::uint entity::DEFAULT_SPEED = 18;
 
 	entity::entity(const std::string &path):
-		m_animations(new entity::animation_map()),
+		m_animations(new std::map<std::string, iq::animation_ptr>()),
 		m_facing(entity::DEFAULT_FACING),
 		m_h(0),
 		m_w(0),
@@ -19,7 +19,7 @@ namespace iq
 	}
 
 	entity::entity(const TiXmlElement * const entity):
-		m_animations(new entity::animation_map()),
+		m_animations(new std::map<std::string, iq::animation_ptr>()),
 		m_facing(entity::DEFAULT_FACING),
 		m_h(0),
 		m_w(0),
@@ -30,8 +30,8 @@ namespace iq
 		this->load(entity);
 	}
 
-	entity::entity(const std::string &path, const unsigned int w, const unsigned int h):
-		m_animations(new entity::animation_map()),
+	entity::entity(const std::string &path, const iq::uint w, const iq::uint h):
+		m_animations(new std::map<std::string, iq::animation_ptr>()),
 		m_facing(entity::DEFAULT_FACING),
 		m_h(h),
 		m_w(w),
@@ -42,10 +42,10 @@ namespace iq
 		this->load(path);
 	}
 
-	const boost::shared_ptr< std::vector<std::string> > entity::animation_keys(void) const
+	const boost::shared_ptr<iq::string_vector> entity::animation_keys(void) const
 	{
 		int j=0;
-		boost::shared_ptr< std::vector<std::string> > keys(new std::vector<std::string>(this->m_animations->size()));
+		boost::shared_ptr<iq::string_vector> keys(new iq::string_vector(this->m_animations->size()));
 
 		for(entity::animation_map::iterator i=this->m_animations->begin(); i != this->m_animations->end(); i++)
 			(*keys)[j++] = i->first;
@@ -53,7 +53,7 @@ namespace iq
 		return(keys);
 	}
 
-	const entity::animation_map::const_iterator entity::begin_animation(const std::string &key, const unsigned int ms)
+	const entity::animation_map::const_iterator entity::begin_animation(const std::string &key, const iq::uint ms)
 	{
 		animation_map::const_iterator animation_iterator = this->m_animations->find(key);
 
@@ -82,7 +82,7 @@ else if(key == "walk_left")
 		return(this->m_current_animation_iterator);
 	}
 
-	const boost::shared_ptr<BITMAP> entity::current_frame(const unsigned int ms) const
+	const iq::BITMAP_ptr entity::current_frame(const iq::uint ms) const
 	{
 		return(this->current_animation()->second->next(ms));
 	}
@@ -92,14 +92,14 @@ else if(key == "walk_left")
 		return(this->m_facing);
 	}
 
-	const unsigned int entity::h(void) const
+	const iq::uint entity::h(void) const
 	{
 		return(this->m_h);
 	}
 
 	void entity::load(const std::string &path)
 	{
-		boost::shared_ptr<TiXmlDocument> doc(new TiXmlDocument(path));
+		iq::TiXmlDocument_ptr doc(new TiXmlDocument(path));
 		TiXmlElement *root = NULL;
 
 		if(!doc->LoadFile())
@@ -113,7 +113,7 @@ else if(key == "walk_left")
 
 	void entity::load(const TiXmlElement * const entity)
 	{
-		boost::shared_ptr<BITMAP> bitmap;
+		iq::BITMAP_ptr bitmap;
 		const TiXmlElement *element = NULL;
 		const char *str = NULL;
 
@@ -125,10 +125,10 @@ else if(key == "walk_left")
 		entity->Attribute("width", (int *)&m_w);
 		entity->Attribute("speed", (int *)&m_speed);
 
-		if((element = entity->FirstChildElement("spritesheet")) == NULL)
-			throw std::runtime_error("Entity XML entity element missing spritesheet element.");
+		if((element = entity->FirstChildElement("animations")) == NULL)
+			throw std::runtime_error("Entity XML animations element missing spritesheet element.");
 
-		this->load_spritesheet(element);
+		this->load_animations(element);
 
 		if(this->m_h == 0 && this->m_w == 0)
 		{
@@ -139,79 +139,61 @@ else if(key == "walk_left")
 		}
 	}
 
-	void entity::load_animation(const unsigned int i, const TiXmlElement * const animation_element, const boost::shared_ptr<iq::spritesheet> sheet, const boost::shared_ptr<unsigned int> anim_w, const boost::shared_ptr<unsigned int> anim_h, const boost::shared_ptr<unsigned int> sheet_ms_per_frame)
+	void entity::load_animations(const TiXmlElement * const animations)
 	{
-		boost::shared_ptr<iq::animation> animation;
-		std::string value;
-		const TiXmlNode *node = NULL;
-		unsigned int ms_per_frame;
-
-		if(animation_element->Attribute("ms_per_frame", (int *)&ms_per_frame) == NULL && sheet_ms_per_frame.get() == NULL)
-			throw std::runtime_error("Entity XML spritesheet element and animation element missing ms_per_frame attribute.");
-		else
-			ms_per_frame = *sheet_ms_per_frame;
-
-		if((node = animation_element->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
-			throw std::runtime_error("Entity XML animation node missing key (name) as text node.");
-
-		if((anim_h.get() == NULL) != (anim_w.get() == NULL))
-			throw std::runtime_error("Entity XML spritesheet attributes anim_width and anim_height must either both exist or neither can exist.");
-		else if(anim_h.get() == NULL)
-			animation.reset(new iq::animation(ms_per_frame, sheet, i));
-		else
-			animation.reset(new iq::animation(ms_per_frame, sheet, i, *anim_w, *anim_h));
-
-		value = node->ToText()->Value();
-		boost::algorithm::trim(value);
-
-		if(value.length() == 0)
-			throw std::runtime_error("Entity XML animation node text node (key/name) is empty.");
-
-		(*this->m_animations)[value] = animation;
-	}
-
-	void entity::load_spritesheet(const TiXmlElement * const spritesheet_element)
-	{
-		boost::shared_ptr<unsigned int> sheet_ms_per_frame(new unsigned int()),
-		                                            anim_w(new unsigned int()),
-		                                            anim_h(new unsigned int());
-		boost::shared_ptr<iq::spritesheet> sheet;
-		const char *file = NULL;
-		unsigned int h, w;
+		iq::animation_ptr animation;
+		iq::uint_ptr default_ms_per_frame(new iq::uint());
+		iq::uint_ptr height(new iq::uint());
+		iq::uint_ptr width(new iq::uint());
+		iq::spritesheet_ptr sheet;
+		const char *spritesheet = NULL;
+		iq::uint count, length;
 		const TiXmlElement *element = NULL;
+		const TiXmlNode *node = NULL;
+		std::string value;
 
-		if((file = spritesheet_element->Attribute("file")) == NULL)
-			throw std::runtime_error("Entity XML spritesheet element missing file attribute.");
+		if((spritesheet = animations->Attribute("spritesheet")) == NULL)
+			throw std::runtime_error("Entity XML animations element missing file attribute.");
 
-		if(spritesheet_element->Attribute("height", (int *)&h) == NULL)
-			throw std::runtime_error("Entity XML spritesheet element missing height attribute.");
+		if(animations->Attribute("count", (int *)&count) == NULL)
+			throw std::runtime_error("Entity XML animations element missing height attribute.");
 
-		if(spritesheet_element->Attribute("width", (int *)&w) == NULL)
-			throw std::runtime_error("Entity XML spritesheet element missing width attribute.");
+		if(animations->Attribute("length", (int *)&length) == NULL)
+			throw std::runtime_error("Entity XML animations element missing width attribute.");
 
-		if(spritesheet_element->Attribute("anim_height", (int *)anim_h.get()) == NULL)
-			anim_h.reset((unsigned int *)NULL);
+		if(animations->Attribute("height", (int *)height.get()) == NULL)
+			height.reset((iq::uint *)NULL);
 
-		if(spritesheet_element->Attribute("anim_width", (int *)anim_w.get()) == NULL)
-			anim_w.reset((unsigned int *)NULL);
+		if(animations->Attribute("width", (int *)width.get()) == NULL)
+			width.reset((iq::uint *)NULL);
 
-		if((anim_h.get() == NULL) != (anim_w.get() == NULL))
+		if((height.get() == NULL) != (width.get() == NULL))
 			throw std::runtime_error("Entity XML spritesheet attributes anim_width and anim_height must either both exist or neither can exist.");
 
-		if(spritesheet_element->Attribute("ms_per_frame", (int *)sheet_ms_per_frame.get()) == NULL)
-			sheet_ms_per_frame.reset((unsigned int *)NULL);
+		if(animations->Attribute("ms_per_frame", (int *)default_ms_per_frame.get()) == NULL)
+			default_ms_per_frame.reset((iq::uint *)NULL);
 
-		if((element = spritesheet_element->FirstChildElement("animation")) == NULL)
+		if((element = animations->FirstChildElement("animation")) == NULL)
 			throw std::runtime_error("Entity XML spritesheet element missing animation element(s).");
 
-		sheet.reset(new iq::spritesheet(file, w, h));
+		sheet.reset(new iq::spritesheet(spritesheet, length, count));
 
-		for(unsigned int i=0; i<sheet->h; i++)
+		for(iq::uint i=0; i<sheet->h; i++)
 		{
 			if(element == NULL)
 				throw std::runtime_error("Entity XML spritesheet element missing animation element(s).");
 
-			this->load_animation(i, element, sheet, anim_w, anim_h, sheet_ms_per_frame);
+			if((node = element->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
+				throw std::runtime_error("Entity XML animation node missing key (name) as text node.");
+
+			value = node->ToText()->Value();
+			boost::algorithm::trim(value);
+
+			if(value.length() == 0)
+				throw std::runtime_error("Entity XML animation node text node (key/name) is empty.");
+
+			animation.reset(new iq::animation(element, sheet, i, width, height, default_ms_per_frame));
+			(*this->m_animations)[value] = animation;
 
 			element = element->NextSiblingElement("animation");
 		}
@@ -222,32 +204,32 @@ else if(key == "walk_left")
 		return(this->m_name);
 	}
 
-	const unsigned int entity::screen_x(void) const
+	const iq::uint entity::screen_x(void) const
 	{
 		throw std::logic_error("iq::entity::screen_x not implemented yet.");
 	}
 
-	const unsigned int entity::screen_y(void) const
+	const iq::uint entity::screen_y(void) const
 	{
 		throw std::logic_error("iq::entity::screen_y not implemented yet.");
 	}
 
-	const unsigned int entity::speed(void) const
+	const iq::uint entity::speed(void) const
 	{
 		return(this->m_speed);
 	}
 
-	const unsigned int entity::w(void) const
+	const iq::uint entity::w(void) const
 	{
 		return(this->m_w);
 	}
 
-	const unsigned int entity::x(void) const
+	const iq::uint entity::x(void) const
 	{
 		return(this->m_x);
 	}
 
-	const unsigned int entity::y(void) const
+	const iq::uint entity::y(void) const
 	{
 		return(this->m_y);
 	}

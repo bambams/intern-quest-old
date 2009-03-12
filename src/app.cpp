@@ -14,7 +14,7 @@ namespace iq
 	{
 		IQ_APP_TRACE("iq::app::app(int, char *[]) {");
 
-		boost::shared_ptr<iq::entity> entity;
+		iq::entity_ptr entity;
 
 		this->sem.reset(new sem_t(), app::sem_destroy);
 		this->target_fps = 30;
@@ -125,13 +125,13 @@ for(int i=0; i<3; i++)
  * h4x: temporary just to draw animations and have something pretty to look
  * at. ^_^
  */
-boost::shared_ptr<BITMAP> bitmap;
+iq::BITMAP_ptr bitmap;
 int j=0, n[] = {-55, 0, +55};
 
 int x = (this->scrbuf->w / 2);
 int y = (this->scrbuf->h / 2);
 
-for(std::map<std::string, boost::shared_ptr<iq::entity> >::iterator i=this->entities.begin(); i != this->entities.end(); i++, j++)
+for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end(); i++, j++)
 {
 	bitmap = i->second->current_frame(this->ms);
 	masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, x - (i->second->w() / 2) + n[j], y - (i->second->h() / 2), bitmap->w, bitmap->h);
@@ -282,7 +282,7 @@ for(std::map<std::string, boost::shared_ptr<iq::entity> >::iterator i=this->enti
 
 	void app::load(void)
 	{
-		boost::shared_ptr<TiXmlDocument> doc(new TiXmlDocument(this->m_file));
+		iq::TiXmlDocument_ptr doc(new TiXmlDocument(this->m_file));
 		const TiXmlElement *root = NULL;
 
 		if(!doc->LoadFile())
@@ -304,8 +304,9 @@ for(std::map<std::string, boost::shared_ptr<iq::entity> >::iterator i=this->enti
 
 	void app::load_entities(const TiXmlElement * const entities)
 	{
-		boost::shared_ptr<iq::entity> entity;
+		iq::entity_ptr entity;
 		const TiXmlElement *element = NULL;
+		std::map<std::string, iq::entity_ptr>::iterator it;
 		std::string player;
 		const char *str = NULL;
 
@@ -314,24 +315,26 @@ for(std::map<std::string, boost::shared_ptr<iq::entity> >::iterator i=this->enti
 		else
 			player = str;
 
-		if((element = entities->FirstChildElement("entity")) != NULL)
+		if((element = entities->FirstChildElement("entity")) == NULL)
+			throw std::runtime_error("Entities XML missing entity elements.");
+
+		do
 		{
-			do
-			{
-				if((str = element->Attribute("file")) != NULL)
-					entity.reset(new iq::entity(str));
-				else
-					entity.reset(new iq::entity(element));
+			if((str = element->Attribute("file")) != NULL)
+				entity.reset(new iq::entity(str));
+			else
+				entity.reset(new iq::entity(element));
 
-				if(entity->name() == player)
-					this->player = entity;
+			if(this->entities.find(entity->name()) != this->entities.end())
+				throw std::runtime_error("Dupliciate entity '" + entity->name() + "' found in XML. Duplicates are not allowed.");
 
-				if(this->entities.find(entity->name()) != this->entities.end())
-					throw std::runtime_error("Dupliciate entity '" + entity->name() + "' found in XML. Duplicates are not allowed.");
+			this->entities[entity->name()] = entity;
+		}while((element = element->NextSiblingElement("entity")) != NULL);
 
-				this->entities[entity->name()] = entity;
-			}while((element = element->NextSiblingElement("entity")) != NULL);
-		}
+		if((it = this->entities.find(player)) == this->entities.end())
+			throw std::runtime_error("Player entity '" + player + "' doesn't exist.");
+
+		this->player = it->second;
 	}
 
 	void app::logic(void)
@@ -443,7 +446,7 @@ const char *anim[] = {"walk_left", "walk_down", "walk_right"};
  * h4x: just demonstrating animations. This should be removed eventually
  * (unless it turns out to be correct :P).
  */
-for(std::map<std::string, boost::shared_ptr<iq::entity> >::iterator i=this->entities.begin(); i != this->entities.end(); i++, j++)
+for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end(); i++, j++)
 	i->second->begin_animation(anim[j], this->ms);
 
 			this->m_drawptr = &app::draw_gameplay;

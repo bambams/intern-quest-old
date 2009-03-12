@@ -13,6 +13,7 @@ namespace iq
 	#include <iostream>
 	#include <string>
 	#include <sstream>
+	#include <types.hpp>
 
 	/*
 	 * MACRO to output trace information to help debug where the timer class
@@ -31,44 +32,46 @@ namespace iq
 
 namespace iq
 {
+	typedef boost::shared_ptr<timer> timer_ptr;
+
 	class timer
 	{
 	private:
 	protected:
-		static unsigned int after_days(const unsigned int);
-		static unsigned int after_hours(const unsigned int);
-		static unsigned int after_mins(const unsigned int);
+		static iq::uint after_days(const iq::uint);
+		static iq::uint after_hours(const iq::uint);
+		static iq::uint after_mins(const iq::uint);
 	public:
-		static const unsigned int HOURS_PER_DAY;
-		static const unsigned int MSECS_PER_SEC;
-		static const unsigned int MINS_PER_HOUR;
-		static const unsigned int SECS_PER_MIN;
-		static const unsigned int SECS_PER_HOUR;
-		static const unsigned int SECS_PER_DAY;
+		static const iq::uint HOURS_PER_DAY;
+		static const iq::uint MSECS_PER_SEC;
+		static const iq::uint MINS_PER_HOUR;
+		static const iq::uint SECS_PER_MIN;
+		static const iq::uint SECS_PER_HOUR;
+		static const iq::uint SECS_PER_DAY;
 
 		bool running;
 		int ticks;
 
 		timer(void);
 
-		unsigned int                days(void) const;
-		unsigned int                hours(void) const;
-		unsigned int                mins(void) const;
-		void                        reset(void);
-		unsigned int                secs(void) const;
-		bool                        start(void);
-		void                        stop(void);
-		const std::string           to_str(void) const;
-		float                       total_days(void) const;
-		float                       total_hours(void) const;
-		float                       total_mins(void) const;
-		unsigned int                total_secs(void) const;
+		iq::uint                days(void) const;
+		iq::uint                hours(void) const;
+		iq::uint                mins(void) const;
+		void                    reset(void);
+		iq::uint                secs(void) const;
+		bool                    start(void);
+		void                    stop(void);
+		const std::string       to_str(void) const;
+		float                   total_days(void) const;
+		float                   total_hours(void) const;
+		float                   total_mins(void) const;
+		iq::uint                total_secs(void) const;
 
-		static unsigned int         days(const unsigned int);
-		static unsigned int         hours(const unsigned int);
-		static unsigned int         mins(const unsigned int);
+		static iq::uint         days(const iq::uint);
+		static iq::uint         hours(const iq::uint);
+		static iq::uint         mins(const iq::uint);
 
-		static void                 tick(void *);
+		static void             tick(void *);
 	};
 }
 

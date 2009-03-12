@@ -45,6 +45,8 @@ namespace iq
 
 namespace iq
 {
+	typedef boost::shared_ptr<app> app_ptr;
+
 	/**
 	 * \brief An application class to hold application state data.
 	 * \details Intended to be passed around the application to avoid
@@ -72,19 +74,19 @@ namespace iq
 		// `state' wouldn't work for a typename and variable name so gamestate is what it became...
 		enum gamestate {SETUP, GAMEPLAY, SCRIPTED, CREDITS};
 
-		std::map<std::string, std::string> argv;
-		boost::shared_ptr<iq::tilemap> demo_map;
-		std::map<std::string, boost::shared_ptr<iq::entity> > entities;
-		unsigned int fts; // frames this second.
-		unsigned int ms;
+		iq::string_map argv;
+		iq::tilemap_ptr demo_map;
+		std::map<std::string, iq::entity_ptr> entities;
+		iq::uint fts; // frames this second.
+		iq::uint ms;
 		bool os_cursor;
-		boost::shared_ptr<iq::entity> player;
-		boost::shared_ptr<BITMAP> scrbuf;
-		boost::shared_ptr<sem_t> sem;
+		iq::entity_ptr player;
+		iq::BITMAP_ptr scrbuf;
+		iq::sem_t_ptr sem;
 		gamestate state;
-		unsigned int target_fps;
-		boost::shared_ptr<iq::timer> timer;
-		unsigned int total_frames;
+		iq::uint target_fps;
+		iq::timer_ptr timer;
+		iq::uint total_frames;
 		bool verbose;
 
 		static bool close_button_pressed;
@@ -110,7 +112,6 @@ namespace iq
 		void set_state(gamestate);
 
 		static void add_frame(void *);
-		//static void close_button_handler(void *);
 		static void close_button_handler(void);
 		static void sem_destroy(sem_t *);
 	};
