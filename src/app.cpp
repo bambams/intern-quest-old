@@ -362,23 +362,35 @@ for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i 
  */
 if(key[KEY_UP])
 {
-	if(this->player->facing() != entity::FACING_UP)
+	if(this->player->facing() != entity::FACING_UP || !this->player->current_animation()->second->playing())
+	{
+		this->player->face(entity::FACING_UP);
 		this->player->begin_animation("walk_up", this->ms);
+	}
 }
 else if(key[KEY_RIGHT])
 {
-	if(this->player->facing() != entity::FACING_RIGHT)
+	if(this->player->facing() != entity::FACING_RIGHT || !this->player->current_animation()->second->playing())
+	{
+		this->player->face(entity::FACING_RIGHT);
 		this->player->begin_animation("walk_right", this->ms);
+	}
 }
 else if(key[KEY_DOWN])
 {
-	if(this->player->facing() != entity::FACING_DOWN)
+	if(this->player->facing() != entity::FACING_DOWN || !this->player->current_animation()->second->playing())
+	{
+		this->player->face(entity::FACING_DOWN);
 		this->player->begin_animation("walk_down", this->ms);
+	}
 }
 else if(key[KEY_LEFT])
 {
-	if(this->player->facing() != entity::FACING_LEFT)
+	if(this->player->facing() != entity::FACING_LEFT || !this->player->current_animation()->second->playing())
+	{
+		this->player->face(entity::FACING_LEFT);
 		this->player->begin_animation("walk_left", this->ms);
+	}
 }
 else if(this->player->current_animation()->second->playing())
 {

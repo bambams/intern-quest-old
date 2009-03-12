@@ -62,15 +62,6 @@ namespace iq
 
 		(this->m_current_animation_iterator = animation_iterator)->second->begin(ms);
 
-if(key == "walk_up")
-	this->m_facing = entity::FACING_UP;
-else if(key == "walk_right")
-	this->m_facing = entity::FACING_RIGHT;
-else if(key == "walk_down")
-	this->m_facing = entity::FACING_DOWN;
-else if(key == "walk_left")
-	this->m_facing = entity::FACING_LEFT;
-
 		return(this->m_current_animation_iterator);
 	}
 
@@ -85,6 +76,11 @@ else if(key == "walk_left")
 	const iq::BITMAP_ptr entity::current_frame(const iq::uint ms) const
 	{
 		return(this->current_animation()->second->next(ms));
+	}
+
+	void entity::face(entity::facing_direction facing)
+	{
+		this->m_facing = facing;
 	}
 
 	const entity::facing_direction entity::facing(void) const

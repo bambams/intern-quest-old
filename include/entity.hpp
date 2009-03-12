@@ -37,6 +37,7 @@ namespace iq
 		const std::map<std::string, iq::animation_ptr>::const_iterator begin_animation(const std::string &, const iq::uint);
 		const iq::BITMAP_ptr current_frame(const iq::uint) const;
 		const std::map<std::string, iq::animation_ptr>::const_iterator current_animation(void) const;
+		void face(facing_direction);
 		const facing_direction facing(void) const;
 		const iq::uint h(void) const;
 		void load(const std::string &);
