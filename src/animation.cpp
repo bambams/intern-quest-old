@@ -4,36 +4,36 @@
 namespace iq
 {
 	animation::animation(const iq::spritesheet_ptr sheet, const iq::uint i):
-		m_ms_per_frame(0),
-		m_last_ms(0)
+		m_ms_per_frame(0)
 	{
+		this->reset();
 		this->load(sheet, i);
 	}
 
-	animation::animation(const iq::spritesheet_ptr sheet, const iq::uint i, const iq::uint ms_per_frame):
-		m_last_ms(0)
+	animation::animation(const iq::spritesheet_ptr sheet, const iq::uint i, const iq::uint ms_per_frame)
 	{
+		this->reset();
 		this->set_ms_per_frame(ms_per_frame);
 		this->load(sheet, i, ms_per_frame);
 	}
 
 	animation::animation(const iq::spritesheet_ptr sheet, const iq::uint i, const iq::uint w, const iq::uint h):
-		m_ms_per_frame(0),
-		m_last_ms(0)
+		m_ms_per_frame(0)
 	{
+		this->reset();
 		this->load(sheet, i, w, h);
 	}
 
-	animation::animation(const iq::spritesheet_ptr sheet, const iq::uint i, const iq::uint w, const iq::uint h, const iq::uint ms_per_frame):
-		m_last_ms(0)
+	animation::animation(const iq::spritesheet_ptr sheet, const iq::uint i, const iq::uint w, const iq::uint h, const iq::uint ms_per_frame)
 	{
+		this->reset();
 		this->set_ms_per_frame(ms_per_frame);
 		this->load(sheet, i, w, h, ms_per_frame);
 	}
 
-	animation::animation(const TiXmlElement * const animation, const iq::spritesheet_ptr sheet, const iq::uint i, const iq::uint_ptr w, const iq::uint_ptr h, const iq::uint_ptr ms_per_frame):
-		m_last_ms(0)
+	animation::animation(const TiXmlElement * const animation, const iq::spritesheet_ptr sheet, const iq::uint i, const iq::uint_ptr w, const iq::uint_ptr h, const iq::uint_ptr ms_per_frame)
 	{
+		this->reset();
 		this->load(animation, sheet, i, w, h, ms_per_frame);
 	}
 
@@ -59,6 +59,9 @@ namespace iq
 	{
 		this->check_ms_per_frame();
 		this->set_last_ms(ms);
+		this->set_last_frame(0);
+
+		this->m_playing = true;
 
 		return(this->m_frames[0]);
 	}
@@ -67,6 +70,8 @@ namespace iq
 	{
 		this->set_ms_per_frame(ms_per_frame);
 		this->set_last_ms(ms);
+
+		this->m_playing = true;
 
 		return(this->m_frames[0]);
 	}
@@ -161,6 +166,9 @@ namespace iq
 		iq::uint i;
 		iq::uint past;
 
+		if(!this->m_playing)
+			return(this->m_frames[this->m_last_frame]);
+
 		this->check_ms_per_frame();
 		this->check_ms(ms);
 
@@ -181,6 +189,23 @@ printf("ms=%d    last_ms=%d    past=%d    i=%d\n", ms, this->m_last_ms, past, i)
 	const iq::BITMAP_ptr animation::operator[](const iq::uint i) const
 	{
 		return(this->frame(i));
+	}
+
+	void animation::pause(void)
+	{
+		this->m_playing = false;
+	}
+
+	const bool animation::playing(void) const
+	{
+		return(this->m_playing);
+	}
+
+	void animation::reset(void)
+	{
+		this->pause();
+		this->m_last_frame = 0;
+		this->m_last_ms = 0;
 	}
 
 	void animation::set_last_frame(const iq::uint i)

@@ -42,11 +42,12 @@ namespace iq
 		void load(const std::string &);
 		void load(const TiXmlElement * const);
 		const std::string name(void) const;
+		void pause_animation(void);
+		void reset_animation(void);
 		const iq::uint screen_x(void) const;
 		const iq::uint screen_y(void) const;
 		const iq::uint speed(void) const;
 		const iq::uint w(void) const;
-
 		const iq::uint x(void) const;
 		const iq::uint y(void) const;
 	protected:

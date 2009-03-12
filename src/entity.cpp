@@ -60,7 +60,7 @@ namespace iq
 		if(animation_iterator == this->m_animations->end())
 			throw std::range_error("Invalid animation key '" + key + "'.");
 
-		this->m_current_animation_iterator = animation_iterator;
+		(this->m_current_animation_iterator = animation_iterator)->second->begin(ms);
 
 if(key == "walk_up")
 	this->m_facing = entity::FACING_UP;
@@ -202,6 +202,16 @@ else if(key == "walk_left")
 	const std::string entity::name(void) const
 	{
 		return(this->m_name);
+	}
+
+	void entity::pause_animation(void)
+	{
+		this->current_animation()->second->pause();
+	}
+
+	void entity::reset_animation(void)
+	{
+		this->current_animation()->second->reset();
 	}
 
 	const iq::uint entity::screen_x(void) const

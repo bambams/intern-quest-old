@@ -22,10 +22,11 @@ namespace iq
 	{
 	private:
 	protected:
-		iq::uint m_ms_per_frame;
+		std::vector<iq::BITMAP_ptr> m_frames;
 		iq::uint m_last_ms;
 		iq::uint m_last_frame;
-		std::vector<iq::BITMAP_ptr> m_frames;
+		iq::uint m_ms_per_frame;
+		bool m_playing;
 
 		void check_frame_index(const iq::uint) const;
 		void check_ms(const iq::uint) const;
@@ -50,6 +51,9 @@ namespace iq
 		void load(const spritesheet_ptr, const iq::uint, const iq::uint, const iq::uint, const iq::uint);
 		void load(const TiXmlElement*, spritesheet_ptr, iq::uint, uint_ptr, uint_ptr, uint_ptr);
 		const iq::BITMAP_ptr next(const iq::uint);
+		void pause(void);
+		const bool playing(void) const;
+		void reset(void);
 		const iq::uint w(void) const;
 
 		const iq::BITMAP_ptr operator[](const iq::uint) const;

@@ -360,14 +360,30 @@ for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i 
 /*
  * h4x: QnD for a demonstration. :D
  */
-if(key[KEY_UP] && this->player->facing() != entity::FACING_UP)
-	this->player->begin_animation("walk_up", this->ms);
-if(key[KEY_RIGHT] && this->player->facing() != entity::FACING_RIGHT)
-	this->player->begin_animation("walk_right", this->ms);
-if(key[KEY_DOWN] && this->player->facing() != entity::FACING_DOWN)
-	this->player->begin_animation("walk_down", this->ms);
-if(key[KEY_LEFT] && this->player->facing() != entity::FACING_LEFT)
-	this->player->begin_animation("walk_left", this->ms);
+if(key[KEY_UP])
+{
+	if(this->player->facing() != entity::FACING_UP)
+		this->player->begin_animation("walk_up", this->ms);
+}
+else if(key[KEY_RIGHT])
+{
+	if(this->player->facing() != entity::FACING_RIGHT)
+		this->player->begin_animation("walk_right", this->ms);
+}
+else if(key[KEY_DOWN])
+{
+	if(this->player->facing() != entity::FACING_DOWN)
+		this->player->begin_animation("walk_down", this->ms);
+}
+else if(key[KEY_LEFT])
+{
+	if(this->player->facing() != entity::FACING_LEFT)
+		this->player->begin_animation("walk_left", this->ms);
+}
+else if(this->player->current_animation()->second->playing())
+{
+	this->player->reset_animation();
+}
 
 /*
 		g_total_frames++;
