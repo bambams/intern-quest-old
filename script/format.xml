@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<script>
+	<!--
+		Every 'command' blocks the script until it completes. Only one
+		thing can happen at a time.
+	-->
+	<say who="boss">
+		<![CDATA[Get back to work!]]>
+	</say>
+
+	<!--
+		Each entity gets a speed declared in their XML. They are not allowed
+		to collide while walking so we will throw an exception if they do.
+	-->
+	<walk who="intern" direction="left" distance="50" />
+</script>
+
