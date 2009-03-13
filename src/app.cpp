@@ -126,12 +126,13 @@ for(int i=0; i<3; i++)
  * at. ^_^
  */
 iq::BITMAP_ptr bitmap;
-int j=0, n[] = {-55, 0, +55};
+iq::uint j=0;
+int n[] = {-55, 0, +55};
 
 int x = (this->scrbuf->w / 2);
 int y = (this->scrbuf->h / 2);
 
-for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end(); i++, j++)
+for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end() && j<sizeof(n); i++, j++)
 {
 	bitmap = i->second->current_frame(this->ms);
 	masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, x - (i->second->w() / 2) + n[j], y - (i->second->h() / 2), bitmap->w, bitmap->h);
@@ -455,7 +456,7 @@ else if(this->player->current_animation()->second->playing())
  * h4x: just demonstrating animations. This should be removed eventually
  * (unless it turns out to be correct :P).
  */
-int j=0;
+iq::uint j=0;
 const char *anim[] = {"walk_left", "walk_down", "walk_right"};
 
 		switch(state)
@@ -474,7 +475,7 @@ const char *anim[] = {"walk_left", "walk_down", "walk_right"};
  * h4x: just demonstrating animations. This should be removed eventually
  * (unless it turns out to be correct :P).
  */
-for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end(); i++, j++)
+for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end() && j<sizeof(anim); i++, j++)
 	i->second->begin_animation(anim[j], this->ms);
 
 			this->m_drawptr = &app::draw_gameplay;
