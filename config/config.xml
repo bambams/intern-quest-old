@@ -1,9 +1,0 @@
-<?xml version="1.0" ?>
-<app>
-	<entities player="intern">
-		<entity file="config/security.xml" />
-		<entity file="config/intern.xml" />
-		<entity file="config/boss.xml" />
-	</entities>
-</app>
-

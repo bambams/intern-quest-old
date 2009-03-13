@@ -4,7 +4,7 @@
 namespace iq
 {
 	bool app::close_button_pressed = false;
-	const std::string app::DEFAULT_FILE = "config/config.xml";
+	const std::string app::DEFAULT_FILE = "config/app.config";
 
 	app::app(int argc, char *argv[]):
 		m_file(DEFAULT_FILE),
