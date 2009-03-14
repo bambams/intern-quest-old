@@ -133,6 +133,12 @@ namespace iq
 		}
 	}
 
+	void animation::load(const iq::spritesheet_ptr sheet, const iq::uint i, const iq::uint w, const iq::uint h, const iq::uint ms_per_frame)
+	{
+		this->set_ms_per_frame(ms_per_frame);
+		this->load(sheet, i, w, h);
+	}
+
 	void animation::load(const TiXmlElement * const animation, const iq::spritesheet_ptr sheet, const iq::uint i, const iq::uint_ptr w, const iq::uint_ptr h, const iq::uint_ptr ms_per_frame)
 	{
 		if(animation->Attribute("ms_per_frame", (int *)&this->m_ms_per_frame) == NULL)
@@ -153,12 +159,6 @@ namespace iq
 			this->load(sheet, i);
 		else
 			this->load(sheet, i, *w, *h, *ms_per_frame);
-	}
-
-	void animation::load(const iq::spritesheet_ptr sheet, const iq::uint i, const iq::uint w, const iq::uint h, const iq::uint ms_per_frame)
-	{
-		this->set_ms_per_frame(ms_per_frame);
-		this->load(sheet, i, w, h);
 	}
 
 	const iq::BITMAP_ptr animation::next(const iq::uint ms)

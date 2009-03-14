@@ -19,6 +19,9 @@ namespace iq
 
 	void spritesheet::load(const std::string &path, const iq::uint w, const iq::uint h)
 	{
+		this->h = h;
+		this->w = w;
+
 		this->bitmap.reset(load_bitmap(path.c_str(), NULL), destroy_bitmap);
 
 		if(this->bitmap.get() == NULL)

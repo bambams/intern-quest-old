@@ -44,7 +44,7 @@ endif
 
 
 ifndef NAME
-	NAME = game
+	NAME = iq
 endif
 
 ifndef WINDOWS
@@ -54,6 +54,7 @@ endif
 endif
 
 ifdef WINDOWS
+	MKDIR = mkdir
 	RM = del /q
 	CFLAGS += -D__GTHREAD_HIDE_WIN32API
 	LFLAGS = -Wl,--subsystem,windows
@@ -66,7 +67,7 @@ ifdef WINDOWS
 			LIBS += -lpthreadGC2
 		else
 			# Link with pthreads for Win32's Visual Studio library.
-			LIBS += -pthreadVC
+			LIBS += -lpthreadVC2
 		endif
 
 		OBJDIR = obj/static
@@ -79,16 +80,17 @@ ifdef WINDOWS
 			LIBS += -lpthreadGC2
 		else
 			# Link with pthreads for Win32's Visual Studio library.
-			LIBS += -pthreadVC
+			LIBS += -lpthreadVC2
 		endif
 
 		OBJDIR = obj
 		BIN = $(NAME).exe
 	endif
 else
+	MKDIR = mkdir -p
 	RM = rm -f
 	ifdef STATICLINK
-		LIBS += `allegro-config --libs --static` -lXrender -pthread
+		LIBS += `allegro-config --libs --static` -lXrender -lpthread
 		OBJDIR = obj/static
 		BIN = $(NAME)_static
 	else
@@ -101,7 +103,10 @@ endif
 OBJ_CPP := $(addprefix $(OBJDIR)/, $(subst src/,,$(patsubst %.cpp,%.o,$(wildcard src/*.cpp))))
 OBJ_C := $(addprefix $(OBJDIR)/, $(subst src/,,$(patsubst %.c,%.o,$(wildcard src/*.c))))
 
-all: game
+all: $(BIN)
+
+$(OBJDIR):
+	$(MKDIR) obj
 
 $(OBJDIR)/%.o: src/%.c
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -109,7 +114,7 @@ $(OBJDIR)/%.o: src/%.c
 $(OBJDIR)/%.o: src/%.cpp
 	$(CXX) $(CFLAGS) -o $@ -c $<
 
-game: $(OBJ_C) $(OBJ_CPP)
+$(BIN): $(OBJDIR) $(OBJ_C) $(OBJ_CPP)
 	$(LD) -o $(BIN) $(OBJ_C) $(OBJ_CPP) $(LIBS) $(LFLAGS)
 
 clean:
