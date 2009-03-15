@@ -90,11 +90,11 @@ else
 	MKDIR = mkdir -p
 	RM = rm -f
 	ifdef STATICLINK
-		LIBS += `allegro-config --libs --static` -lXrender -lpthread
+		LIBS += `allegro-config --libs --static` -lXrender -lpthread -ltinyxml
 		OBJDIR = obj/static
 		BIN = $(NAME)_static
 	else
-		LIBS += `allegro-config --libs` -pthread
+		LIBS += `allegro-config --libs` -pthread -ltinyxml
 		OBJDIR = obj
 		BIN = $(NAME)
 	endif
