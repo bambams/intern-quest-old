@@ -22,10 +22,10 @@ namespace iq
 		this->h = h;
 		this->w = w;
 
-		this->bitmap.reset(load_bitmap(path.c_str(), NULL), destroy_bitmap);
+		this->bitmap.reset(load_bmp(path.c_str(), NULL), destroy_bitmap);
 
 		if(this->bitmap.get() == NULL)
-			throw std::runtime_error("Failed to load spritesheet.");
+			throw std::runtime_error("Failed to load spritesheet '" + path + "'.");
 	}
 }
 
