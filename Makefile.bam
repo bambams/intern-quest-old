@@ -6,6 +6,8 @@ CXX = g++
 CXX_CFLAGS = -g3 -Iinclude -pg -Wall
 CXX_COMPILE = $(CXX) -c $(CXX_CFLAGS)
 #CXX_LINK = $(CXX) $(CXX_CFLAGS) $(LIBS)
+DOCSDIRS = docs/html docs/latex docs/man docs/xml
+DOXYGEN = doxygen
 INCDIR = include
 LIBS += 
 NAME = iq
@@ -45,6 +47,10 @@ else
 	RM = rm -f
 	RMDIR = rm -fR
 endif
+
+# .PHONYs are targets that don't actually correspond to a file on the file
+# system.
+.PHONY: clean default docs
 
 # The default will make sure all subdirectories exist, compile, and link the
 # project.
@@ -92,10 +98,10 @@ $(OBJDIR):
 
 # -- Cleanup --
 clean:
-	$(RMDIR) $(OBJDIR)
+	$(RMDIR) $(DOCSDIRS) $(OBJDIR)
 	$(RM) $(BIN) $(OBJECTS) $(X11_ICON_OUT) gmon.out
 
-# .PHONYs are targets that don't actually correspond to a file on the file
-# system.
-.PHONY: clean default
+# -- Documentation --
+docs:
+	$(DOXYGEN) Doxyfile
 
