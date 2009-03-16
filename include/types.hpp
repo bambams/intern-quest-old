@@ -17,7 +17,6 @@ namespace iq
 	typedef std::vector<std::string> string_vector;
 
 	typedef boost::shared_ptr<BITMAP> BITMAP_ptr;
-	typedef boost::shared_ptr<BITMAP> BITMAP_ptr;
 	typedef boost::shared_ptr<TiXmlDocument> TiXmlDocument_ptr;
 	typedef boost::shared_ptr<sem_t> sem_t_ptr;
 	typedef boost::shared_ptr<string_map> string_map_ptr;

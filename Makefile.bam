@@ -8,25 +8,30 @@ CXX_COMPILE = $(CXX) -c $(CXX_CFLAGS)
 #CXX_LINK = $(CXX) $(CXX_CFLAGS) $(LIBS)
 DOCSDIRS = docs/html docs/latex docs/man docs/xml
 DOXYGEN = doxygen
+ICONBMP = media/icon.bmp
 INCDIR = include
 LIBS += 
 NAME = iq
 OBJDIR = obj
 SRCDIR = src
-X11_ICON_OUT = src/allegro_icon.c
+WIN_ICON_RES = $(OBJDIR)/icon.res
+X11_ICON_C = $(SRCDIR)/allegro_icon.c
+X11_ICON_O = $(OBJDIR)/allegro_icon.o
 
 # List all .o files here.
 OBJECTS += $(OBJDIR)/animation.o $(OBJDIR)/app.o $(OBJDIR)/entity.o $(OBJDIR)/main.o $(OBJDIR)/spritesheet.o $(OBJDIR)/tile.o $(OBJDIR)/tilemap.o $(OBJDIR)/timer.o
-
-ifndef WINDOWS
-	OBJECTS += $(OBJDIR)/allegro_icon.o
-endif
 
 # Some conditional stuff stolen from the SpeedHack Makefile.
 ifndef WINDOWS
 	ifdef MINGDIR
 		WINDOWS = 1
 	endif
+endif
+
+ifdef WINDOWS
+	OBJECTS += $(WIN_ICON_RES)
+else
+	OBJECTS += $(X11_ICON_O)
 endif
 
 ifdef WINDOWS
@@ -61,9 +66,6 @@ $(BIN): $(OBJECTS)
 	$(CXX) $(CXX_CFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
 # -- Compile the source files --
-$(OBJDIR)/allegro_icon.o: $(X11_ICON_OUT)
-	$(CXX_COMPILE) -o $@ $<
-
 $(OBJDIR)/animation.o: $(SRCDIR)/animation.cpp $(INCDIR)/animation.hpp 
 	$(CXX_COMPILE) -o $@ $<
 
@@ -88,9 +90,17 @@ $(OBJDIR)/tilemap.o: $(SRCDIR)/tilemap.cpp $(INCDIR)/tilemap.hpp
 $(OBJDIR)/timer.o: $(SRCDIR)/timer.cpp $(INCDIR)/timer.hpp 
 	$(CXX_COMPILE) -o $@ $<
 
+$(X11_ICON_O): $(X11_ICON_C)
+	$(CXX_COMPILE) -o $@ $<
+
+
 # -- Generate X11 icon source... --
-$(X11_ICON_OUT):
-	xfixicon.sh media/icon.bmp -o $(X11_ICON_OUT)
+$(X11_ICON_C):
+	xfixicon.sh $(ICON_BMP) -o $@
+
+# -- Build Windows icon resource file.
+$(WIN_ICON_RES):
+	wfixicon.bat $@ -ro $(ICON_BMP)
 
 # -- Make necessary directories --
 $(OBJDIR):
@@ -99,7 +109,7 @@ $(OBJDIR):
 # -- Cleanup --
 clean:
 	$(RMDIR) $(DOCSDIRS) $(OBJDIR)
-	$(RM) $(BIN) $(OBJECTS) $(X11_ICON_OUT) gmon.out
+	$(RM) $(BIN) gmon.out $(OBJECTS) $(WIN_ICON_RES) $(X11_ICON_C)
 
 # -- Documentation --
 docs:
