@@ -3,15 +3,9 @@
 
 namespace iq
 {
-	tile::tile(iq::BITMAP_ptr img, bool Passability)
+	tile::tile(iq::BITMAP_ptr img)
 	{
 		this->tileImage = img;
-		this->isPassable = Passability;
-	}
-
-	void tile::passable(bool Passability)
-	{
-		this->isPassable = Passability;
 	}
 }
 

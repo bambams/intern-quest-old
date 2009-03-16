@@ -32,7 +32,7 @@ namespace iq
 			throw;
 		}
 
-		this->demo_map.reset(new iq::tilemap("config/tilemap.xml"));
+		this->demo_map.reset(new iq::tilemap(""));
 
 		this->timer.reset(new iq::timer());
 
@@ -120,6 +120,13 @@ for(int i=0; i<3; i++)
 	vline(this->scrbuf.get(), this->scrbuf->w / 2 - 1 + i, 0, this->scrbuf->h, RED);
 	rect(this->scrbuf.get(), 0+i, 0+i, this->scrbuf->w - 1 - i, this->scrbuf->h - 1 - i, RED);
 }
+
+/*
+ * h4x: temporary just to draw TILEMAPS and have something pretty to look
+ * at. ^_^
+ */
+
+demo_map->draw(scrbuf);
 
 /*
  * h4x: temporary just to draw animations and have something pretty to look
@@ -337,7 +344,7 @@ for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i 
 
 		this->player = it->second;
 	}
-
+	
 	void app::logic(void)
 	{
 		IQ_APP_TRACE("iq::app::logic() {");

@@ -19,12 +19,12 @@ namespace iq
 	class tile
 	{
 		protected:
-			boost::shared_ptr<BITMAP> tileImage;
-			bool isPassable;
+			
+			
 		public:
-			tile(boost::shared_ptr<BITMAP> image, bool Passability);
-			void passable(bool Passability);
-			bool passable(){ return isPassable;}
+			boost::shared_ptr<BITMAP> tileImage;
+			tile(boost::shared_ptr<BITMAP> image);
+			
 	};
 }
 #endif
