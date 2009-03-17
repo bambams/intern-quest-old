@@ -71,12 +71,14 @@ namespace iq
 	void tilemap::loadHard()
 	{
 		int n = 0;
-		this->rawTileSetImage.reset(load_bitmap("media/tileset.bmp", NULL),destroy_bitmap);
-		
-		
 		BITMAP_ptr tmpBitmap;
 		tile_ptr tmpTile;
-		
+
+		this->rawTileSetImage.reset(load_bmp("map/example.tileset", NULL), destroy_bitmap);
+
+		if(this->rawTileSetImage.get() == NULL)
+			throw std::runtime_error("Failed to load map/example.tileset.");
+
 		this->MapTextureWidth = 64;
 		this->MapTextureHeight = 96;
 		this->MapNumTilesWide = 2;

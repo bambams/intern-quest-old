@@ -8,6 +8,7 @@ namespace iq
 }
 
 	#include <boost/shared_ptr.hpp>
+	#include <stdexcept>
 	#include <string>
 	#include <tile.hpp>
 	#include <vector>

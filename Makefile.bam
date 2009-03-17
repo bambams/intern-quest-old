@@ -8,13 +8,17 @@ CXX_COMPILE = $(CXX) -c $(CXX_CFLAGS)
 #CXX_LINK = $(CXX) $(CXX_CFLAGS) $(LIBS)
 DOCSDIRS = docs/html docs/latex docs/man docs/xml
 DOXYGEN = doxygen
-ICONBMP = media/icon.bmp
+ICON_BMP = media/icon.bmp
 INCDIR = include
 LIBS += 
+MKDIR = mkdir -p
 NAME = iq
 OBJDIR = obj
+RM = rm -f
+RMDIR = rm -fR
 SRCDIR = src
-WIN_ICON_RES = $(OBJDIR)/icon.res
+WIN_ICON = $(OBJDIR)\icon
+WIN_ICON_RES = $(WIN_ICON).res
 X11_ICON_C = $(SRCDIR)/allegro_icon.c
 X11_ICON_O = $(OBJDIR)/allegro_icon.o
 
@@ -29,28 +33,26 @@ ifndef WINDOWS
 endif
 
 ifdef WINDOWS
-	OBJECTS += $(WIN_ICON_RES)
+	
 else
-	OBJECTS += $(X11_ICON_O)
+	
 endif
 
 ifdef WINDOWS
-	LIBS += -lalleg
 	BIN = $(NAME).exe
+	LIBS += -lalleg
+
 	ifdef MINGDIR
-		# Link pthreads for Win32 library -- GNU without exceptions.
-		LIBS += -lpthreadGC
+		LIBS += -lpthreadGC2
+	else
+		LIBS += -lpthreadVC2
 	endif
 
-	MKDIR = mkdir
-	RM = del /q
-	RMDIR = rmdir /s /q
+	OBJECTS += $(WIN_ICON_RES) $(OBJDIR)/tinystr.o $(OBJDIR)/tinyxml.o $(OBJDIR)/tinyxmlerror.o $(OBJDIR)/tinyxmlparser.o
 else
 	BIN = $(NAME)
 	LIBS += `allegro-config --libs` -lpthread -ltinyxml
-	MKDIR = mkdir -p
-	RM = rm -f
-	RMDIR = rm -fR
+	OBJECTS += $(X11_ICON_O)
 endif
 
 # .PHONYs are targets that don't actually correspond to a file on the file
@@ -87,20 +89,45 @@ $(OBJDIR)/tile.o: $(SRCDIR)/tile.cpp $(INCDIR)/tile.hpp
 $(OBJDIR)/tilemap.o: $(SRCDIR)/tilemap.cpp $(INCDIR)/tilemap.hpp 
 	$(CXX_COMPILE) -o $@ $<
 
-$(OBJDIR)/timer.o: $(SRCDIR)/timer.cpp $(INCDIR)/timer.hpp 
+$(OBJDIR)/timer.o: $(SRCDIR)/timer.cpp $(INCDIR)/timer.hpp
 	$(CXX_COMPILE) -o $@ $<
+
+$(OBJDIR)/tinystr.o: $(SRCDIR)/tinystr.cpp $(INCDIR)/tinystr.h
+ifdef WINDOWS
+	$(CXX_COMPILE) -o $@ $<
+endif
+
+$(OBJDIR)/tinyxml.o: $(SRCDIR)/tinyxml.cpp $(INCDIR)/tinyxml.h
+ifdef WINDOWS
+	$(CXX_COMPILE) -o $@ $<
+endif
+
+$(OBJDIR)/tinyxmlerror.o: $(SRCDIR)/tinyxmlerror.cpp
+ifdef WINDOWS
+	$(CXX_COMPILE) -o $@ $<
+endif
+
+$(OBJDIR)/tinyxmlparser.o: $(SRCDIR)/tinyxmlparser.cpp
+ifdef WINDOWS
+	$(CXX_COMPILE) -o $@ $<
+endif
 
 $(X11_ICON_O): $(X11_ICON_C)
+ifndef WINDOWS
 	$(CXX_COMPILE) -o $@ $<
-
+endif
 
 # -- Generate X11 icon source... --
 $(X11_ICON_C):
+ifndef WINDOWS
 	xfixicon.sh $(ICON_BMP) -o $@
+endif
 
 # -- Build Windows icon resource file.
-$(WIN_ICON_RES):
-	wfixicon.bat $@ -ro $(ICON_BMP)
+$(WIN_ICON_RES): $(ICON_BMP)
+ifdef WINDOWS
+	wfixicon.exe $(WIN_ICON) -ro $(ICON_BMP)
+endif
 
 # -- Make necessary directories --
 $(OBJDIR):
@@ -108,10 +135,9 @@ $(OBJDIR):
 
 # -- Cleanup --
 clean:
-	$(RMDIR) $(DOCSDIRS) $(OBJDIR)
-	$(RM) $(BIN) gmon.out $(OBJECTS) $(WIN_ICON_RES) $(X11_ICON_C)
+	-$(RMDIR) $(DOCSDIRS) $(OBJDIR)
+	-$(RM) $(BIN) gmon.out $(OBJECTS) $(WIN_ICON_RES) $(X11_ICON_C)
 
 # -- Documentation --
 docs:
 	$(DOXYGEN) Doxyfile
-
