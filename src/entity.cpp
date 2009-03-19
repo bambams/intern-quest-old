@@ -50,7 +50,7 @@ namespace iq
 		for(entity::animation_map::iterator i=this->m_animations->begin(); i != this->m_animations->end(); i++)
 			(*keys)[j++] = i->first;
 
-		return(keys);
+		return keys;
 	}
 
 	const entity::animation_map::const_iterator entity::begin_animation(const std::string &key, const iq::uint ms)
@@ -62,7 +62,7 @@ namespace iq
 
 		(this->m_current_animation_iterator = animation_iterator)->second->begin(ms);
 
-		return(this->m_current_animation_iterator);
+		return this->m_current_animation_iterator;
 	}
 
 	const entity::animation_map::const_iterator entity::current_animation(void) const
@@ -70,12 +70,12 @@ namespace iq
 		if(this->m_current_animation_iterator == this->m_animations->end())
 			throw std::logic_error("No entity animation has been started yet. Cannot get current animation.");
 
-		return(this->m_current_animation_iterator);
+		return this->m_current_animation_iterator;
 	}
 
 	const iq::BITMAP_ptr entity::current_frame(const iq::uint ms) const
 	{
-		return(this->current_animation()->second->next(ms));
+		return this->current_animation()->second->next(ms);
 	}
 
 	void entity::face(entity::facing_direction facing)
@@ -85,12 +85,12 @@ namespace iq
 
 	const entity::facing_direction entity::facing(void) const
 	{
-		return(this->m_facing);
+		return this->m_facing;
 	}
 
 	const iq::uint entity::h(void) const
 	{
-		return(this->m_h);
+		return this->m_h;
 	}
 
 	void entity::load(const std::string &path)
@@ -197,7 +197,7 @@ namespace iq
 
 	const std::string entity::name(void) const
 	{
-		return(this->m_name);
+		return this->m_name;
 	}
 
 	void entity::pause_animation(void)
@@ -222,22 +222,22 @@ namespace iq
 
 	const iq::uint entity::speed(void) const
 	{
-		return(this->m_speed);
+		return this->m_speed;
 	}
 
 	const iq::uint entity::w(void) const
 	{
-		return(this->m_w);
+		return this->m_w;
 	}
 
 	const iq::uint entity::x(void) const
 	{
-		return(this->m_x);
+		return this->m_x;
 	}
 
 	const iq::uint entity::y(void) const
 	{
-		return(this->m_y);
+		return this->m_y;
 	}
 }
 

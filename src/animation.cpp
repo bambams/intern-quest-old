@@ -63,7 +63,7 @@ namespace iq
 
 		this->m_playing = true;
 
-		return(this->m_frames[0]);
+		return this->m_frames[0];
 	}
 
 	const iq::BITMAP_ptr animation::begin(const iq::uint ms_per_frame, const iq::uint ms)
@@ -73,19 +73,19 @@ namespace iq
 
 		this->m_playing = true;
 
-		return(this->m_frames[0]);
+		return this->m_frames[0];
 	}
 
 	const iq::BITMAP_ptr animation::frame(const iq::uint i) const
 	{
 		this->check_frame_index(i);
 
-		return(this->m_frames[i]);
+		return this->m_frames[i];
 	}
 
 	const iq::uint animation::h(void) const
 	{
-		return(this->m_frames[0]->h);
+		return this->m_frames[0]->h;
 	}
 
 	void animation::load(const iq::spritesheet_ptr sheet, const iq::uint i)
@@ -167,7 +167,7 @@ namespace iq
 		iq::uint past;
 
 		if(!this->m_playing)
-			return(this->m_frames[this->m_last_frame]);
+			return this->m_frames[this->m_last_frame];
 
 		this->check_ms_per_frame();
 		this->check_ms(ms);
@@ -183,12 +183,12 @@ printf("ms=%d    last_ms=%d    past=%d    i=%d\n", ms, this->m_last_ms, past, i)
 			this->set_last_frame(i);
 		}
 
-		return(this->m_frames[i]);
+		return this->m_frames[i];
 	}
 
 	const iq::BITMAP_ptr animation::operator[](const iq::uint i) const
 	{
-		return(this->frame(i));
+		return this->frame(i);
 	}
 
 	void animation::pause(void)
@@ -198,7 +198,7 @@ printf("ms=%d    last_ms=%d    past=%d    i=%d\n", ms, this->m_last_ms, past, i)
 
 	const bool animation::playing(void) const
 	{
-		return(this->m_playing);
+		return this->m_playing;
 	}
 
 	void animation::reset(void)
@@ -231,7 +231,7 @@ printf("ms=%d    last_ms=%d    past=%d    i=%d\n", ms, this->m_last_ms, past, i)
 
 	const iq::uint animation::w(void) const
 	{
-		return(this->m_frames[0]->w);
+		return this->m_frames[0]->w;
 	}
 }
 

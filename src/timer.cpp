@@ -18,51 +18,51 @@ namespace iq
 	
 	iq::uint timer::after_days(const iq::uint total_secs)
 	{
-		return(total_secs - (timer::days(total_secs) * timer::SECS_PER_DAY));
+		return total_secs - (timer::days(total_secs) * timer::SECS_PER_DAY);
 	}
 	
 	iq::uint timer::after_hours(const iq::uint total_secs)
 	{
-		return(timer::after_days(total_secs) - (timer::hours(total_secs) * timer::SECS_PER_HOUR));
+		return timer::after_days(total_secs) - (timer::hours(total_secs) * timer::SECS_PER_HOUR);
 	}
 	
 	iq::uint timer::after_mins(const iq::uint total_secs)
 	{
-		return(timer::after_hours(total_secs) - (timer::mins(total_secs) * timer::SECS_PER_MIN));
+		return timer::after_hours(total_secs) - (timer::mins(total_secs) * timer::SECS_PER_MIN);
 	}
 	
 	iq::uint timer::days(void) const
 	{
-		return(timer::days(this->total_secs()));
+		return timer::days(this->total_secs());
 	}
 	
 	iq::uint timer::days(const iq::uint total_secs)
 	{
-		return(total_secs / timer::SECS_PER_DAY);
+		return total_secs / timer::SECS_PER_DAY;
 	}
 	
 	iq::uint timer::hours(void) const
 	{
-		return(this->hours(this->total_secs()));
+		return this->hours(this->total_secs());
 	}
 	
 	iq::uint timer::hours(const iq::uint total_secs)
 	{
 		iq::uint left = timer::after_days(total_secs);
 	
-		return(left / timer::SECS_PER_HOUR);
+		return left / timer::SECS_PER_HOUR;
 	}
 	
 	iq::uint timer::mins(void) const
 	{
-		return(timer::mins(this->total_secs()));
+		return timer::mins(this->total_secs());
 	}
 	
 	iq::uint timer::mins(const iq::uint total_secs)
 	{
 		iq::uint left = timer::after_hours(total_secs);
 	
-		return(left / timer::SECS_PER_MIN);
+		return left / timer::SECS_PER_MIN;
 	}
 
 	void timer::reset(void)
@@ -72,14 +72,14 @@ namespace iq
 
 	iq::uint timer::secs(void) const
 	{
-		return(this->after_mins(this->total_secs()));
+		return this->after_mins(this->total_secs());
 	}
 
 	bool timer::start(void)
 	{
 		if(!this->running)
-			return(this->running = (install_param_int_ex(timer::tick, this, BPS_TO_TIMER(1)) == 0));
-		return(true);
+			return this->running = (install_param_int_ex(timer::tick, this, BPS_TO_TIMER(1)) == 0);
+		return true;
 	}
 
 	void timer::stop(void)
@@ -110,27 +110,27 @@ namespace iq
 			ss.width(strsize);
 		}
 
-		return(ss.str());
+		return ss.str();
 	}
 
 	float timer::total_days(void) const
 	{
-		return((float)this->total_secs() / (float)this->SECS_PER_DAY);
+		return (float)this->total_secs() / (float)this->SECS_PER_DAY;
 	}
 	
 	float timer::total_hours(void) const
 	{
-		return((float)this->total_secs() / (float)this->SECS_PER_HOUR);
+		return (float)this->total_secs() / (float)this->SECS_PER_HOUR;
 	}
 	
 	float timer::total_mins(void) const
 	{
-		return((float)this->total_secs() / (float)this->SECS_PER_MIN);
+		return (float)this->total_secs() / (float)this->SECS_PER_MIN;
 	}
 	
 	iq::uint timer::total_secs(void) const
 	{
-		return(this->ticks);
+		return this->ticks;
 	}
 	
 	void timer::tick(void *self)
