@@ -34,26 +34,6 @@ namespace iq
 
 		this->demo_map.reset(new iq::tilemap("map/example.map", this->tiles));
 
-printf("layers=%d tiles=%d\n", this->demo_map->get_layers().size(), this->tiles.size());
-
-/*for(iq::uint i=0; i<this->demo_map->get_layers().size(); i++)
-{
-	printf("\tlayer[%d] rows=%d\n", i, this->demo_map->get_layers()[i].size());
-	for(iq::uint j=0; j<this->demo_map->get_layers()[i].size(); j++)
-		printf("\t\tlayer[%d].row[%d] tiles=%d\n", i, j, this->demo_map->get_layers()[i][j].size());
-}*/
-
-clear_to_color(screen, makecol(255, 255, 255));
-
-iq::uint i=0;
-for(std::map<std::string, iq::tile_ptr>::iterator it=this->tiles.begin(); it!=this->tiles.end(); it++)
-{
-	masked_blit(it->second->bitmap.get(), screen, 0, 0, i*it->second->bitmap->w, i*it->second->bitmap->h, it->second->bitmap->w, it->second->bitmap->h);
-	i++;
-}
-
-getc(stdin);
-
 		this->timer.reset(new iq::timer());
 
 		/*
@@ -146,7 +126,7 @@ for(int i=0; i<3; i++)
  * at. ^_^
  */
 
-demo_map->draw(scrbuf);
+demo_map->draw(scrbuf, this->player);
 
 /*
  * h4x: temporary just to draw animations and have something pretty to look

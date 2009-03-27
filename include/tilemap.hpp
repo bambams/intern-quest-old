@@ -8,6 +8,7 @@ namespace iq
 }
 	#include <boost/lexical_cast.hpp>
 	#include <boost/shared_ptr.hpp>
+	#include <entity.hpp>
 	#include <stdexcept>
 	#include <string>
 	#include <tile.hpp>
@@ -36,7 +37,7 @@ namespace iq
 	public:
 		tilemap(const std::string &, std::map<std::string, iq::tile_ptr> &);
 
-		void draw(const BITMAP_ptr) const;
+		void draw(const iq::BITMAP_ptr, const iq::entity_ptr) const;
 		const unsigned int h(void) const;
 		const std::vector<tilelayer> get_layers(void) const;
 		const iq::uint get_tilesize(void) const;

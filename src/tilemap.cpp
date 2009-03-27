@@ -10,22 +10,31 @@ namespace iq
 //		this->loadHard();
 	}
 
-	void tilemap::draw(const iq::BITMAP_ptr scrbuf) const
+	void tilemap::draw(const iq::BITMAP_ptr scrbuf, const iq::entity_ptr player) const
 	{
-		iq::BITMAP_ptr tilebmp;
+static bool flag = true;
+		int map_x, map_y;
+		iq::BITMAP_ptr bitmap;
 
 		for(iq::uint z=0, zlen=this->layers.size(); z<zlen; z++)
 		{
-			for(iq::uint y=0, ylen=this->layers[z].size(); y<ylen; y++)
-			{
-				for(iq::uint x=0, xlen=this->layers[z][y].size(); x<xlen; x++)
-				{
-					tilebmp = this->layers[z][y][x]->bitmap;
+			map_y = player->y()-(scrbuf->h/2.0/this->tilesize);
 
-					masked_blit(tilebmp.get(), scrbuf.get(), 0, 0, x * tilebmp->w, y * tilebmp->h, tilebmp->w, tilebmp->h);					
+			for(int y=0, ylen=this->layers[z].size(); y<ylen; y++)
+			{
+				map_x=player->x()-(scrbuf->w/2.0/this->tilesize);
+
+				for(int x=0, xlen=this->layers[z][y].size(); x<xlen; x++)
+				{
+					bitmap = this->layers[z][y][x]->bitmap;
+if(flag)
+printf("Container: x,y,z=%3d,%3d,%3d\tScreen: x,y,z=%3d,%3d,%3d\n", x, y, z, x * bitmap->w, y * bitmap->h, z);
+
+					masked_blit(bitmap.get(), scrbuf.get(), 0, 0, map_x + (x*this->tilesize), map_y + (y*this->tilesize), bitmap->w, bitmap->h);
 				}
 			}
 		}
+flag=false;
 	}
 
 	const std::vector<tilemap::tilelayer> tilemap::get_layers(void) const
@@ -266,7 +275,7 @@ endloop:
 		if(bitmap.get() == NULL)
 			throw std::runtime_error("Failed to allocate void tile.");
 
-		rect(bitmap.get(), 0, 0, this->tilesize, this->tilesize, makecol(255, 0, 255));
+		rectfill(bitmap.get(), 0, 0, this->tilesize, this->tilesize, makecol(255, 0, 255));
 
 		tile.reset(new iq::tile(bitmap));
 
