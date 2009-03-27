@@ -6,14 +6,24 @@ CXX = g++
 CXX_CFLAGS = -g3 -Iinclude -pg -Wall
 CXX_COMPILE = $(CXX) -c $(CXX_CFLAGS)
 #CXX_LINK = $(CXX) $(CXX_CFLAGS) $(LIBS)
+DOCSDIRS = docs/html docs/latex docs/man docs/xml
+DOXYGEN = doxygen
+ICON_BMP = media/icon.bmp
 INCDIR = include
 LIBS += 
+MKDIR = mkdir -p
 NAME = iq
 OBJDIR = obj
+RM = rm -f
+RMDIR = rm -fR
 SRCDIR = src
+WIN_ICON = $(OBJDIR)\icon
+WIN_ICON_RES = $(WIN_ICON).res
+X11_ICON_C = $(SRCDIR)/allegro_icon.c
+X11_ICON_O = $(OBJDIR)/allegro_icon.o
 
 # List all .o files here.
-OBJECTS += $(OBJDIR)/main.o $(OBJDIR)/app.o $(OBJDIR)/timer.o
+OBJECTS += $(OBJDIR)/animation.o $(OBJDIR)/app.o $(OBJDIR)/entity.o $(OBJDIR)/main.o $(OBJDIR)/spritesheet.o $(OBJDIR)/tile.o $(OBJDIR)/tilemap.o $(OBJDIR)/timer.o
 
 # Some conditional stuff stolen from the SpeedHack Makefile.
 ifndef WINDOWS
@@ -23,23 +33,31 @@ ifndef WINDOWS
 endif
 
 ifdef WINDOWS
-	LIBS += -lalleg
+	
+else
+	
+endif
+
+ifdef WINDOWS
 	BIN = $(NAME).exe
+	LIBS += -lalleg
+
 	ifdef MINGDIR
-		# Link pthreads for Win32 library -- GNU without exceptions.
-		LIBS += -lpthreadGC
+		LIBS += -lpthreadGC2
+	else
+		LIBS += -lpthreadVC2
 	endif
 
-	MKDIR = mkdir
-	RM = del /q
-	RMDIR = rmdir /s /q
+	OBJECTS += $(WIN_ICON_RES) $(OBJDIR)/tinystr.o $(OBJDIR)/tinyxml.o $(OBJDIR)/tinyxmlerror.o $(OBJDIR)/tinyxmlparser.o
 else
 	BIN = $(NAME)
-	LIBS += `allegro-config --libs` -lpthread
-	MKDIR = mkdir -p
-	RM = rm -f
-	RMDIR = rm -fR
+	LIBS += `allegro-config --libs` -lpthread -ltinyxml
+	OBJECTS += $(X11_ICON_O)
 endif
+
+# .PHONYs are targets that don't actually correspond to a file on the file
+# system.
+.PHONY: clean default docs
 
 # The default will make sure all subdirectories exist, compile, and link the
 # project.
@@ -50,14 +68,66 @@ $(BIN): $(OBJECTS)
 	$(CXX) $(CXX_CFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
 # -- Compile the source files --
-$(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp $(INCDIR)/app.hpp $(INCDIR)/iq.hpp
+$(OBJDIR)/animation.o: $(SRCDIR)/animation.cpp $(INCDIR)/animation.hpp 
 	$(CXX_COMPILE) -o $@ $<
 
-$(OBJDIR)/app.o: $(SRCDIR)/app.cpp $(INCDIR)/app.hpp $(INCDIR)/iq.hpp
+$(OBJDIR)/app.o: $(SRCDIR)/app.cpp $(INCDIR)/app.hpp 
 	$(CXX_COMPILE) -o $@ $<
 
-$(OBJDIR)/timer.o: $(SRCDIR)/timer.cpp $(INCDIR)/timer.hpp $(INCDIR)/iq.hpp
+$(OBJDIR)/entity.o: $(SRCDIR)/entity.cpp $(INCDIR)/entity.hpp 
 	$(CXX_COMPILE) -o $@ $<
+
+$(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp
+	$(CXX_COMPILE) -o $@ $<
+
+$(OBJDIR)/spritesheet.o: $(SRCDIR)/spritesheet.cpp $(INCDIR)/spritesheet.hpp
+	$(CXX_COMPILE) -o $@ $<
+
+$(OBJDIR)/tile.o: $(SRCDIR)/tile.cpp $(INCDIR)/tile.hpp 
+	$(CXX_COMPILE) -o $@ $<
+
+$(OBJDIR)/tilemap.o: $(SRCDIR)/tilemap.cpp $(INCDIR)/tilemap.hpp 
+	$(CXX_COMPILE) -o $@ $<
+
+$(OBJDIR)/timer.o: $(SRCDIR)/timer.cpp $(INCDIR)/timer.hpp
+	$(CXX_COMPILE) -o $@ $<
+
+$(OBJDIR)/tinystr.o: $(SRCDIR)/tinystr.cpp $(INCDIR)/tinystr.h
+ifdef WINDOWS
+	$(CXX_COMPILE) -o $@ $<
+endif
+
+$(OBJDIR)/tinyxml.o: $(SRCDIR)/tinyxml.cpp $(INCDIR)/tinyxml.h
+ifdef WINDOWS
+	$(CXX_COMPILE) -o $@ $<
+endif
+
+$(OBJDIR)/tinyxmlerror.o: $(SRCDIR)/tinyxmlerror.cpp
+ifdef WINDOWS
+	$(CXX_COMPILE) -o $@ $<
+endif
+
+$(OBJDIR)/tinyxmlparser.o: $(SRCDIR)/tinyxmlparser.cpp
+ifdef WINDOWS
+	$(CXX_COMPILE) -o $@ $<
+endif
+
+$(X11_ICON_O): $(X11_ICON_C)
+ifndef WINDOWS
+	$(CXX_COMPILE) -o $@ $<
+endif
+
+# -- Generate X11 icon source... --
+$(X11_ICON_C):
+ifndef WINDOWS
+	xfixicon.sh $(ICON_BMP) -o $@
+endif
+
+# -- Build Windows icon resource file.
+$(WIN_ICON_RES): $(ICON_BMP)
+ifdef WINDOWS
+	wfixicon.exe $(WIN_ICON) -ro $(ICON_BMP)
+endif
 
 # -- Make necessary directories --
 $(OBJDIR):
@@ -65,10 +135,9 @@ $(OBJDIR):
 
 # -- Cleanup --
 clean:
-	$(RMDIR) $(OBJDIR)
-	$(RM) $(BIN) $(OBJECTS) gmon.out
+	-$(RMDIR) $(DOCSDIRS) $(OBJDIR)
+	-$(RM) $(BIN) gmon.out $(OBJECTS) $(WIN_ICON_RES) $(X11_ICON_C)
 
-# .PHONYs are targets that don't actually correspond to a file on the file
-# system.
-.PHONY: clean default
-
+# -- Documentation --
+docs:
+	$(DOXYGEN) Doxyfile

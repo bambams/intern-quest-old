@@ -2,13 +2,22 @@
 #ifndef IQ_APP_HPP
 	#define IQ_APP_HPP
 
+namespace iq
+{
+	class app;
+}
+
 	#include <allegro.h>
 	#include <boost/shared_ptr.hpp>
+	#include <entity.hpp>
 	#include <iostream>
 	#include <timer.hpp>
 	#include <map>
 	#include <semaphore.h>
+	#include <stdexcept>
 	#include <string>
+	#include <tilemap.hpp>
+	#include <tinyxml.h>
 
 	#ifdef IQ_APP_TRACE
 		#error OMFG, IQ_APP_TRACE already exists! \o/
@@ -25,14 +34,19 @@
 	#define IQ_APP_TRACE(msg)                 
 /*		do                                    \
 		{                                     \
-            std::cout << msg << std::endl;    \
+			std::cout << msg << std::endl;    \
 		}while(0)
 */
+
+	#define BLUE makecol(0, 0, 255)
 	#define NUM_DIMENSIONS 2
+	#define RED makecol(255, 0, 0)
 	#define WHITE makecol(255, 255, 255)
 
 namespace iq
 {
+	typedef boost::shared_ptr<app> app_ptr;
+
 	/**
 	 * \brief An application class to hold application state data.
 	 * \details Intended to be passed around the application to avoid
@@ -48,20 +62,32 @@ namespace iq
 		// Method pointer for draw and logic.
 		typedef void (app::*void_method_void)(void);
 
-		void_method_void drawptr;
-		void_method_void logicptr;
+		const static std::string DEFAULT_FILE;
 
+		std::string m_file;
+
+		void_method_void m_drawptr;
+		void_method_void m_logicptr;
+
+		void load_entities(const TiXmlElement * const);
 	public:
 		// `state' wouldn't work for a typename and variable name so gamestate is what it became...
 		enum gamestate {SETUP, GAMEPLAY, SCRIPTED, CREDITS};
 
-		std::map<std::string, std::string> argv;
+		iq::string_map argv;
+		iq::tilemap_ptr demo_map;
+		std::map<std::string, iq::entity_ptr> entities;
+		iq::uint fts; // frames this second.
+		iq::uint ms;
 		bool os_cursor;
-		boost::shared_ptr<BITMAP> scrbuf;
-		boost::shared_ptr<sem_t> sem;
+		iq::entity_ptr player;
+		iq::BITMAP_ptr scrbuf;
+		iq::sem_t_ptr sem;
 		gamestate state;
-		int target_fps;
-		boost::shared_ptr<iq::timer> timer;
+		iq::uint target_fps;
+		std::map<std::string, iq::tile_ptr> tiles;
+		iq::timer_ptr timer;
+		iq::uint total_frames;
 		bool verbose;
 
 		static bool close_button_pressed;
@@ -76,6 +102,8 @@ namespace iq
 		void draw_scripted(void);
 		void draw_credits(void);
 		void initialize(void);
+		void load(void);
+		void load(const TiXmlElement * const);
 		void logic(void);
 		void logic_setup(void);
 		void logic_gameplay(void);
@@ -85,7 +113,6 @@ namespace iq
 		void set_state(gamestate);
 
 		static void add_frame(void *);
-		//static void close_button_handler(void *);
 		static void close_button_handler(void);
 		static void sem_destroy(sem_t *);
 	};
