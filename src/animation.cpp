@@ -175,7 +175,7 @@ namespace iq
 		past = (ms - this->m_last_ms) / this->m_ms_per_frame;
 		i = (this->m_last_frame + past) % this->m_frames.size();
 
-printf("ms=%d    last_ms=%d    past=%d    i=%d\n", ms, this->m_last_ms, past, i);
+//printf("ms=%d    last_ms=%d    past=%d    i=%d\n", ms, this->m_last_ms, past, i);
 
 		if(i != this->m_last_frame)
 		{

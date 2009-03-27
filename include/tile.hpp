@@ -20,9 +20,9 @@ namespace iq
 	{
 		protected:
 		public:
-			boost::shared_ptr<BITMAP> bitmap;
+			iq::BITMAP_ptr bitmap;
 
-			tile(const boost::shared_ptr<BITMAP>);
+			tile(const iq::BITMAP_ptr);
 	};
 }
 

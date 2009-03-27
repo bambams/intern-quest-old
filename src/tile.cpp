@@ -3,7 +3,7 @@
 
 namespace iq
 {
-	tile::tile(iq::BITMAP_ptr bitmap)
+	tile::tile(const iq::BITMAP_ptr bitmap)
 	{
 		this->bitmap = bitmap;
 	}

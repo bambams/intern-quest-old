@@ -22,12 +22,15 @@ namespace iq
 				{
 					tilebmp = this->layers[z][y][x]->bitmap;
 
-					masked_blit(tilebmp.get(), scrbuf.get(), 0, 0,
-					            x * tilebmp->w, y * tilebmp->h,
-					            tilebmp->w, tilebmp->h);
+					masked_blit(tilebmp.get(), scrbuf.get(), 0, 0, x * tilebmp->w, y * tilebmp->h, tilebmp->w, tilebmp->h);					
 				}
 			}
 		}
+	}
+
+	const std::vector<tilemap::tilelayer> tilemap::get_layers(void) const
+	{
+		return this->layers;
 	}
 
 	void tilemap::load(const std::string &path, std::map<std::string, iq::tile_ptr> &tiles)
@@ -96,6 +99,7 @@ namespace iq
 		if((node = element->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
 			throw std::runtime_error("Tile_Size XML is invalid.");
 
+		ss.clear();
 		ss.str(s = node->ToText()->ValueStr());
 
 		if(!(ss >> this->tilesize))
@@ -107,9 +111,8 @@ namespace iq
 		if((node = element->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
 			throw std::runtime_error("Layers XML element is invalid.");
 
+		ss.clear();
 		ss.str(s = node->ToText()->ValueStr());
-
-printf("ss.str=%s ss.fail=%d ss.bad=%d\n", ss.str().c_str(), ss.fail(), ss.bad());
 
 		if(!(ss >> num_layers))
 			throw std::runtime_error("Invalid tilemap layers count '" + s + "'.");
@@ -120,6 +123,7 @@ printf("ss.str=%s ss.fail=%d ss.bad=%d\n", ss.str().c_str(), ss.fail(), ss.bad()
 		if((node = element->FirstChild()) == NULL || node->Type() != TiXmlElement::TEXT)
 			throw std::runtime_error("Width XML element is invalid.");
 
+		ss.clear();
 		ss.str(s = node->ToText()->ValueStr());
 
 		if(!(ss >> w))
@@ -130,11 +134,14 @@ printf("ss.str=%s ss.fail=%d ss.bad=%d\n", ss.str().c_str(), ss.fail(), ss.bad()
 
 		if((node = element->FirstChild()) == NULL || node->Type() != TiXmlElement::TEXT)
 			throw std::runtime_error("Height XML element is invalid.");
-		
+
+		ss.clear();
 		ss.str(s = node->ToText()->ValueStr());
 
 		if(!(ss >> h))
-			throw std::runtime_error("Invalid tilemap width '" + s + "'.");
+			throw std::runtime_error("Invalid tilemap height '" + s + "'.");
+
+//printf("tilesize=%d layers=%d width=%d height=%d\n", this->tilesize, num_layers, w, h);
 	}
 
 	const std::vector< std::vector<iq::tile_ptr> > tilemap::load_layer(const TiXmlElement * const layer, const std::string &path, const iq::BITMAP_ptr tileset, std::map<std::string, iq::tile_ptr> &tiles)
@@ -168,16 +175,23 @@ printf("ss.str=%s ss.fail=%d ss.bad=%d\n", ss.str().c_str(), ss.fail(), ss.bad()
 
 	const std::vector<iq::tile_ptr> tilemap::load_rowinfo(const TiXmlElement * const rowinfo, const std::string &path, const BITMAP_ptr tileset, std::map<std::string, iq::tile_ptr> &tiles)
 	{
-		iq::uint i;
+		long i;
+		const TiXmlNode *node = NULL;
 		std::stringstream ss;
 		std::vector<iq::tile_ptr> tilerow;
 
-		if(!(ss << rowinfo->ValueStr()))
+		if((node = rowinfo->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
+			throw std::runtime_error("RowInfo XML is invalid.");
+
+		if(!(ss << node->ToText()->ValueStr()))
 			throw std::runtime_error("Failed to load tilerow.");
 
 		while(ss >> i)
 		{
-			tilerow.push_back(this->load_tile(tiles, tileset, path, i));
+			if(i == -1)
+				tilerow.push_back(this->void_tile(tiles));
+			else
+				tilerow.push_back(this->load_tile(tiles, tileset, path, (iq::uint)i));
 			ss.ignore(1);
 		}
 
@@ -187,23 +201,28 @@ printf("ss.str=%s ss.fail=%d ss.bad=%d\n", ss.str().c_str(), ss.fail(), ss.bad()
 	const tile_ptr tilemap::load_tile(std::map<std::string, iq::tile_ptr> &tiles, const iq::BITMAP_ptr tileset, const std::string &path, const iq::uint i)
 	{
 		iq::BITMAP_ptr bitmap;
-		const iq::uint d = i * this->tilesize;
 		std::map<std::string, iq::tile_ptr>::iterator it;
+		iq::uint j=1;
 		std::string k = path + ":" + boost::lexical_cast<std::string>(i);
 		iq::tile_ptr tile;
+		iq::uint x, y;
 
 		if((it = tiles.find(k)) != tiles.end())
 			return it->second;
-
+		
 		bitmap.reset(create_bitmap(this->tilesize, this->tilesize), destroy_bitmap);
-
 		if(bitmap.get() == NULL)
 			throw std::runtime_error("Failed to allocate memory for tile bitmap.");
 
-		blit(tileset.get(), bitmap.get(), d, d, 0, 0, this->tilesize, this->tilesize);
+		for(y=0; y < (iq::uint)tileset->h; y += this->tilesize)
+			for(x=0; x < (iq::uint)tileset->w; x += this->tilesize)
+				if(j++ == i)
+					goto endloop;
+		throw std::runtime_error("Invalid tile index '" + boost::lexical_cast<std::string>(i) + "' Valid indexes are 1-" + boost::lexical_cast<std::string>(tileset->w * tileset->h) + ".");
 
+endloop:
+		blit(tileset.get(), bitmap.get(), x, y, 0, 0, this->tilesize, this->tilesize);
 		tile.reset(new iq::tile(bitmap));
-
 		tiles[k] = tile;
 
 		return tile;
@@ -230,6 +249,30 @@ printf("ss.str=%s ss.fail=%d ss.bad=%d\n", ss.str().c_str(), ss.fail(), ss.bad()
 			throw std::runtime_error("Failed to load tileset '" + path + "'.");
 
 		return tileset;
+	}
+
+	const iq::tile_ptr tilemap::void_tile(std::map<std::string, iq::tile_ptr> &tiles) const
+	{
+		iq::BITMAP_ptr bitmap;
+		std::map<std::string, iq::tile_ptr>::iterator it;
+		std::string k = "void:-1";
+		iq::tile_ptr tile;
+
+		if((it = tiles.find(k)) != tiles.end())
+			return it->second;
+
+		bitmap.reset(create_bitmap(this->tilesize, this->tilesize), destroy_bitmap);
+
+		if(bitmap.get() == NULL)
+			throw std::runtime_error("Failed to allocate void tile.");
+
+		rect(bitmap.get(), 0, 0, this->tilesize, this->tilesize, makecol(255, 0, 255));
+
+		tile.reset(new iq::tile(bitmap));
+
+		tiles[k] = tile;
+
+		return tile;
 	}
 
 	// WARNING! A DEADLY KLUDGE LURKS NEARBY!
