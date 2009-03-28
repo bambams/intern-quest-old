@@ -112,14 +112,14 @@ namespace iq
 /*
  * h4x: temporary just to see the screen dimensions and center.
  */
-rectfill(this->scrbuf.get(), 0, 0, this->scrbuf->w, this->scrbuf->h, WHITE);
+// rectfill(this->scrbuf.get(), 0, 0, this->scrbuf->w, this->scrbuf->h, WHITE);
 
-for(int i=0; i<3; i++)
-{
-	hline(this->scrbuf.get(), 0, this->scrbuf->h / 2 - 1 + i, this->scrbuf->w, RED);
-	vline(this->scrbuf.get(), this->scrbuf->w / 2 - 1 + i, 0, this->scrbuf->h, RED);
-	rect(this->scrbuf.get(), 0+i, 0+i, this->scrbuf->w - 1 - i, this->scrbuf->h - 1 - i, RED);
-}
+// for(int i=0; i<3; i++)
+// {
+	// hline(this->scrbuf.get(), 0, this->scrbuf->h / 2 - 1 + i, this->scrbuf->w, RED);
+	// vline(this->scrbuf.get(), this->scrbuf->w / 2 - 1 + i, 0, this->scrbuf->h, RED);
+	// rect(this->scrbuf.get(), 0+i, 0+i, this->scrbuf->w - 1 - i, this->scrbuf->h - 1 - i, RED);
+// }
 
 /*
  * h4x: temporary just to draw TILEMAPS and have something pretty to look

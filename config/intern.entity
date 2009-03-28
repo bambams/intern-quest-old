@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <entity name="intern" speed="20">
-	<animations spritesheet="media/intern.spritesheet" length="4" count="4" height="320" width="240" ms_per_frame="500">
+	<animations spritesheet="media/intern.spritesheet" length="4" count="4" ms_per_frame="100">
 		<animation index="0">walk_up</animation>
 		<animation index="1">walk_right</animation>
 		<animation index="2">walk_down</animation>
