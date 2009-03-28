@@ -18,17 +18,17 @@ static bool flag = true;
 
 		for(iq::uint z=0, zlen=this->layers.size(); z<zlen; z++)
 		{
-			map_y = player->y()-(scrbuf->h/2.0/this->tilesize);
+			map_y = -(player->y()-(scrbuf->h/2.0));
 
 			for(int y=0, ylen=this->layers[z].size(); y<ylen; y++)
 			{
-				map_x=player->x()-(scrbuf->w/2.0/this->tilesize);
+				map_x = -(player->x()-(scrbuf->w/2.0));
 
 				for(int x=0, xlen=this->layers[z][y].size(); x<xlen; x++)
 				{
 					bitmap = this->layers[z][y][x]->bitmap;
 if(flag)
-printf("Container: x,y,z=%3d,%3d,%3d\tScreen: x,y,z=%3d,%3d,%3d\n", x, y, z, x * bitmap->w, y * bitmap->h, z);
+printf("Container: x,y,z=%3d,%3d,%3d\tScreen: x,y,z=%3d,%3d,%3d\n", x, y, z, map_x + (x * bitmap->w), map_y + (y * bitmap->h, z));
 
 					masked_blit(bitmap.get(), scrbuf.get(), 0, 0, map_x + (x*this->tilesize), map_y + (y*this->tilesize), bitmap->w, bitmap->h);
 				}

@@ -51,6 +51,8 @@ namespace iq
 		const iq::uint w(void) const;
 		const iq::uint x(void) const;
 		const iq::uint y(void) const;
+
+		iq::uint m_x, m_y;
 	protected:
 		const static facing_direction DEFAULT_FACING;
 		const static iq::uint DEFAULT_SPEED;
@@ -61,7 +63,6 @@ namespace iq
 		std::string m_name;
 		iq::uint m_speed;
 		iq::uint m_h, m_w;
-		iq::uint m_x, m_y;
 
 		void load_animation(const iq::uint, const TiXmlElement * const, const iq::spritesheet_ptr, const iq::uint_ptr, const iq::uint_ptr, const iq::uint_ptr);
 		void load_animations(const TiXmlElement * const);

@@ -36,6 +36,9 @@ namespace iq
 
 		this->timer.reset(new iq::timer());
 
+this->player->m_x = 300;
+this->player->m_y = 150;
+
 		/*
 		 * This will eventually start at SETUP, but there currently is no
 		 * setup. :P
