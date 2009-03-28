@@ -27,10 +27,10 @@ namespace iq
 		std::vector<tilelayer> layers;
 		iq::uint tilesize;
 
-		void load_dimensions(const TiXmlElement * const);
-		const std::vector< std::vector<iq::tile_ptr> > load_layer(const TiXmlElement * const, const std::string &, const iq::BITMAP_ptr, std::map<std::string, iq::tile_ptr> &);
-		void load_layout(const TiXmlElement * const, const std::string &, const iq::BITMAP_ptr, std::map<std::string, iq::tile_ptr> &);
-		const std::vector<iq::tile_ptr> load_rowinfo(const TiXmlElement * const, const std::string &, const iq::BITMAP_ptr, std::map<std::string, iq::tile_ptr> &);
+		void load_dimensions(const TiXmlElement * const, iq::uint &, iq::uint &, iq::uint &);
+		const std::vector< std::vector<iq::tile_ptr> > load_layer(const TiXmlElement * const, const std::string &, const iq::BITMAP_ptr, const iq::uint &, const iq::uint &, std::map<std::string, iq::tile_ptr> &);
+		void load_layout(const TiXmlElement * const, const std::string &, const iq::BITMAP_ptr, const iq::uint &, const iq::uint &, const iq::uint &, std::map<std::string, iq::tile_ptr> &);
+		const std::vector<iq::tile_ptr> load_rowinfo(const TiXmlElement * const, const std::string &, const iq::BITMAP_ptr, const iq::uint &, std::map<std::string, iq::tile_ptr> &);
 		const iq::tile_ptr load_tile(std::map<std::string, iq::tile_ptr> &, const BITMAP_ptr, const std::string &, const iq::uint);
 		const iq::BITMAP_ptr load_tileset(const TiXmlElement * const);
 		const iq::tile_ptr void_tile(std::map<std::string, iq::tile_ptr> &) const;

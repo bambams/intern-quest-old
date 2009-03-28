@@ -7,36 +7,36 @@ namespace iq
 	const iq::uint entity::DEFAULT_SPEED = 18;
 
 	entity::entity(const std::string &path):
+		m_x(0),
+		m_y(0),
 		m_animations(new std::map<std::string, iq::animation_ptr>()),
 		m_facing(entity::DEFAULT_FACING),
 		m_h(0),
-		m_w(0),
-		m_x(0),
-		m_y(0)
+		m_w(0)
 	{
 		this->m_current_animation_iterator = this->m_animations->end();
 		this->load(path);
 	}
 
 	entity::entity(const TiXmlElement * const entity):
+		m_x(0),
+		m_y(0),
 		m_animations(new std::map<std::string, iq::animation_ptr>()),
 		m_facing(entity::DEFAULT_FACING),
 		m_h(0),
-		m_w(0),
-		m_x(0),
-		m_y(0)
+		m_w(0)
 	{
 		this->m_current_animation_iterator = this->m_animations->end();
 		this->load(entity);
 	}
 
 	entity::entity(const std::string &path, const iq::uint w, const iq::uint h):
+		m_x(0),
+		m_y(0),
 		m_animations(new std::map<std::string, iq::animation_ptr>()),
 		m_facing(entity::DEFAULT_FACING),
 		m_h(h),
-		m_w(w),
-		m_x(0),
-		m_y(0)
+		m_w(w)
 	{
 		this->m_current_animation_iterator = this->m_animations->end();
 		this->load(path);

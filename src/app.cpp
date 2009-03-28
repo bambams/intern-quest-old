@@ -151,7 +151,7 @@ for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i 
 		//textprintf_ex(this->scrbuf.get(), font, 20, 20, WHITE, -1,
 				//"frame-count: %d",
 				//g_total_frames);
-		textprintf_ex(this->scrbuf.get(), font, 20, 40, BLUE, -1,
+		textprintf_ex(this->scrbuf.get(), font, 20, 40, LIGHTGREEN, -1,
 				"time: %s", this->timer->to_str().c_str());
 		//textprintf_ex(app->scrbuf.get(), font, 20, 60, WHITE, -1,
 				//"fps: %d",
@@ -373,6 +373,8 @@ for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i 
  */
 if(key[KEY_UP])
 {
+	this->player->m_y -= 5;
+
 	if(this->player->facing() != entity::FACING_UP || !this->player->current_animation()->second->playing())
 	{
 		this->player->face(entity::FACING_UP);
@@ -381,6 +383,8 @@ if(key[KEY_UP])
 }
 else if(key[KEY_RIGHT])
 {
+	this->player->m_x += 5;
+
 	if(this->player->facing() != entity::FACING_RIGHT || !this->player->current_animation()->second->playing())
 	{
 		this->player->face(entity::FACING_RIGHT);
@@ -389,6 +393,8 @@ else if(key[KEY_RIGHT])
 }
 else if(key[KEY_DOWN])
 {
+	this->player->m_y += 5;
+
 	if(this->player->facing() != entity::FACING_DOWN || !this->player->current_animation()->second->playing())
 	{
 		this->player->face(entity::FACING_DOWN);
@@ -397,6 +403,8 @@ else if(key[KEY_DOWN])
 }
 else if(key[KEY_LEFT])
 {
+	this->player->m_x -= 5;
+
 	if(this->player->facing() != entity::FACING_LEFT || !this->player->current_animation()->second->playing())
 	{
 		this->player->face(entity::FACING_LEFT);

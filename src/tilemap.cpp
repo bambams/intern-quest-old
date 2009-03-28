@@ -6,13 +6,11 @@ namespace iq
 	tilemap::tilemap(const std::string &path, std::map<std::string, iq::tile_ptr> &tiles)
 	{
 		this->load(path, tiles);
-
-//		this->loadHard();
 	}
 
 	void tilemap::draw(const iq::BITMAP_ptr scrbuf, const iq::entity_ptr player) const
 	{
-static bool flag = true;
+//static bool flag = true;
 		int map_x, map_y;
 		iq::BITMAP_ptr bitmap;
 
@@ -27,14 +25,14 @@ static bool flag = true;
 				for(int x=0, xlen=this->layers[z][y].size(); x<xlen; x++)
 				{
 					bitmap = this->layers[z][y][x]->bitmap;
-if(flag)
-printf("Container: x,y,z=%3d,%3d,%3d\tScreen: x,y,z=%3d,%3d,%3d\n", x, y, z, map_x + (x * bitmap->w), map_y + (y * bitmap->h, z));
+//if(flag)
+//printf("Container: x,y,z=%3d,%3d,%3d\tScreen: x,y,z=%3d,%3d,%3d\n", x, y, z, map_x + (x * bitmap->w), map_y + (y * bitmap->h), z);
 
 					masked_blit(bitmap.get(), scrbuf.get(), 0, 0, map_x + (x*this->tilesize), map_y + (y*this->tilesize), bitmap->w, bitmap->h);
 				}
 			}
 		}
-flag=false;
+//flag=false;
 	}
 
 	const std::vector<tilemap::tilelayer> tilemap::get_layers(void) const
@@ -62,6 +60,7 @@ flag=false;
 		const TiXmlElement *texture = NULL;
 		const TiXmlElement *dimensions = NULL;
 		const TiXmlElement *layout = NULL;
+		iq::uint num_layers, w, h;
 		std::string tag_name;
 		iq::BITMAP_ptr tileset;
 
@@ -90,15 +89,14 @@ flag=false;
 			throw std::runtime_error("Tilemap XML is missing LAYOUT element.");
 
 		tileset = this->load_tileset(texture);
-		this->load_dimensions(dimensions);
-		this->load_layout(layout, path, tileset, tiles);
+		this->load_dimensions(dimensions, num_layers, w, h);
+		this->load_layout(layout, path, tileset, num_layers, w, h, tiles);
 	}
 
-	void tilemap::load_dimensions(const TiXmlElement * const dimensions)
+	void tilemap::load_dimensions(const TiXmlElement * const dimensions, iq::uint &num_layers, iq::uint &w, iq::uint &h)
 	{
 		const TiXmlElement *element = NULL;
 		const TiXmlNode *node = NULL;
-		int w, h, num_layers;
 		std::string s;
 		std::stringstream ss;
 
@@ -153,36 +151,59 @@ flag=false;
 //printf("tilesize=%d layers=%d width=%d height=%d\n", this->tilesize, num_layers, w, h);
 	}
 
-	const std::vector< std::vector<iq::tile_ptr> > tilemap::load_layer(const TiXmlElement * const layer, const std::string &path, const iq::BITMAP_ptr tileset, std::map<std::string, iq::tile_ptr> &tiles)
+	const std::vector< std::vector<iq::tile_ptr> > tilemap::load_layer(const TiXmlElement * const layer, const std::string &path, const iq::BITMAP_ptr tileset, const iq::uint &w, const iq::uint &h, std::map<std::string, iq::tile_ptr> &tiles)
 	{
 		const TiXmlElement *element = NULL;
 		std::vector< std::vector<iq::tile_ptr> > l;
+		std::string tag_name;
 
-		if((element = layer->FirstChildElement("RowInfo")) == NULL)
+		if((element = layer->FirstChildElement()) == NULL)
 			throw std::runtime_error("Layer XML missing one or more RowInfo elements.");
 
 		do
 		{
-			l.push_back(this->load_rowinfo(element, path, tileset, tiles));
-		}while((element = element->NextSiblingElement("RowInfo")));
+			tag_name = element->ValueStr();
+
+			if(tag_name == "RowInfo")
+				l.push_back(this->load_rowinfo(element, path, tileset, w, tiles));
+		}while((element = element->NextSiblingElement()));
+
+		if(l.size() != h)
+		{
+			throw std::runtime_error(
+				"Layer XML row count '"
+				+ boost::lexical_cast<std::string>(l.size())
+				+ "' does not match defined Height '"
+				+ boost::lexical_cast<std::string>(h)
+				+ "'.");
+		}
 
 		return l;
 	}
 
-	void tilemap::load_layout(const TiXmlElement * const layout, const std::string &path, const iq::BITMAP_ptr tileset, std::map<std::string, iq::tile_ptr> &tiles)
+	void tilemap::load_layout(const TiXmlElement * const layout, const std::string &path, const iq::BITMAP_ptr tileset, const iq::uint &num_layers, const iq::uint &w, const iq::uint &h, std::map<std::string, iq::tile_ptr> &tiles)
 	{
 		const TiXmlElement *element = NULL;
+		std::string tag_name;
 
-		if((element = layout->FirstChildElement("Layer")) == NULL)
+		if((element = layout->FirstChildElement()) == NULL)
 			std::runtime_error("LAYOUT XML missing one or more Layer elements.");
 
 		do
 		{
-			this->layers.push_back(this->load_layer(element, path, tileset, tiles));
-		}while((element = element->NextSiblingElement("Layer")));
+			tag_name = element->ValueStr();
+
+			if(tag_name == "Layer")
+				this->layers.push_back(this->load_layer(element, path, tileset, w, h, tiles));
+			else if(tag_name == "CollisionLayer")
+				;
+		}while((element = element->NextSiblingElement()));
+
+		if(this->layers.size() != num_layers)
+			throw std::runtime_error("Tilemap XML Layers count does not match the number of Layer elements.");
 	}
 
-	const std::vector<iq::tile_ptr> tilemap::load_rowinfo(const TiXmlElement * const rowinfo, const std::string &path, const BITMAP_ptr tileset, std::map<std::string, iq::tile_ptr> &tiles)
+	const std::vector<iq::tile_ptr> tilemap::load_rowinfo(const TiXmlElement * const rowinfo, const std::string &path, const BITMAP_ptr tileset, const iq::uint &w, std::map<std::string, iq::tile_ptr> &tiles)
 	{
 		long i;
 		const TiXmlNode *node = NULL;
@@ -192,8 +213,8 @@ flag=false;
 		if((node = rowinfo->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
 			throw std::runtime_error("RowInfo XML is invalid.");
 
-		if(!(ss << node->ToText()->ValueStr()))
-			throw std::runtime_error("Failed to load tilerow.");
+		ss.clear();
+		ss.str(node->ToText()->ValueStr());
 
 		while(ss >> i)
 		{
@@ -202,6 +223,16 @@ flag=false;
 			else
 				tilerow.push_back(this->load_tile(tiles, tileset, path, (iq::uint)i));
 			ss.ignore(1);
+		}
+
+		if(tilerow.size() != w)
+		{
+			throw std::runtime_error(
+				"RowInfo XML tile count '"
+				+ boost::lexical_cast<std::string>(tilerow.size())
+				+ "' does not match defined Width '"
+				+ boost::lexical_cast<std::string>(w)
+				+ "'.");
 		}
 
 		return tilerow;
@@ -220,18 +251,27 @@ flag=false;
 			return it->second;
 		
 		bitmap.reset(create_bitmap(this->tilesize, this->tilesize), destroy_bitmap);
+
 		if(bitmap.get() == NULL)
 			throw std::runtime_error("Failed to allocate memory for tile bitmap.");
 
 		for(y=0; y < (iq::uint)tileset->h; y += this->tilesize)
 			for(x=0; x < (iq::uint)tileset->w; x += this->tilesize)
 				if(j++ == i)
-					goto endloop;
-		throw std::runtime_error("Invalid tile index '" + boost::lexical_cast<std::string>(i) + "' Valid indexes are 1-" + boost::lexical_cast<std::string>(tileset->w * tileset->h) + ".");
+					goto createtile;
 
-endloop:
+		throw std::runtime_error(
+			"Invalid tile index '"
+			+ boost::lexical_cast<std::string>(i)
+			+ "' Valid indexes are 1-"
+			+ boost::lexical_cast<std::string>(tileset->w * tileset->h)
+			+ ".");
+
+createtile:
 		blit(tileset.get(), bitmap.get(), x, y, 0, 0, this->tilesize, this->tilesize);
+
 		tile.reset(new iq::tile(bitmap));
+
 		tiles[k] = tile;
 
 		return tile;
@@ -284,74 +324,9 @@ endloop:
 		return tile;
 	}
 
-	// WARNING! A DEADLY KLUDGE LURKS NEARBY!
-/*	void tilemap::loadHard()
+	const iq::uint tilemap::get_tilesize(void) const
 	{
-		int n = 0;
-		BITMAP_ptr tmpBitmap;
-		tile_ptr tmpTile;
-
-		this->rawTileSetImage.reset(load_bmp("map/example.tileset", NULL), destroy_bitmap);
-
-		if(this->rawTileSetImage.get() == NULL)
-			throw std::runtime_error("Failed to load map/example.tileset.");
-
-		this->MapTextureWidth = 64;
-		this->MapTextureHeight = 96;
-		this->MapNumTilesWide = 2;
-		this->MapNumTilesHigh = 3;
-		this->TileSize = 32;
-		this->MapWidth = 10;
-		this->MapHeight = 10;
-
-		for(uint y = 0; y < MapNumTilesHigh; y++)
-		{
-			for(uint x = 0; x < MapNumTilesWide; x++) 
-			{
-				tmpBitmap.reset(create_bitmap(TileSize, TileSize), destroy_bitmap);
-
-				blit(rawTileSetImage.get(), tmpBitmap.get(), x * TileSize, y * TileSize, 0, 0, TileSize, TileSize);
-
-				tmpTile.reset(new tile(tmpBitmap));	
-
-				TileSet.push_back(tmpTile);				
-
-			}
-		}
-
-		int foo[][10][10] = {
-			{
-			{2,2,2,2,2,2,2,2,2,2},
-			{4,4,4,4,4,4,4,4,4,4},
-			{6,6,6,6,6,6,6,6,6,6},
-			{1,1,1,1,1,1,1,1,1,1},
-			{1,1,1,1,1,1,1,1,1,1},
-			{1,1,1,1,1,1,1,1,1,1},
-			{1,1,1,1,1,1,1,1,1,1},
-			{1,1,1,1,1,1,1,1,1,1},
-			{1,1,1,1,1,1,1,1,1,1},
-			{1,1,1,1,1,1,1,1,1,1},
-				}
-			};
-
-		//STRAIGHT
-		for(uint i = 0; i < numLayers; i++)
-		{
-			this->layers.push_back(std::vector<std::vector<tile_ptr> >() );
-			for(uint y = 0; y < MapHeight; y++)
-			{
-				this->layers[i].push_back(std::vector<tile_ptr>());
-				for(uint x = 0; x < MapWidth; x++)
-				{
-					this->layers[i][y].push_back(TileSet[foo[i][y][x]-1]);
-				}
-			}
-		}
-
-		const iq::uint get_tilesize(void) const
-		{
-			return this->tilesize;
-		}
-	}*/
+		return this->tilesize;
+	}
 }
 

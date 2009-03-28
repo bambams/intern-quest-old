@@ -39,6 +39,7 @@ namespace iq
 */
 
 	#define BLUE makecol(0, 0, 255)
+	#define LIGHTGREEN makecol(155, 255, 155)
 	#define NUM_DIMENSIONS 2
 	#define RED makecol(255, 0, 0)
 	#define WHITE makecol(255, 255, 255)
