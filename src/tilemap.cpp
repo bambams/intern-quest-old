@@ -93,6 +93,51 @@ namespace iq
 		this->load_layout(layout, path, tileset, num_layers, w, h, tiles);
 	}
 
+	void tilemap::load_collision(const TiXmlElement * const collision, const iq::uint w, const iq::uint h)
+	{
+		const TiXmlElement *element = NULL;
+
+		if((element = collision->FirstChildElement("RowInfo")) == NULL)
+			throw std::runtime_error("CollisionLayer XML is missing one or more RowInfo elements.");
+
+		do
+		{
+			this->passable.push_back(this->load_collision_rowinfo(element, w));
+		}while((element = element->NextSiblingElement("RowInfo")));
+	}
+
+	const std::vector<bool> tilemap::load_collision_rowinfo(const TiXmlElement * const rowinfo, const iq::uint w)
+	{
+		bool b;
+		const TiXmlNode *node = NULL;
+		std::vector<bool> passable_row;
+		std::stringstream ss;
+
+		if((node = rowinfo->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
+			throw std::runtime_error("CollisionLayer RowInfo XML is invalid.");
+
+		ss.clear();
+		ss.str(node->ToText()->ValueStr());
+
+		while(ss >> b)
+		{
+			passable_row.push_back(b);
+			ss.ignore(1);
+		}
+
+		if(passable_row.size() != w)
+		{
+			throw std::runtime_error(
+				"RowInfo XML tile count '"
+				+ boost::lexical_cast<std::string>(passable_row.size())
+				+ "' does not match defined Width '"
+				+ boost::lexical_cast<std::string>(w)
+				+ "'.");
+		}
+
+		return passable_row;
+	}
+
 	void tilemap::load_dimensions(const TiXmlElement * const dimensions, iq::uint &num_layers, iq::uint &w, iq::uint &h)
 	{
 		const TiXmlElement *element = NULL;
@@ -147,14 +192,12 @@ namespace iq
 
 		if(!(ss >> h))
 			throw std::runtime_error("Invalid tilemap height '" + s + "'.");
-
-//printf("tilesize=%d layers=%d width=%d height=%d\n", this->tilesize, num_layers, w, h);
 	}
 
-	const std::vector< std::vector<iq::tile_ptr> > tilemap::load_layer(const TiXmlElement * const layer, const std::string &path, const iq::BITMAP_ptr tileset, const iq::uint &w, const iq::uint &h, std::map<std::string, iq::tile_ptr> &tiles)
+	const iq::tilemap::tilelayer tilemap::load_layer(const TiXmlElement * const layer, const std::string &path, const iq::BITMAP_ptr tileset, const iq::uint w, const iq::uint h, std::map<std::string, iq::tile_ptr> &tiles)
 	{
 		const TiXmlElement *element = NULL;
-		std::vector< std::vector<iq::tile_ptr> > l;
+		iq::tilemap::tilelayer l;
 		std::string tag_name;
 
 		if((element = layer->FirstChildElement()) == NULL)
@@ -165,7 +208,7 @@ namespace iq
 			tag_name = element->ValueStr();
 
 			if(tag_name == "RowInfo")
-				l.push_back(this->load_rowinfo(element, path, tileset, w, tiles));
+				l.push_back(this->load_layer_rowinfo(element, path, tileset, w, tiles));
 		}while((element = element->NextSiblingElement()));
 
 		if(l.size() != h)
@@ -181,29 +224,7 @@ namespace iq
 		return l;
 	}
 
-	void tilemap::load_layout(const TiXmlElement * const layout, const std::string &path, const iq::BITMAP_ptr tileset, const iq::uint &num_layers, const iq::uint &w, const iq::uint &h, std::map<std::string, iq::tile_ptr> &tiles)
-	{
-		const TiXmlElement *element = NULL;
-		std::string tag_name;
-
-		if((element = layout->FirstChildElement()) == NULL)
-			std::runtime_error("LAYOUT XML missing one or more Layer elements.");
-
-		do
-		{
-			tag_name = element->ValueStr();
-
-			if(tag_name == "Layer")
-				this->layers.push_back(this->load_layer(element, path, tileset, w, h, tiles));
-			else if(tag_name == "CollisionLayer")
-				;
-		}while((element = element->NextSiblingElement()));
-
-		if(this->layers.size() != num_layers)
-			throw std::runtime_error("Tilemap XML Layers count does not match the number of Layer elements.");
-	}
-
-	const std::vector<iq::tile_ptr> tilemap::load_rowinfo(const TiXmlElement * const rowinfo, const std::string &path, const BITMAP_ptr tileset, const iq::uint &w, std::map<std::string, iq::tile_ptr> &tiles)
+	const std::vector<iq::tile_ptr> tilemap::load_layer_rowinfo(const TiXmlElement * const rowinfo, const std::string &path, const BITMAP_ptr tileset, const iq::uint w, std::map<std::string, iq::tile_ptr> &tiles)
 	{
 		long i;
 		const TiXmlNode *node = NULL;
@@ -211,7 +232,7 @@ namespace iq
 		std::vector<iq::tile_ptr> tilerow;
 
 		if((node = rowinfo->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
-			throw std::runtime_error("RowInfo XML is invalid.");
+			throw std::runtime_error("Layer RowInfo XML is invalid.");
 
 		ss.clear();
 		ss.str(node->ToText()->ValueStr());
@@ -236,6 +257,28 @@ namespace iq
 		}
 
 		return tilerow;
+	}
+
+	void tilemap::load_layout(const TiXmlElement * const layout, const std::string &path, const iq::BITMAP_ptr tileset, const iq::uint num_layers, const iq::uint w, const iq::uint h, std::map<std::string, iq::tile_ptr> &tiles)
+	{
+		const TiXmlElement *element = NULL;
+		std::string tag_name;
+
+		if((element = layout->FirstChildElement()) == NULL)
+			std::runtime_error("LAYOUT XML missing one or more Layer elements.");
+
+		do
+		{
+			tag_name = element->ValueStr();
+
+			if(tag_name == "Layer")
+				this->layers.push_back(this->load_layer(element, path, tileset, w, h, tiles));
+			else if(tag_name == "CollisionLayer")
+				this->load_collision(element, w, h);
+		}while((element = element->NextSiblingElement()));
+
+		if(this->layers.size() != num_layers)
+			throw std::runtime_error("Tilemap XML Layers count does not match the number of Layer elements.");
 	}
 
 	const tile_ptr tilemap::load_tile(std::map<std::string, iq::tile_ptr> &tiles, const iq::BITMAP_ptr tileset, const std::string &path, const iq::uint i)
@@ -298,6 +341,20 @@ createtile:
 			throw std::runtime_error("Failed to load tileset '" + path + "'.");
 
 		return tileset;
+	}
+
+	const bool tilemap::is_passable(const iq::uint x, const iq::uint y) const
+	{
+		if(y >= this->passable.size() || x >= this->passable[y].size())
+		{
+			throw std::runtime_error("Invalid passable tile coordinate '("
+				+ boost::lexical_cast<std::string>(x)
+				+ ","
+				+ boost::lexical_cast<std::string>(y)
+				+ ")'.");
+		}
+
+		return this->passable[y][x];
 	}
 
 	const iq::tile_ptr tilemap::void_tile(std::map<std::string, iq::tile_ptr> &tiles) const
