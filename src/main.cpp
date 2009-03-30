@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 
 	try
 	{
-		app.reset(new iq::app(argc, argv));
+		app.reset(new iq::app("Intern's Quest", argc, argv));
 
 		// Main game loop.
 		while(!(key[KEY_Q] || key[KEY_ESC] || iq::app::close_button_pressed))

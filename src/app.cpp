@@ -6,7 +6,7 @@ namespace iq
 	bool app::close_button_pressed = false;
 	const std::string app::DEFAULT_FILE = "config/app.config";
 
-	app::app(int argc, char *argv[]):
+	app::app(const char * const title, int argc, char *argv[]):
 		m_file(DEFAULT_FILE),
 		fts(0),
 		ms(0),
@@ -24,6 +24,10 @@ namespace iq
 		{
 			this->parse_args(argc, argv);
 			this->initialize();
+
+			if(title)
+				set_window_title(title);
+
 			this->load();
 		}
 		catch(...)
@@ -32,7 +36,7 @@ namespace iq
 			throw;
 		}
 
-		this->demo_map.reset(new iq::tilemap("map/example.map", this->tiles));
+		this->map.reset(new iq::tilemap("map/example.map", this->tiles));
 
 		this->timer.reset(new iq::timer());
 
@@ -129,7 +133,7 @@ this->player->m_y = 0;
  * at. ^_^
  */
 
-demo_map->draw(scrbuf, this->player);
+this->map->draw(scrbuf, this->player);
 
 /*
  * h4x: temporary just to draw animations and have something pretty to look

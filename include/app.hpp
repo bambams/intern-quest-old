@@ -76,9 +76,9 @@ namespace iq
 		enum gamestate {SETUP, GAMEPLAY, SCRIPTED, CREDITS};
 
 		iq::string_map argv;
-		iq::tilemap_ptr demo_map;
 		std::map<std::string, iq::entity_ptr> entities;
 		iq::uint fts; // frames this second.
+		iq::tilemap_ptr map;
 		iq::uint ms;
 		bool os_cursor;
 		iq::entity_ptr player;
@@ -93,7 +93,7 @@ namespace iq
 
 		static bool close_button_pressed;
 
-		app(int, char *[]);
+		app(const char * const, int, char *[]);
 		~app(void);
 
 		void deinitialize(void);
