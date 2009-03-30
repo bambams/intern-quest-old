@@ -2,21 +2,21 @@
 #ifndef IQ_SPRITESHEET_HPP
 	#define IQ_SPRITESHEET_HPP
 
-namespace iq
-{
-	class spritesheet;
-}
-
 	#include <allegro.h>
 	#include <boost/shared_ptr.hpp>
 	#include <stdexcept>
 	#include <string>
+
+namespace iq
+{
+	class spritesheet;
+	typedef boost::shared_ptr<spritesheet> spritesheet_ptr;
+}
+
 	#include <types.hpp>
 
 namespace iq
 {
-	typedef boost::shared_ptr<spritesheet> spritesheet_ptr;
-
 	class spritesheet
 	{
 	private:

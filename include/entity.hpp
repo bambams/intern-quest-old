@@ -2,25 +2,26 @@
 #ifndef IQ_ENTITY_HPP
 	#define IQ_ENTITY_HPP
 
-namespace iq
-{
-	class entity;
-}
-
-	#include <animation.hpp>
 	#include <boost/algorithm/string/trim.hpp>
 	#include <boost/shared_ptr.hpp>
 	#include <map>
-	#include <spritesheet.hpp>
 	#include <string>
 	#include <tinyxml.h>
-	#include <types.hpp>
 	#include <vector>
 
 namespace iq
 {
+	class entity;
 	typedef boost::shared_ptr<entity> entity_ptr;
+}
 
+	#include <animation.hpp>
+	#include <spritesheet.hpp>
+	#include <tilemap.hpp>
+	#include <types.hpp>
+
+namespace iq
+{
 	class entity
 	{
 	private:
@@ -45,14 +46,14 @@ namespace iq
 		const std::string name(void) const;
 		void pause_animation(void);
 		void reset_animation(void);
-		const iq::uint screen_x(void) const;
-		const iq::uint screen_y(void) const;
+		const int screen_x(const iq::BITMAP_ptr, const iq::entity_ptr) const;
+		const int screen_y(const iq::BITMAP_ptr, const iq::entity_ptr) const;
 		const iq::uint speed(void) const;
 		const iq::uint w(void) const;
-		const iq::uint x(void) const;
-		const iq::uint y(void) const;
+		const int x(void) const;
+		const int y(void) const;
 
-		iq::uint m_x, m_y;
+		int m_x, m_y;
 	protected:
 		const static facing_direction DEFAULT_FACING;
 		const static iq::uint DEFAULT_SPEED;

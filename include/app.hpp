@@ -2,22 +2,24 @@
 #ifndef IQ_APP_HPP
 	#define IQ_APP_HPP
 
-namespace iq
-{
-	class app;
-}
-
 	#include <allegro.h>
 	#include <boost/shared_ptr.hpp>
-	#include <entity.hpp>
 	#include <iostream>
-	#include <timer.hpp>
-	#include <map>
 	#include <semaphore.h>
 	#include <stdexcept>
 	#include <string>
-	#include <tilemap.hpp>
 	#include <tinyxml.h>
+
+namespace iq
+{
+	class app;
+	typedef boost::shared_ptr<app> app_ptr;
+}
+
+	#include <entity.hpp>
+	#include <timer.hpp>
+	#include <map>
+	#include <tilemap.hpp>
 
 	#ifdef IQ_APP_TRACE
 		#error OMFG, IQ_APP_TRACE already exists! \o/
@@ -46,8 +48,6 @@ namespace iq
 
 namespace iq
 {
-	typedef boost::shared_ptr<app> app_ptr;
-
 	/**
 	 * \brief An application class to hold application state data.
 	 * \details Intended to be passed around the application to avoid

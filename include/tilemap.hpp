@@ -2,22 +2,22 @@
 #ifndef IQ_TILEMAP_HPP
 	#define IQ_TILEMAP_HPP
 
-namespace iq
-{
-	class tilemap;
-}
 	#include <boost/lexical_cast.hpp>
 	#include <boost/shared_ptr.hpp>
-	#include <entity.hpp>
 	#include <stdexcept>
 	#include <string>
-	#include <tile.hpp>
 	#include <vector>
 
 namespace iq
 {
+	class tilemap;
 	typedef boost::shared_ptr<tilemap> tilemap_ptr;
+}
+	#include <entity.hpp>
+	#include <tile.hpp>
 
+namespace iq
+{
 	class tilemap
 	{
 	private:
@@ -44,10 +44,13 @@ namespace iq
 		const iq::uint h(void) const;
 		const std::vector<tilelayer> get_layers(void) const;
 		const iq::uint get_tilesize(void) const;
+		const bool is_passable(const iq::uint, const iq::uint) const;
 		void load(const std::string &, std::map<std::string, iq::tile_ptr> &);
 		void load(const TiXmlElement * const, const std::string &, std::map<std::string, iq::tile_ptr> &);
-		const bool is_passable(const iq::uint, const iq::uint) const;
 		const iq::uint w(void) const;
+
+		static const int screen_x(const iq::BITMAP_ptr, const iq::entity_ptr);
+		static const int screen_y(const iq::BITMAP_ptr, const iq::entity_ptr);
 	};
 }
 

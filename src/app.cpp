@@ -38,6 +38,18 @@ namespace iq
 
 		this->map.reset(new iq::tilemap("map/example.map", this->tiles));
 
+/*
+ * h4x to get the entities on the map to start...
+ */
+this->entities["boss"]->m_x = 200;
+this->entities["boss"]->m_y = 100;
+
+this->entities["intern"]->m_x = 100;
+this->entities["intern"]->m_y = 100;
+
+this->entities["security"]->m_x = 300;
+this->entities["security"]->m_y = 200;
+
 		this->timer.reset(new iq::timer());
 
 		/*
@@ -113,6 +125,9 @@ namespace iq
 	{
 		IQ_APP_TRACE("iq::app::draw_gameplay() {");
 
+		iq::BITMAP_ptr bitmap;
+		iq::entity_ptr entity;
+
 /*
  * h4x: temporary just to see the screen dimensions and center.
  */
@@ -125,29 +140,13 @@ namespace iq
 	// rect(this->scrbuf.get(), 0+i, 0+i, this->scrbuf->w - 1 - i, this->scrbuf->h - 1 - i, RED);
 // }
 
-/*
- * h4x: temporary just to draw TILEMAPS and have something pretty to look
- * at. ^_^
- */
+		this->map->draw(scrbuf, this->player);
 
-this->map->draw(scrbuf, this->player);
-
-/*
- * h4x: temporary just to draw animations and have something pretty to look
- * at. ^_^
- */
-iq::BITMAP_ptr bitmap;
-iq::uint j=0;
-int n[] = {-55, 0, +55};
-
-int x = (this->scrbuf->w / 2);
-int y = (this->scrbuf->h / 2);
-
-for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end() && j<sizeof(n); i++, j++)
-{
-	bitmap = i->second->current_frame(this->ms);
-	masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, x - (i->second->w() / 2) + n[j], y - (i->second->h() / 2), bitmap->w, bitmap->h);
-}
+		for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end(); i++)
+		{
+			bitmap = (entity = i->second)->current_frame(this->ms);
+			masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, entity->screen_x(this->scrbuf, this->player), entity->screen_y(this->scrbuf, this->player), bitmap->w, bitmap->h);
+		}
 
 		//textprintf_ex(this->scrbuf.get(), font, 20, 20, WHITE, -1,
 				//"frame-count: %d",

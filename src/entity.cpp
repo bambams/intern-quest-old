@@ -210,14 +210,14 @@ namespace iq
 		this->current_animation()->second->reset();
 	}
 
-	const iq::uint entity::screen_x(void) const
+	const int entity::screen_x(const iq::BITMAP_ptr scrbuf, const iq::entity_ptr player) const
 	{
-		throw std::logic_error("iq::entity::screen_x not implemented yet.");
+		return iq::tilemap::screen_x(scrbuf, player) + this->m_x;
 	}
 
-	const iq::uint entity::screen_y(void) const
+	const int entity::screen_y(const iq::BITMAP_ptr scrbuf, const iq::entity_ptr player) const
 	{
-		throw std::logic_error("iq::entity::screen_y not implemented yet.");
+		return iq::tilemap::screen_y(scrbuf, player) + this->m_y;
 	}
 
 	const iq::uint entity::speed(void) const
@@ -230,12 +230,12 @@ namespace iq
 		return this->m_w;
 	}
 
-	const iq::uint entity::x(void) const
+	const int entity::x(void) const
 	{
 		return this->m_x;
 	}
 
-	const iq::uint entity::y(void) const
+	const int entity::y(void) const
 	{
 		return this->m_y;
 	}

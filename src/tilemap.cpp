@@ -16,11 +16,11 @@ namespace iq
 
 		for(iq::uint z=0, zlen=this->layers.size(); z<zlen; z++)
 		{
-			map_y = -(player->y()-(scrbuf->h/2.0));
+			map_y = iq::tilemap::screen_y(scrbuf, player);
 
 			for(int y=0, ylen=this->layers[z].size(); y<ylen; y++)
 			{
-				map_x = -(player->x()-(scrbuf->w/2.0));
+				map_x = iq::tilemap::screen_x(scrbuf, player);
 
 				for(int x=0, xlen=this->layers[z][y].size(); x<xlen; x++)
 				{
@@ -38,6 +38,11 @@ namespace iq
 	const std::vector<tilemap::tilelayer> tilemap::get_layers(void) const
 	{
 		return this->layers;
+	}
+
+	const iq::uint tilemap::get_tilesize(void) const
+	{
+		return this->tilesize;
 	}
 
 	void tilemap::load(const std::string &path, std::map<std::string, iq::tile_ptr> &tiles)
@@ -357,6 +362,16 @@ createtile:
 		return this->passable[y][x];
 	}
 
+	const int tilemap::screen_x(const iq::BITMAP_ptr scrbuf, const iq::entity_ptr player)
+	{
+		return -(player->x()-(scrbuf->w/2.0));
+	}
+
+	const int tilemap::screen_y(const iq::BITMAP_ptr scrbuf, const iq::entity_ptr player)
+	{
+		return -(player->y()-(scrbuf->h/2.0));
+	}
+
 	const iq::tile_ptr tilemap::void_tile(std::map<std::string, iq::tile_ptr> &tiles) const
 	{
 		iq::BITMAP_ptr bitmap;
@@ -379,11 +394,6 @@ createtile:
 		tiles[k] = tile;
 
 		return tile;
-	}
-
-	const iq::uint tilemap::get_tilesize(void) const
-	{
-		return this->tilesize;
 	}
 }
 
