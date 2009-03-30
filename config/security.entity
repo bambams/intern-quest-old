@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<entity name="security" speed="18">
+<entity name="security" speed="3">
 	<animations spritesheet="media/security.spritesheet" length="4" count="4" ms_per_frame="250">
 		<animation index="0">walk_up</animation>
 		<animation index="1">walk_right</animation>

@@ -118,8 +118,8 @@ namespace iq
 
 		this->m_name = str;
 		entity->Attribute("height", (int *)&this->m_h);
-		entity->Attribute("width", (int *)&m_w);
-		entity->Attribute("speed", (int *)&m_speed);
+		entity->Attribute("width", (int *)&this->m_w);
+		entity->Attribute("speed", (int *)&this->m_speed);
 
 		if((element = entity->FirstChildElement("animations")) == NULL)
 			throw std::runtime_error("Entity XML animations element missing spritesheet element.");

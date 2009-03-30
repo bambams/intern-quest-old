@@ -40,9 +40,6 @@ namespace iq
 
 		this->timer.reset(new iq::timer());
 
-this->player->m_x = 0;
-this->player->m_y = 0;
-
 		/*
 		 * This will eventually start at SETUP, but there currently is no
 		 * setup. :P
@@ -377,7 +374,7 @@ for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i 
  */
 if(key[KEY_UP])
 {
-	this->player->m_y -= 5;
+	this->player->m_y -= this->player->speed();
 
 	if(this->player->facing() != entity::FACING_UP || !this->player->current_animation()->second->playing())
 	{
@@ -387,7 +384,7 @@ if(key[KEY_UP])
 }
 else if(key[KEY_RIGHT])
 {
-	this->player->m_x += 5;
+	this->player->m_x += this->player->speed();
 
 	if(this->player->facing() != entity::FACING_RIGHT || !this->player->current_animation()->second->playing())
 	{
@@ -397,7 +394,7 @@ else if(key[KEY_RIGHT])
 }
 else if(key[KEY_DOWN])
 {
-	this->player->m_y += 5;
+	this->player->m_y += this->player->speed();
 
 	if(this->player->facing() != entity::FACING_DOWN || !this->player->current_animation()->second->playing())
 	{
@@ -407,7 +404,7 @@ else if(key[KEY_DOWN])
 }
 else if(key[KEY_LEFT])
 {
-	this->player->m_x -= 5;
+	this->player->m_x -= this->player->speed();
 
 	if(this->player->facing() != entity::FACING_LEFT || !this->player->current_animation()->second->playing())
 	{

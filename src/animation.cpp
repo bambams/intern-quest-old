@@ -63,7 +63,10 @@ namespace iq
 
 		this->m_playing = true;
 
-		return this->m_frames[0];
+		if(this->m_frames.size() > 1)
+			return this->m_frames[this->m_last_frame = 1];
+		else
+			return this->m_frames[this->m_last_frame = 0];
 	}
 
 	const iq::BITMAP_ptr animation::begin(const iq::uint ms_per_frame, const iq::uint ms)
@@ -73,7 +76,10 @@ namespace iq
 
 		this->m_playing = true;
 
-		return this->m_frames[0];
+		if(this->m_frames.size() > 1)
+			return this->m_frames[this->m_last_frame = 1];
+		else
+			return this->m_frames[this->m_last_frame = 0];
 	}
 
 	const iq::BITMAP_ptr animation::frame(const iq::uint i) const

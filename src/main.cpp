@@ -30,35 +30,35 @@ int main(int argc, char *argv[])
 	catch(std::invalid_argument &ex)
 	{
 		if(screen)
-			printf("An invalid argument was passed: %s\n", ex.what());
+			fprintf(stderr, "An invalid argument was passed: %s\n", ex.what());
 		allegro_message("An invalid argument was passed: %s\n", ex.what());
 		exit(-1);
 	}
 	catch(std::range_error &ex)
 	{
 		if(screen)
-			printf("A range error occurred: %s\n", ex.what());
+			fprintf(stderr, "A range error occurred: %s\n", ex.what());
 		allegro_message("A range error occurred: %s\n", ex.what());
 		exit(-1);
 	}
 	catch(std::logic_error &ex)
 	{
 		if(screen)
-			printf("A logic error occurred: %s\n", ex.what());
+			fprintf(stderr, "A logic error occurred: %s\n", ex.what());
 		allegro_message("A logic error occurred: %s\n", ex.what());
 		exit(-1);
 	}
 	catch(std::runtime_error &ex)
 	{
 		if(screen)
-			printf("A runtime error occurred: %s\n", ex.what());
+			fprintf(stderr, "A runtime error occurred: %s\n", ex.what());
 		allegro_message("A runtime error occurred: %s\n", ex.what());
 		exit(-1);
 	}
 	catch(std::exception &ex)
 	{
 		if(screen)
-			printf("An exception occurred: %s\n", ex.what());
+			fprintf(stderr, "An exception occurred: %s\n", ex.what());
 		allegro_message("An exception occurred: %s\n", ex.what());
 		exit(-1);
 	}
