@@ -44,8 +44,8 @@ namespace iq
 this->entities["boss"]->m_x = 200;
 this->entities["boss"]->m_y = 100;
 
-this->entities["intern"]->m_x = 100;
-this->entities["intern"]->m_y = 100;
+this->entities["intern"]->m_x = 100; // 100/32=3.125 && 124/32=3.875 therefore player is located in 3rd tile across (extends into 3rd)
+this->entities["intern"]->m_y = 100; // 100/32=3.125 && 132/32=4.125 therefore player is located in 3rd tile down extending to 4th
 
 this->entities["security"]->m_x = 300;
 this->entities["security"]->m_y = 200;
@@ -106,7 +106,7 @@ bool app::horizontal_collision(int x, int y, int w, int &tilecoordy)
 
 	int tilecoordx = tilexpixels/32;	//calculate map x coordinate for first tile
 
-
+	printf("app::horizontal_collision::tilecoordx: %d tilecoordy: %d\n", tilecoordx, tilecoordy);
 	//loop while the start point (pixels!) of the test tile is inside the players bounding box
 	while(tilexpixels <= testend){
 		if(!this->map->collisionxy(tilecoordx, tilecoordy)){	//is a solid tile is found at tilecoordx, tilecoordy?
@@ -129,7 +129,8 @@ bool app::vertical_collision(int x, int y, int h, int &tilecoordx)
 	tilecoordx = x/32;
 
 	int tilecoordy = tileypixels/32;
-
+	printf("app::vertical_collision:: tilecoordx: %d tilecoordy: %d\n", tilecoordx, tilecoordy);
+	
 	while(tileypixels <= testend){
 		if(!this->map->collisionxy(tilecoordx, tilecoordy)){
 			printf("app::vertical_colision:: tilecoordx: %d tilecoordy: %d is TRUE!\n", tilecoordx, tilecoordy);
@@ -424,7 +425,7 @@ bool app::vertical_collision(int x, int y, int h, int &tilecoordx)
 if(key[KEY_UP])
 {
 	vely = -(this->player->speedy());
-	printf("::KEY_UP:: velx: %d vely: %d\n", velx, vely);
+	//printf("::KEY_UP:: velx: %d vely: %d\n", velx, vely);
 	
 	// this->player->m_y -= this->player->speedy();
 
@@ -437,7 +438,7 @@ if(key[KEY_UP])
 else if(key[KEY_RIGHT])
 {
 	velx = this->player->speedx();
-	printf("::KEY_RIGHT:: velx: %d vely: %d\n", velx, vely);
+	//printf("::KEY_RIGHT:: velx: %d vely: %d\n", velx, vely);
 	// this->player->m_x += this->player->speed();
 	
 	if(this->player->facing() != entity::FACING_RIGHT || !this->player->current_animation()->second->playing())
@@ -449,7 +450,7 @@ else if(key[KEY_RIGHT])
 else if(key[KEY_DOWN])
 {
 	vely = this->player->speedy();
-	printf("::KEY_DOWN:: velx: %d vely: %d\n", velx, vely);
+	//printf("::KEY_DOWN:: velx: %d vely: %d\n", velx, vely);
 	// this->player->m_y += this->player->speed();
 
 	if(this->player->facing() != entity::FACING_DOWN || !this->player->current_animation()->second->playing())
@@ -461,7 +462,7 @@ else if(key[KEY_DOWN])
 else if(key[KEY_LEFT])
 {
 	velx = -(this->player->speedx());
-	printf("::KEY_LEFT:: velx: %d vely: %d\n", velx, vely);
+	//printf("::KEY_LEFT:: velx: %d vely: %d\n", velx, vely);
 	// this->player->m_x -= this->player->speed();
 
 	if(this->player->facing() != entity::FACING_LEFT || !this->player->current_animation()->second->playing())
@@ -479,12 +480,10 @@ else if(this->player->current_animation()->second->playing())
 if(velx > 0)
 {
 	//player is moving right
-	if(vertical_collision(this->player->m_x + velx+this->player->w(), this->player->m_y, this->player->w(), tilecoord)){	//collision on the right side.
-			//printf("Player collided moving right!"
+	if(vertical_collision(this->player->m_x + velx+this->player->w(), this->player->m_y, this->player->w(), tilecoord))	//collision on the right side.
 			this->player->m_x = tilecoord*32 - this->player->w()-1;					//move to the edge of the tile (tile on the right -> mind the player width)
-		}else{			//no collision
+		else			//no collision
 			this->player->m_x += velx;
-		}
 	}		 
 	else if(velx < 0){	//moving left
 		if(vertical_collision(this->player->m_x + velx, this->player->m_y, this->player->w(), tilecoord))		//collision on the left side
@@ -506,7 +505,9 @@ else if(vely > 0){	//moving down
 	else
 		this->player->m_y += vely;
 }
-	printf("velx: %d vely: %d player->m_x: %d player->m_y: %d\n", velx, vely, this->player->m_x, this->player->m_y);
+	//printf("velx: %d vely: %d player->m_x: %d player->m_y: %d\n", velx, vely, this->player->m_x, this->player->m_y);
+	horizontal_collision(this->player->m_x, this->player->m_y, this->player->w(), tilecoord);
+	vertical_collision(this->player->m_x, this->player->m_y, this->player->h(), tilecoord);
 		IQ_APP_TRACE("} //iq::app::logic_gameplay()");
 		
 	}
