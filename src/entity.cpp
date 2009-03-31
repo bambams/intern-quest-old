@@ -119,8 +119,9 @@ namespace iq
 		this->m_name = str;
 		entity->Attribute("height", (int *)&this->m_h);
 		entity->Attribute("width", (int *)&this->m_w);
-		entity->Attribute("speed", (int *)&this->m_speed);
-
+		entity->Attribute("speed", (int *)&this->m_speedx);
+		entity->Attribute("speed", (int *)&this->m_speedy);
+		printf("this->name: %s this->speedx: %d this->speedy: %d\n", this->m_name.c_str(), this->m_speedx, this->m_speedy);
 		if((element = entity->FirstChildElement("animations")) == NULL)
 			throw std::runtime_error("Entity XML animations element missing spritesheet element.");
 
@@ -220,9 +221,14 @@ namespace iq
 		return iq::tilemap::screen_y(scrbuf, player) + this->m_y;
 	}
 
-	const iq::uint entity::speed(void) const
+	const iq::uint entity::speedx(void) const
 	{
-		return this->m_speed;
+		return this->m_speedx;
+	}
+	
+	const iq::uint entity::speedy(void) const
+	{
+		return this->m_speedy;
 	}
 
 	const iq::uint entity::w(void) const

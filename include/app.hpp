@@ -108,6 +108,9 @@ namespace iq
 		void logic(void);
 		void logic_setup(void);
 		void logic_gameplay(void);
+		bool horizontal_collision(int x, int y, int w, int &tilecoordy); //hax
+		bool vertical_collision(int x, int y, int h, int &tilecoordx); //hax
+
 		void logic_scripted(void);
 		void logic_credits(void);
 		void parse_args(int, char *[]);

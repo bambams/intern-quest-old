@@ -48,7 +48,8 @@ namespace iq
 		void reset_animation(void);
 		const int screen_x(const iq::BITMAP_ptr, const iq::entity_ptr) const;
 		const int screen_y(const iq::BITMAP_ptr, const iq::entity_ptr) const;
-		const iq::uint speed(void) const;
+		const iq::uint speedx(void) const;
+		const iq::uint speedy(void) const;
 		const iq::uint w(void) const;
 		const int x(void) const;
 		const int y(void) const;
@@ -62,7 +63,8 @@ namespace iq
 		boost::shared_ptr< std::map<std::string, iq::animation_ptr> > m_animations;
 		facing_direction m_facing;
 		std::string m_name;
-		iq::uint m_speed;
+		iq::uint m_speedx;
+		iq::uint m_speedy;
 		iq::uint m_h, m_w;
 
 		void load_animation(const iq::uint, const TiXmlElement * const, const iq::spritesheet_ptr, const iq::uint_ptr, const iq::uint_ptr, const iq::uint_ptr);
