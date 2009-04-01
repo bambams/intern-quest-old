@@ -487,13 +487,13 @@ else if(this->player->current_animation()->second->playing())
 if(velx > 0)
 {
 	//player is moving right
-	if(vertical_collision(this->player->m_x + velx+this->player->w(), this->player->m_y, this->player->w(), tilecoord))	//collision on the right side.
+	if(vertical_collision(this->player->m_x + velx+this->player->w(), this->player->m_y, this->player->h(), tilecoord))	//collision on the right side.
 			this->player->m_x = tilecoord*32 - this->player->w()-1;					//move to the edge of the tile (tile on the right -> mind the player width)
 		else			//no collision
 			this->player->m_x += velx;
 	}		 
 	else if(velx < 0){	//moving left
-		if(vertical_collision(this->player->m_x + velx, this->player->m_y, this->player->w(), tilecoord))		//collision on the left side
+		if(vertical_collision(this->player->m_x + velx, this->player->m_y, this->player->h(), tilecoord))		//collision on the left side
 			this->player->m_x = (tilecoord+1)*32 +1;				//move to the edge of the tile
 		else
 			this->player->m_x += velx;
@@ -501,13 +501,13 @@ if(velx > 0)
 if(vely < 0)
 {
 	//player is moving up
-	if(horizontal_collision(this->player->m_x, this->player->m_y + vely, this->player->h(), tilecoord))	//collision on the right side.
+	if(horizontal_collision(this->player->m_x, this->player->m_y + vely, this->player->w(), tilecoord))	//collision on the right side.
 			this->player->m_y = (tilecoord+1)*32 +1;					//move to the edge of the tile (tile on the right -> mind the player width)
 		else			//no collision
 			this->player->m_y += vely;
 	}		 
 else if(vely > 0){	//moving down
-	if(horizontal_collision(this->player->m_x, this->player->m_y + vely + this->player->h(), this->player->h(), tilecoord))		//collision on the left side
+	if(horizontal_collision(this->player->m_x, this->player->m_y + vely + this->player->h(), this->player->w(), tilecoord))		//collision on the left side
 		this->player->m_y = tilecoord*32 - this->player->h()-1;				//move to the edge of the tile
 	else
 		this->player->m_y += vely;
