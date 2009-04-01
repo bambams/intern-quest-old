@@ -109,7 +109,7 @@ bool app::horizontal_collision(int x, int y, int w, int &tilecoordy)
 	textprintf_ex(this->scrbuf.get(), font, 20, 70, LIGHTGREEN, -1,	"hc: tilecoordx: %d tilecoordy: %d", tilecoordx, tilecoordy);
 	//loop while the start point (pixels!) of the test tile is inside the players bounding box
 	while(tilexpixels <= testend){
-		if(!this->map->collisionxy(tilecoordx, tilecoordy)){	//is a solid tile is found at tilecoordx, tilecoordy?
+		if(!this->map->is_passable(tilecoordx, tilecoordy)){	//is a solid tile is found at tilecoordx, tilecoordy?
 			printf("app::horizontal_colision:: tilecoordx: %d tilecoordy: %d is TRUE!\n", tilecoordx, tilecoordy);
 			return true;
 		}
@@ -133,7 +133,7 @@ bool app::vertical_collision(int x, int y, int h, int &tilecoordx)
 	
 	
 	while(tileypixels <= testend){
-		if(!this->map->collisionxy(tilecoordx, tilecoordy)){
+		if(!this->map->is_passable(tilecoordx, tilecoordy)){
 			printf("app::vertical_colision:: tilecoordx: %d tilecoordy: %d is TRUE!\n", tilecoordx, tilecoordy);
 			return true;
 		}
@@ -421,7 +421,7 @@ bool app::vertical_collision(int x, int y, int h, int &tilecoordx)
  * h4x: QnD for a demonstration. :D
  */
  int velx = 0, vely = 0; //don't move the player at all by default
- int tilecoord, debugx,debugy;
+ int tilecoord;
  
 if(key[KEY_UP])
 {

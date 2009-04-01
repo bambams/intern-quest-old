@@ -48,7 +48,7 @@ namespace iq
 		void load(const std::string &, std::map<std::string, iq::tile_ptr> &);
 		void load(const TiXmlElement * const, const std::string &, std::map<std::string, iq::tile_ptr> &);
 		const iq::uint w(void) const;
-		bool collisionxy(int x, int y){ return passable[y][x]; };	// x, y are tile coordinates, not pixel coordinates!
+		//bool collision(int x, int y);	// x, y are tile coordinates, not pixel coordinates!
 
 		static const int screen_x(const iq::BITMAP_ptr, const iq::entity_ptr);
 		static const int screen_y(const iq::BITMAP_ptr, const iq::entity_ptr);

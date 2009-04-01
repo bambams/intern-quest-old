@@ -352,12 +352,15 @@ createtile:
 	{
 		if(y >= this->passable.size() || x >= this->passable[y].size())
 		{
-			throw std::runtime_error("Invalid passable tile coordinate '("
-				+ boost::lexical_cast<std::string>(x)
-				+ ","
-				+ boost::lexical_cast<std::string>(y)
-				+ ")'.");
+			// throw std::runtime_error("Invalid passable tile coordinate '("
+				// + boost::lexical_cast<std::string>(x)
+				// + ","
+				// + boost::lexical_cast<std::string>(y)
+				// + ")'.");
+			return false;
 		}
+		
+			
 
 		return this->passable[y][x];
 	}
@@ -394,6 +397,6 @@ createtile:
 		tiles[k] = tile;
 
 		return tile;
-	}
+	}	
 }
 
