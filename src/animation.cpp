@@ -135,8 +135,8 @@ namespace iq
 
 			stretch_blit(sheet->bitmap.get(), frame.get(), x, y, sprite_w, sprite_h, 0, 0, w, h);
 
-for(iq::uint k=0; k<3; k++)
-rect(frame.get(), 0+k, 0+k, frame->w-k-1, frame->h-k-1, makecol(155, 255, 155));
+//for(iq::uint k=0; k<3; k++)
+//rect(frame.get(), 0+k, 0+k, frame->w-k-1, frame->h-k-1, makecol(155, 255, 155));
 
 			this->m_frames[j] = frame;
 		}

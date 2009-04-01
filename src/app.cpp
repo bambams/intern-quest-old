@@ -106,11 +106,11 @@ bool app::horizontal_collision(int x, int y, int w, int &tilecoordy)
 
 	int tilecoordx = tilexpixels/32;	//calculate map x coordinate for first tile
 
-	textprintf_ex(this->scrbuf.get(), font, 20, 70, LIGHTGREEN, -1,	"hc: tilecoordx: %d tilecoordy: %d", tilecoordx, tilecoordy);
+//	textprintf_ex(this->scrbuf.get(), font, 20, 70, LIGHTGREEN, -1,	"hc: tilecoordx: %d tilecoordy: %d", tilecoordx, tilecoordy);
 	//loop while the start point (pixels!) of the test tile is inside the players bounding box
 	while(tilexpixels <= testend){
 		if(!this->map->is_passable(tilecoordx, tilecoordy)){	//is a solid tile is found at tilecoordx, tilecoordy?
-			printf("app::horizontal_colision:: pixel: %d,%d tile: %d,%d\n", x, y, tilecoordx, tilecoordy);
+//			printf("app::horizontal_colision:: pixel: %d,%d tile: %d,%d\n", x, y, tilecoordx, tilecoordy);
 			return true;
 		}
 
@@ -129,12 +129,12 @@ bool app::vertical_collision(int x, int y, int h, int &tilecoordx)
 	tilecoordx = x/32;
 
 	int tilecoordy = tileypixels/32;
-	textprintf_ex(this->scrbuf.get(), font, 20, 60, LIGHTGREEN, -1,	"vc: tilecoordx: %d tilecoordy: %d", tilecoordx, tilecoordy);
+//	textprintf_ex(this->scrbuf.get(), font, 20, 60, LIGHTGREEN, -1,	"vc: tilecoordx: %d tilecoordy: %d", tilecoordx, tilecoordy);
 	
 	
 	while(tileypixels <= testend){
 		if(!this->map->is_passable(tilecoordx, tilecoordy)){
-			printf("app::vertical_colision:: pixel: %d,%d tile: %d,%d\n", x, y, tilecoordx, tilecoordy);
+//			printf("app::vertical_colision:: pixel: %d,%d tile: %d,%d\n", x, y, tilecoordx, tilecoordy);
 			return true;
 		}
 		tilecoordy++;
@@ -202,12 +202,12 @@ bool app::vertical_collision(int x, int y, int h, int &tilecoordx)
 				//"frame-count: %d",
 				//g_total_frames);
 
-for(int i=0, ilen=this->map->h(); i<ilen; i++)
-	for(int j=0, jlen=this->map->w(); j<jlen; j++)
-		textprintf_ex(this->scrbuf.get(), font, 500+(10*j), 30+(10*i), LIGHTGREEN, -1, "%d", this->map->is_passable(j, i));
+//for(int i=0, ilen=this->map->h(); i<ilen; i++)
+//	for(int j=0, jlen=this->map->w(); j<jlen; j++)
+//		textprintf_ex(this->scrbuf.get(), font, 500+(10*j), 30+(10*i), LIGHTGREEN, -1, "%d", this->map->is_passable(j, i));
 
 		textprintf_ex(this->scrbuf.get(), font, 20, 40, LIGHTGREEN, -1,	"time: %s", this->timer->to_str().c_str());
-		textprintf_ex(this->scrbuf.get(), font, 20, 50, LIGHTGREEN, -1,	"player->m_x: %d player->m_y: %d", this->player->m_x, this->player->m_y);
+//		textprintf_ex(this->scrbuf.get(), font, 20, 50, LIGHTGREEN, -1,	"player->m_x: %d player->m_y: %d", this->player->m_x, this->player->m_y);
 		//textprintf_ex(app->scrbuf.get(), font, 20, 60, WHITE, -1,
 				//"fps: %d",
 				//g_frames_per_second);
