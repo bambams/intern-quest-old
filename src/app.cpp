@@ -36,7 +36,7 @@ namespace iq
 			throw;
 		}
 
-		this->map.reset(new iq::tilemap("map/cellpanic.map", this->tiles));
+		this->map.reset(new iq::tilemap("map/example.map", this->tiles));
 
 /*
  * h4x to get the entities on the map to start...
