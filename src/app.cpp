@@ -44,10 +44,10 @@ namespace iq
 this->entities["boss"]->m_x = 200;
 this->entities["boss"]->m_y = 100;
 
-this->entities["intern"]->m_x = 0; // 100/32=3.125 && 124/32=3.875 therefore player is located in 3rd tile across (extends into 3rd)
-this->entities["intern"]->m_y = 0; // 100/32=3.125 && 132/32=4.125 therefore player is located in 3rd tile down extending to 4th
+this->entities["intern"]->m_x = 164; // 100/32=3.125 && 124/32=3.875 therefore player is located in 3rd tile across (extends into 3rd)
+this->entities["intern"]->m_y = 164; // 100/32=3.125 && 132/32=4.125 therefore player is located in 3rd tile down extending to 4th
 
-this->entities["security"]->m_x = 300;
+this->entities["security"]->m_x = 100;
 this->entities["security"]->m_y = 200;
 
 		this->timer.reset(new iq::timer());

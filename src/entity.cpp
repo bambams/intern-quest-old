@@ -121,7 +121,9 @@ namespace iq
 		entity->Attribute("width", (int *)&this->m_w);
 		entity->Attribute("speed", (int *)&this->m_speedx);
 		entity->Attribute("speed", (int *)&this->m_speedy);
-		printf("this->name: %s this->speedx: %d this->speedy: %d\n", this->m_name.c_str(), this->m_speedx, this->m_speedy);
+
+//		printf("this->name: %s this->speedx: %d this->speedy: %d\n", this->m_name.c_str(), this->m_speedx, this->m_speedy);
+
 		if((element = entity->FirstChildElement("animations")) == NULL)
 			throw std::runtime_error("Entity XML animations element missing spritesheet element.");
 
