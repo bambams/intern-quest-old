@@ -47,8 +47,8 @@ this->entities["boss"]->m_y = 100;
 this->entities["intern"]->m_x = 164; // 100/32=3.125 && 124/32=3.875 therefore player is located in 3rd tile across (extends into 3rd)
 this->entities["intern"]->m_y = 164; // 100/32=3.125 && 132/32=4.125 therefore player is located in 3rd tile down extending to 4th
 
-this->entities["security"]->m_x = 100;
-this->entities["security"]->m_y = 200;
+this->entities["security"]->m_x = 600;
+this->entities["security"]->m_y = 220;
 
 		this->timer.reset(new iq::timer());
 
@@ -512,7 +512,68 @@ else if(vely > 0){	//moving down
 	else
 		this->player->m_y += vely;
 }
-	
+
+/*
+ * Hard-coded NPC pacing for demo. Shhhh!!!
+ */
+std::map<std::string, iq::entity_ptr>::iterator it;
+
+if((it = this->entities.find("boss")) != this->entities.end())
+{
+	static int boss_right = true;
+	boost::shared_ptr<iq::entity> boss = it->second;
+
+	int boss_velocity = boss->speedy();
+	const int boss_pace_left_y = 50;
+	const int boss_pace_right_y = 200;
+
+	if(!boss_right)
+		boss_velocity = -boss_velocity;
+
+	boss->m_y += boss_velocity;
+
+	if(boss_right && boss->m_y >= boss_pace_right_y)
+	{
+		boss->begin_animation("walk_up", this->ms);
+		boss_right = !boss_right;
+		boss->m_y = boss_pace_right_y;
+	}
+	else if(!boss_right && boss->m_y <= boss_pace_left_y)
+	{
+		boss->begin_animation("walk_down", this->ms);
+		boss_right = !boss_right;
+		boss->m_y = boss_pace_left_y;
+	}
+}
+
+if((it = this->entities.find("security")) != this->entities.end())
+{
+	static int security_right = true;
+	boost::shared_ptr<iq::entity> security = it->second;
+
+	int security_velocity = security->speedx();
+	int security_pace_left_x = 400;
+	int security_pace_right_x = 600;
+
+	if(!security_right)
+		security_velocity = -security_velocity;
+
+	security->m_x += security_velocity;
+
+	if(security_right && security->m_x >= security_pace_right_x)
+	{
+		security->begin_animation("walk_left", this->ms);
+		security_right = !security_right;
+		security->m_x = security_pace_right_x;
+	}
+	else if(!security_right && security->m_x <= security_pace_left_x)
+	{
+		security->begin_animation("walk_right", this->ms);
+		security_right = !security_right;
+		security->m_x = security_pace_left_x;
+	}
+}
+
 	horizontal_collision(this->player->m_x, this->player->m_y, this->player->w(), tilecoord);
 	vertical_collision(this->player->m_x, this->player->m_y, this->player->h(), tilecoord);
 		IQ_APP_TRACE("} //iq::app::logic_gameplay()");
@@ -563,14 +624,15 @@ else if(vely > 0){	//moving down
 
 	void app::set_state(gamestate state)
 	{
+std::map<std::string, iq::entity_ptr>::iterator it;
 		this->state = state;
 
 /*
  * h4x: just demonstrating animations. This should be removed eventually
  * (unless it turns out to be correct :P).
  */
-iq::uint j=0;
-const char *anim[] = {"walk_left", "walk_down", "walk_right"};
+//iq::uint j=0;
+//const char *anim[] = {"walk_left", "walk_down", "walk_right"};
 
 		switch(state)
 		{
@@ -588,8 +650,14 @@ const char *anim[] = {"walk_left", "walk_down", "walk_right"};
  * h4x: just demonstrating animations. This should be removed eventually
  * (unless it turns out to be correct :P).
  */
-for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end() && j<sizeof(anim); i++, j++)
-	i->second->begin_animation(anim[j], this->ms);
+//for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end() && j<sizeof(anim); i++, j++)
+	//i->second->begin_animation(anim[j], this->ms);
+
+this->player->begin_animation("walk_left", this->ms); // h4x: had to start player animation or things crash. Fix this.
+if((it = this->entities.find("boss")) != this->entities.end())
+	it->second->begin_animation("walk_down", this->ms);
+if((it = this->entities.find("security")) != this->entities.end())
+	it->second->begin_animation("walk_left", this->ms);
 
 			this->m_drawptr = &app::draw_gameplay;
 			this->m_logicptr = &app::logic_gameplay;
