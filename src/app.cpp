@@ -106,7 +106,7 @@ bool app::horizontal_collision(int x, int y, int w, int &tilecoordy)
 
 	int tilecoordx = tilexpixels/32;	//calculate map x coordinate for first tile
 
-	printf("app::horizontal_collision::tilecoordx: %d tilecoordy: %d\n", tilecoordx, tilecoordy);
+	textprintf_ex(this->scrbuf.get(), font, 20, 70, LIGHTGREEN, -1,	"hc: tilecoordx: %d tilecoordy: %d", tilecoordx, tilecoordy);
 	//loop while the start point (pixels!) of the test tile is inside the players bounding box
 	while(tilexpixels <= testend){
 		if(!this->map->collisionxy(tilecoordx, tilecoordy)){	//is a solid tile is found at tilecoordx, tilecoordy?
@@ -129,7 +129,8 @@ bool app::vertical_collision(int x, int y, int h, int &tilecoordx)
 	tilecoordx = x/32;
 
 	int tilecoordy = tileypixels/32;
-	printf("app::vertical_collision:: tilecoordx: %d tilecoordy: %d\n", tilecoordx, tilecoordy);
+	textprintf_ex(this->scrbuf.get(), font, 20, 60, LIGHTGREEN, -1,	"vc: tilecoordx: %d tilecoordy: %d", tilecoordx, tilecoordy);
+	
 	
 	while(tileypixels <= testend){
 		if(!this->map->collisionxy(tilecoordx, tilecoordy)){
@@ -199,8 +200,8 @@ bool app::vertical_collision(int x, int y, int h, int &tilecoordx)
 		//textprintf_ex(this->scrbuf.get(), font, 20, 20, WHITE, -1,
 				//"frame-count: %d",
 				//g_total_frames);
-		textprintf_ex(this->scrbuf.get(), font, 20, 40, LIGHTGREEN, -1,
-				"time: %s", this->timer->to_str().c_str());
+		textprintf_ex(this->scrbuf.get(), font, 20, 40, LIGHTGREEN, -1,	"time: %s", this->timer->to_str().c_str());
+		textprintf_ex(this->scrbuf.get(), font, 20, 50, LIGHTGREEN, -1,	"player->m_x: %d player->m_y: %d", this->player->m_x, this->player->m_y);
 		//textprintf_ex(app->scrbuf.get(), font, 20, 60, WHITE, -1,
 				//"fps: %d",
 				//g_frames_per_second);
@@ -420,7 +421,7 @@ bool app::vertical_collision(int x, int y, int h, int &tilecoordx)
  * h4x: QnD for a demonstration. :D
  */
  int velx = 0, vely = 0; //don't move the player at all by default
- int tilecoord;
+ int tilecoord, debugx,debugy;
  
 if(key[KEY_UP])
 {
@@ -505,7 +506,7 @@ else if(vely > 0){	//moving down
 	else
 		this->player->m_y += vely;
 }
-	//printf("velx: %d vely: %d player->m_x: %d player->m_y: %d\n", velx, vely, this->player->m_x, this->player->m_y);
+	
 	horizontal_collision(this->player->m_x, this->player->m_y, this->player->w(), tilecoord);
 	vertical_collision(this->player->m_x, this->player->m_y, this->player->h(), tilecoord);
 		IQ_APP_TRACE("} //iq::app::logic_gameplay()");
