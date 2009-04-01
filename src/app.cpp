@@ -36,7 +36,7 @@ namespace iq
 			throw;
 		}
 
-		this->map.reset(new iq::tilemap("map/example.map", this->tiles));
+		this->map.reset(new iq::tilemap("map/cellpanic.map", this->tiles));
 
 /*
  * h4x to get the entities on the map to start...
@@ -44,8 +44,8 @@ namespace iq
 this->entities["boss"]->m_x = 200;
 this->entities["boss"]->m_y = 100;
 
-this->entities["intern"]->m_x = 100; // 100/32=3.125 && 124/32=3.875 therefore player is located in 3rd tile across (extends into 3rd)
-this->entities["intern"]->m_y = 100; // 100/32=3.125 && 132/32=4.125 therefore player is located in 3rd tile down extending to 4th
+this->entities["intern"]->m_x = 0; // 100/32=3.125 && 124/32=3.875 therefore player is located in 3rd tile across (extends into 3rd)
+this->entities["intern"]->m_y = 0; // 100/32=3.125 && 132/32=4.125 therefore player is located in 3rd tile down extending to 4th
 
 this->entities["security"]->m_x = 300;
 this->entities["security"]->m_y = 200;
@@ -190,13 +190,14 @@ bool app::vertical_collision(int x, int y, int h, int &tilecoordx)
 // }
 
 		this->map->draw(scrbuf, this->player);
-
+		
 		for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end(); i++)
 		{
 			bitmap = (entity = i->second)->current_frame(this->ms);
 			masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, entity->screen_x(this->scrbuf, this->player), entity->screen_y(this->scrbuf, this->player), bitmap->w, bitmap->h);
 		}
-
+		
+		//rect(this->scrbuf.get(), ((SCREEN_W/2)-this->player->w()/2), ((SCREEN_H/2) - this->player->h()/2) 
 		//textprintf_ex(this->scrbuf.get(), font, 20, 20, WHITE, -1,
 				//"frame-count: %d",
 				//g_total_frames);

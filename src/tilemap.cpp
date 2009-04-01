@@ -10,12 +10,13 @@ namespace iq
 
 	void tilemap::draw(const iq::BITMAP_ptr scrbuf, const iq::entity_ptr player) const
 	{
-//static bool flag = true;
+static bool flag = true;
 		int map_x, map_y;
 		iq::BITMAP_ptr bitmap;
 
 		for(iq::uint z=0, zlen=this->layers.size(); z<zlen; z++)
 		{
+if(z>0)flag=false;		
 			map_y = iq::tilemap::screen_y(scrbuf, player);
 
 			for(int y=0, ylen=this->layers[z].size(); y<ylen; y++)
@@ -25,14 +26,15 @@ namespace iq
 				for(int x=0, xlen=this->layers[z][y].size(); x<xlen; x++)
 				{
 					bitmap = this->layers[z][y][x]->bitmap;
-//if(flag)
+if(flag)
 //printf("Container: x,y,z=%3d,%3d,%3d\tScreen: x,y,z=%3d,%3d,%3d\n", x, y, z, map_x + (x * bitmap->w), map_y + (y * bitmap->h), z);
+printf("player->x: %d; player->y: %d map_x: %d map_y: %d\n", player->x(), player->y(), map_x, map_y);
 
 					masked_blit(bitmap.get(), scrbuf.get(), 0, 0, map_x + (x*this->tilesize), map_y + (y*this->tilesize), bitmap->w, bitmap->h);
 				}
 			}
 		}
-//flag=false;
+flag=false;
 	}
 
 	const std::vector<tilemap::tilelayer> tilemap::get_layers(void) const
