@@ -97,6 +97,10 @@ flag=false;
 
 		tileset = this->load_tileset(texture);
 		this->load_dimensions(dimensions, num_layers, w, h);
+
+this->m_w = w;
+this->m_h = h;
+
 		this->load_layout(layout, path, tileset, num_layers, w, h, tiles);
 	}
 
@@ -399,6 +403,16 @@ createtile:
 		tiles[k] = tile;
 
 		return tile;
-	}	
+	}
+
+	const iq::uint tilemap::h(void) const
+	{
+		return this->m_h;
+	}
+
+	const iq::uint tilemap::w(void) const
+	{
+		return this->m_w;
+	}
 }
 

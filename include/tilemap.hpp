@@ -27,6 +27,7 @@ namespace iq
 		std::vector< std::vector<bool> > passable;
 		std::vector<tilelayer> layers;
 		iq::uint tilesize;
+		iq::uint m_w, m_h;
 
 		void load_collision(const TiXmlElement * const, const iq::uint, const iq::uint);
 		const std::vector<bool> load_collision_rowinfo(const TiXmlElement * const, const iq::uint);

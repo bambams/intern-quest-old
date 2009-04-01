@@ -16,27 +16,27 @@
   </TERRAINS>
   <LAYOUT>
     <Layer Id="0">
-      <RowInfo>2,2,2,2,2,2,2,2,3,3</RowInfo>
-      <RowInfo>4,4,4,4,4,4,4,4,2,3</RowInfo>
-      <RowInfo>1,1,1,1,1,1,1,1,4,3</RowInfo>
-      <RowInfo>1,1,1,1,1,1,1,1,1,3</RowInfo>
-      <RowInfo>1,1,1,1,1,1,1,1,1,3</RowInfo>
-      <RowInfo>1,1,1,1,1,1,1,3,3,3</RowInfo>
-      <RowInfo>1,1,1,1,1,1,1,2,2,3</RowInfo>
-      <RowInfo>1,1,1,1,1,1,1,4,4,3</RowInfo>
-      <RowInfo>1,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,3,3,3,3,3,3,3,3,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
       <RowInfo>3,3,3,3,3,3,3,3,3,3</RowInfo>
     </Layer>
     <CollisionLayer>
       <RowInfo>0,0,0,0,0,0,0,0,0,0</RowInfo>
-      <RowInfo>1,1,1,1,1,1,1,1,0,0</RowInfo>
-      <RowInfo>1,1,1,1,1,1,1,1,1,0</RowInfo>
-      <RowInfo>1,1,1,1,1,1,1,1,1,0</RowInfo>
-      <RowInfo>1,1,1,1,1,1,1,1,1,0</RowInfo>
-      <RowInfo>1,1,1,1,1,1,1,0,0,0</RowInfo>
-      <RowInfo>1,1,1,1,1,1,1,0,0,0</RowInfo>
-      <RowInfo>1,1,1,1,1,1,1,1,1,0</RowInfo>
-      <RowInfo>1,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
       <RowInfo>0,0,0,0,0,0,0,0,0,0</RowInfo>
     </CollisionLayer>
     <TerrainLayer>
@@ -53,3 +53,4 @@
     </TerrainLayer>
   </LAYOUT>
 </MAP>
+
