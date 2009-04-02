@@ -25,7 +25,6 @@ namespace iq
 		typedef std::vector< std::vector<tile_ptr > > tilelayer;
 
 		std::vector< std::vector<bool> > passable;
-		std::vector<tilelayer> layers;
 		iq::uint tilesize;
 		iq::uint m_w, m_h;
 
@@ -39,9 +38,11 @@ namespace iq
 		const iq::BITMAP_ptr load_tileset(const TiXmlElement * const);
 		const iq::tile_ptr void_tile(std::map<std::string, iq::tile_ptr> &) const;
 	public:
+		std::vector<tilelayer> layers;
+
 		tilemap(const std::string &, std::map<std::string, iq::tile_ptr> &);
 
-		void draw(const iq::BITMAP_ptr, const iq::entity_ptr) const;
+		void draw(const iq::uint, const iq::BITMAP_ptr, const iq::entity_ptr) const;
 		const iq::uint h(void) const;
 		const std::vector<tilelayer> get_layers(void) const;
 		const iq::uint get_tilesize(void) const;

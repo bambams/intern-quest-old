@@ -8,33 +8,33 @@ namespace iq
 		this->load(path, tiles);
 	}
 
-	void tilemap::draw(const iq::BITMAP_ptr scrbuf, const iq::entity_ptr player) const
+	void tilemap::draw(const iq::uint i, const iq::BITMAP_ptr scrbuf, const iq::entity_ptr player) const
 	{
-//static bool flag = true;
 		int map_x, map_y;
 		iq::BITMAP_ptr bitmap;
 
-		for(iq::uint z=0, zlen=this->layers.size(); z<zlen; z++)
+		if(i >= this->layers.size())
 		{
-//if(z>0)flag=false;		
-			map_y = iq::tilemap::screen_y(scrbuf, player);
+			throw std::runtime_error(
+				"Invalid tilemap layer index '"
+				+ boost::lexical_cast<std::string>(i)
+				+ "'. Valid indexes are 0-"
+				+ boost::lexical_cast<std::string>(this->layers.size()-1)
+				+ ".");
+		}
 
-			for(int y=0, ylen=this->layers[z].size(); y<ylen; y++)
+		map_y = iq::tilemap::screen_y(scrbuf, player);
+
+		for(int y=0, ylen=this->layers[i].size(); y<ylen; y++)
+		{
+			map_x = iq::tilemap::screen_x(scrbuf, player);
+
+			for(int x=0, xlen=this->layers[i][y].size(); x<xlen; x++)
 			{
-				map_x = iq::tilemap::screen_x(scrbuf, player);
-
-				for(int x=0, xlen=this->layers[z][y].size(); x<xlen; x++)
-				{
-					bitmap = this->layers[z][y][x]->bitmap;
-//if(flag)
-//printf("Container: x,y,z=%3d,%3d,%3d\tScreen: x,y,z=%3d,%3d,%3d\n", x, y, z, map_x + (x * bitmap->w), map_y + (y * bitmap->h), z);
-//printf("player->x: %d; player->y: %d map_x: %d map_y: %d\n", player->x(), player->y(), map_x, map_y);
-
-					masked_blit(bitmap.get(), scrbuf.get(), 0, 0, map_x + (x*this->tilesize), map_y + (y*this->tilesize), bitmap->w, bitmap->h);
-				}
+				bitmap = this->layers[i][y][x]->bitmap;
+				masked_blit(bitmap.get(), scrbuf.get(), 0, 0, map_x + (x*this->tilesize), map_y + (y*this->tilesize), bitmap->w, bitmap->h);
 			}
 		}
-//flag=false;
 	}
 
 	const std::vector<tilemap::tilelayer> tilemap::get_layers(void) const

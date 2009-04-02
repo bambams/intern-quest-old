@@ -189,14 +189,21 @@ bool app::vertical_collision(int x, int y, int h, int &tilecoordx)
 	// rect(this->scrbuf.get(), 0+i, 0+i, this->scrbuf->w - 1 - i, this->scrbuf->h - 1 - i, RED);
 // }
 
-		this->map->draw(scrbuf, this->player);
+		iq::uint map_len = this->map->layers.size();
+		iq::uint map_mid = map_len/2;
+
+		for(iq::uint i=0; i<map_mid; i++)
+			this->map->draw(i, scrbuf, this->player);
 		
 		for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end(); i++)
 		{
 			bitmap = (entity = i->second)->current_frame(this->ms);
 			masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, entity->screen_x(this->scrbuf, this->player), entity->screen_y(this->scrbuf, this->player), bitmap->w, bitmap->h);
 		}
-		
+
+		for(iq::uint i=map_mid; i<map_len; i++)
+			this->map->draw(i, scrbuf, this->player);
+
 		//rect(this->scrbuf.get(), ((SCREEN_W/2)-this->player->w()/2), ((SCREEN_H/2) - this->player->h()/2) 
 		//textprintf_ex(this->scrbuf.get(), font, 20, 20, WHITE, -1,
 				//"frame-count: %d",
