@@ -19,6 +19,7 @@ namespace iq
 	#include <entity.hpp>
 	#include <timer.hpp>
 	#include <map>
+	#include <select_value.hpp>
 	#include <tilemap.hpp>
 
 	#ifdef IQ_APP_TRACE
@@ -77,6 +78,7 @@ namespace iq
 
 		iq::string_map argv;
 		std::map<std::string, iq::entity_ptr> entities;
+		std::vector<iq::entity_ptr> drawn_entities;
 		iq::uint fts; // frames this second.
 		iq::tilemap_ptr map;
 		iq::uint ms;

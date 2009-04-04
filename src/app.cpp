@@ -29,6 +29,22 @@ namespace iq
 				set_window_title(title);
 
 			this->load();
+
+			/*
+			 * For now we'll just copy ALL entities into the drawn vector.
+			 * We'll begin by reserving enough slots.
+			 */
+			this->drawn_entities.reserve(this->entities.size());
+
+			/*
+			 * Now we'll transform the std::map's values into std::vector values.
+			 * URL: http://www.velocityreviews.com/forums/showpost.php?p=2512190&postcount=6
+			 */
+			std::transform(
+				this->entities.begin(),
+				this->entities.end(),
+				std::back_inserter(this->drawn_entities),
+				iq::select_value< std::pair<std::string, iq::entity_ptr> >());
 		}
 		catch(...)
 		{
@@ -194,10 +210,10 @@ bool app::vertical_collision(int x, int y, int h, int &tilecoordx)
 
 		for(iq::uint i=0; i<map_mid; i++)
 			this->map->draw(i, scrbuf, this->player);
-		
-		for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end(); i++)
+
+		for(std::vector<iq::entity_ptr>::iterator i=this->drawn_entities.begin(); i != this->drawn_entities.end(); i++)
 		{
-			bitmap = (entity = i->second)->current_frame(this->ms);
+			bitmap = (entity = *i)->current_frame(this->ms);
 			masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, entity->screen_x(this->scrbuf, this->player), entity->screen_y(this->scrbuf, this->player), bitmap->w, bitmap->h);
 		}
 
@@ -583,6 +599,9 @@ if((it = this->entities.find("security")) != this->entities.end())
 
 	horizontal_collision(this->player->m_x, this->player->m_y, this->player->w(), tilecoord);
 	vertical_collision(this->player->m_x, this->player->m_y, this->player->h(), tilecoord);
+
+		std::sort(this->drawn_entities.begin(), this->drawn_entities.end(), iq::entity::y_comparer());
+
 		IQ_APP_TRACE("} //iq::app::logic_gameplay()");
 		
 	}

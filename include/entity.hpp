@@ -16,6 +16,7 @@ namespace iq
 }
 
 	#include <animation.hpp>
+	#include <entity_y_comparer.hpp>
 	#include <spritesheet.hpp>
 	#include <tilemap.hpp>
 	#include <types.hpp>
@@ -29,6 +30,7 @@ namespace iq
 		typedef std::map<std::string, boost::shared_ptr<iq::animation> > animation_map;
 	public:
 		enum facing_direction { FACING_UP, FACING_RIGHT, FACING_LEFT, FACING_DOWN };
+		typedef iq::entity_y_comparer y_comparer;
 
 		entity(const std::string &);
 		entity(const TiXmlElement * const);
