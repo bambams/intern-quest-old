@@ -6,7 +6,7 @@ namespace iq
 	bool app::close_button_pressed = false;
 	const std::string app::DEFAULT_FILE = "config/app.config";
 
-	app::app(int argc, char *argv[]):
+	app::app(const char * const title, int argc, char *argv[]):
 		m_file(DEFAULT_FILE),
 		fts(0),
 		ms(0),
@@ -24,7 +24,27 @@ namespace iq
 		{
 			this->parse_args(argc, argv);
 			this->initialize();
+
+			if(title)
+				set_window_title(title);
+
 			this->load();
+
+			/*
+			 * For now we'll just copy ALL entities into the drawn vector.
+			 * We'll begin by reserving enough slots.
+			 */
+			this->drawn_entities.reserve(this->entities.size());
+
+			/*
+			 * Now we'll transform the std::map's values into std::vector values.
+			 * URL: http://www.velocityreviews.com/forums/showpost.php?p=2512190&postcount=6
+			 */
+			std::transform(
+				this->entities.begin(),
+				this->entities.end(),
+				std::back_inserter(this->drawn_entities),
+				iq::select_value< std::pair<std::string, iq::entity_ptr> >());
 		}
 		catch(...)
 		{
@@ -32,7 +52,19 @@ namespace iq
 			throw;
 		}
 
-		this->demo_map.reset(new iq::tilemap(""));
+		this->map.reset(new iq::tilemap("map/example.map", this->tiles));
+
+/*
+ * h4x to get the entities on the map to start...
+ */
+this->entities["boss"]->m_x = 200;
+this->entities["boss"]->m_y = 100;
+
+this->entities["intern"]->m_x = 164; // 100/32=3.125 && 124/32=3.875 therefore player is located in 3rd tile across (extends into 3rd)
+this->entities["intern"]->m_y = 164; // 100/32=3.125 && 132/32=4.125 therefore player is located in 3rd tile down extending to 4th
+
+this->entities["security"]->m_x = 600;
+this->entities["security"]->m_y = 220;
 
 		this->timer.reset(new iq::timer());
 
@@ -80,6 +112,55 @@ namespace iq
 	}
 	END_OF_FUNCTION(app::close_button_handler)
 
+// h4x for demo: Should probably be moved to game_logic or something
+bool app::horizontal_collision(int x, int y, int w, int &tilecoordy)
+{
+	int tilexpixels = x-(x%32);	//calculate the x position (pixels!) of the tiles we check against
+	int testend = x + w;		//calculate the end of testing (just to save the x+w calculation each for loop)
+
+	tilecoordy = y/32;		//calculate the y position (map coordinates!) of the tiles we want to test
+
+	int tilecoordx = tilexpixels/32;	//calculate map x coordinate for first tile
+
+//	textprintf_ex(this->scrbuf.get(), font, 20, 70, LIGHTGREEN, -1,	"hc: tilecoordx: %d tilecoordy: %d", tilecoordx, tilecoordy);
+	//loop while the start point (pixels!) of the test tile is inside the players bounding box
+	while(tilexpixels <= testend){
+		if(!this->map->is_passable(tilecoordx, tilecoordy)){	//is a solid tile is found at tilecoordx, tilecoordy?
+//			printf("app::horizontal_colision:: pixel: %d,%d tile: %d,%d\n", x, y, tilecoordx, tilecoordy);
+			return true;
+		}
+
+		tilecoordx++;		//increase tile x map coordinate
+		tilexpixels+=32;	//increase tile x pixel coordinate
+	}
+
+	return false;
+}
+
+bool app::vertical_collision(int x, int y, int h, int &tilecoordx)
+{
+	int tileypixels = y-(y%32);
+	int testend = y + h;
+
+	tilecoordx = x/32;
+
+	int tilecoordy = tileypixels/32;
+//	textprintf_ex(this->scrbuf.get(), font, 20, 60, LIGHTGREEN, -1,	"vc: tilecoordx: %d tilecoordy: %d", tilecoordx, tilecoordy);
+	
+	
+	while(tileypixels <= testend){
+		if(!this->map->is_passable(tilecoordx, tilecoordy)){
+//			printf("app::vertical_colision:: pixel: %d,%d tile: %d,%d\n", x, y, tilecoordx, tilecoordy);
+			return true;
+		}
+		tilecoordy++;
+		tileypixels += 32;
+	}
+
+	return false;
+}
+
+
 	void app::deinitialize(void)
 	{
 		IQ_APP_TRACE("iq::app::deinitialize() {");
@@ -109,47 +190,47 @@ namespace iq
 	{
 		IQ_APP_TRACE("iq::app::draw_gameplay() {");
 
+		iq::BITMAP_ptr bitmap;
+		iq::entity_ptr entity;
+
 /*
  * h4x: temporary just to see the screen dimensions and center.
  */
-rectfill(this->scrbuf.get(), 0, 0, this->scrbuf->w, this->scrbuf->h, WHITE);
+// rectfill(this->scrbuf.get(), 0, 0, this->scrbuf->w, this->scrbuf->h, WHITE);
 
-for(int i=0; i<3; i++)
-{
-	hline(this->scrbuf.get(), 0, this->scrbuf->h / 2 - 1 + i, this->scrbuf->w, RED);
-	vline(this->scrbuf.get(), this->scrbuf->w / 2 - 1 + i, 0, this->scrbuf->h, RED);
-	rect(this->scrbuf.get(), 0+i, 0+i, this->scrbuf->w - 1 - i, this->scrbuf->h - 1 - i, RED);
-}
+// for(int i=0; i<3; i++)
+// {
+	// hline(this->scrbuf.get(), 0, this->scrbuf->h / 2 - 1 + i, this->scrbuf->w, RED);
+	// vline(this->scrbuf.get(), this->scrbuf->w / 2 - 1 + i, 0, this->scrbuf->h, RED);
+	// rect(this->scrbuf.get(), 0+i, 0+i, this->scrbuf->w - 1 - i, this->scrbuf->h - 1 - i, RED);
+// }
 
-/*
- * h4x: temporary just to draw TILEMAPS and have something pretty to look
- * at. ^_^
- */
+		iq::uint map_len = this->map->layers.size();
+		iq::uint map_mid = map_len/2;
 
-demo_map->draw(scrbuf);
+		for(iq::uint i=0; i<map_mid; i++)
+			this->map->draw(i, scrbuf, this->player);
 
-/*
- * h4x: temporary just to draw animations and have something pretty to look
- * at. ^_^
- */
-iq::BITMAP_ptr bitmap;
-iq::uint j=0;
-int n[] = {-55, 0, +55};
+		for(std::vector<iq::entity_ptr>::iterator i=this->drawn_entities.begin(); i != this->drawn_entities.end(); i++)
+		{
+			bitmap = (entity = *i)->current_frame(this->ms);
+			masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, entity->screen_x(this->scrbuf, this->player), entity->screen_y(this->scrbuf, this->player), bitmap->w, bitmap->h);
+		}
 
-int x = (this->scrbuf->w / 2);
-int y = (this->scrbuf->h / 2);
+		for(iq::uint i=map_mid; i<map_len; i++)
+			this->map->draw(i, scrbuf, this->player);
 
-for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end() && j<sizeof(n); i++, j++)
-{
-	bitmap = i->second->current_frame(this->ms);
-	masked_blit(bitmap.get(), this->scrbuf.get(), 0, 0, x - (i->second->w() / 2) + n[j], y - (i->second->h() / 2), bitmap->w, bitmap->h);
-}
-
+		//rect(this->scrbuf.get(), ((SCREEN_W/2)-this->player->w()/2), ((SCREEN_H/2) - this->player->h()/2) 
 		//textprintf_ex(this->scrbuf.get(), font, 20, 20, WHITE, -1,
 				//"frame-count: %d",
 				//g_total_frames);
-		textprintf_ex(this->scrbuf.get(), font, 20, 40, BLUE, -1,
-				"time: %s", this->timer->to_str().c_str());
+
+//for(int i=0, ilen=this->map->h(); i<ilen; i++)
+//	for(int j=0, jlen=this->map->w(); j<jlen; j++)
+//		textprintf_ex(this->scrbuf.get(), font, 500+(10*j), 30+(10*i), LIGHTGREEN, -1, "%d", this->map->is_passable(j, i));
+
+		textprintf_ex(this->scrbuf.get(), font, 20, 40, LIGHTGREEN, -1,	"time: %s", this->timer->to_str().c_str());
+//		textprintf_ex(this->scrbuf.get(), font, 20, 50, LIGHTGREEN, -1,	"player->m_x: %d player->m_y: %d", this->player->m_x, this->player->m_y);
 		//textprintf_ex(app->scrbuf.get(), font, 20, 60, WHITE, -1,
 				//"fps: %d",
 				//g_frames_per_second);
@@ -368,8 +449,16 @@ for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i 
 /*
  * h4x: QnD for a demonstration. :D
  */
+ int velx = 0, vely = 0; //don't move the player at all by default
+ int tilecoord;
+ 
 if(key[KEY_UP])
 {
+	vely = -(this->player->speedy());
+	//printf("::KEY_UP:: velx: %d vely: %d\n", velx, vely);
+	
+	// this->player->m_y -= this->player->speedy();
+
 	if(this->player->facing() != entity::FACING_UP || !this->player->current_animation()->second->playing())
 	{
 		this->player->face(entity::FACING_UP);
@@ -378,6 +467,10 @@ if(key[KEY_UP])
 }
 else if(key[KEY_RIGHT])
 {
+	velx = this->player->speedx();
+	//printf("::KEY_RIGHT:: velx: %d vely: %d\n", velx, vely);
+	// this->player->m_x += this->player->speed();
+	
 	if(this->player->facing() != entity::FACING_RIGHT || !this->player->current_animation()->second->playing())
 	{
 		this->player->face(entity::FACING_RIGHT);
@@ -386,14 +479,22 @@ else if(key[KEY_RIGHT])
 }
 else if(key[KEY_DOWN])
 {
+	vely = this->player->speedy();
+	//printf("::KEY_DOWN:: velx: %d vely: %d\n", velx, vely);
+	// this->player->m_y += this->player->speed();
+
 	if(this->player->facing() != entity::FACING_DOWN || !this->player->current_animation()->second->playing())
 	{
-		this->player->face(entity::FACING_DOWN);
-		this->player->begin_animation("walk_down", this->ms);
+		 this->player->face(entity::FACING_DOWN);
+		 this->player->begin_animation("walk_down", this->ms);
 	}
 }
 else if(key[KEY_LEFT])
 {
+	velx = -(this->player->speedx());
+	//printf("::KEY_LEFT:: velx: %d vely: %d\n", velx, vely);
+	// this->player->m_x -= this->player->speed();
+
 	if(this->player->facing() != entity::FACING_LEFT || !this->player->current_animation()->second->playing())
 	{
 		this->player->face(entity::FACING_LEFT);
@@ -405,12 +506,104 @@ else if(this->player->current_animation()->second->playing())
 	this->player->reset_animation();
 }
 
+//check x-axis first (--)
+if(velx > 0)
+{
+	//player is moving right
+	if(vertical_collision(this->player->m_x + velx+this->player->w(), this->player->m_y, this->player->h(), tilecoord))	//collision on the right side.
+			this->player->m_x = tilecoord*32 - this->player->w()-1;					//move to the edge of the tile (tile on the right -> mind the player width)
+		else			//no collision
+			this->player->m_x += velx;
+	}		 
+	else if(velx < 0){	//moving left
+		if(vertical_collision(this->player->m_x + velx, this->player->m_y, this->player->h(), tilecoord))		//collision on the left side
+			this->player->m_x = (tilecoord+1)*32 +1;				//move to the edge of the tile
+		else
+			this->player->m_x += velx;
+}
+if(vely < 0)
+{
+	//player is moving up
+	if(horizontal_collision(this->player->m_x, this->player->m_y + vely, this->player->w(), tilecoord))	//collision on the right side.
+			this->player->m_y = (tilecoord+1)*32 +1;					//move to the edge of the tile (tile on the right -> mind the player width)
+		else			//no collision
+			this->player->m_y += vely;
+	}		 
+else if(vely > 0){	//moving down
+	if(horizontal_collision(this->player->m_x, this->player->m_y + vely + this->player->h(), this->player->w(), tilecoord))		//collision on the left side
+		this->player->m_y = tilecoord*32 - this->player->h()-1;				//move to the edge of the tile
+	else
+		this->player->m_y += vely;
+}
+
 /*
-		g_total_frames++;
-		g_frames_this_second++;
-*/
+ * Hard-coded NPC pacing for demo. Shhhh!!!
+ */
+std::map<std::string, iq::entity_ptr>::iterator it;
+
+if((it = this->entities.find("boss")) != this->entities.end())
+{
+	static int boss_right = true;
+	boost::shared_ptr<iq::entity> boss = it->second;
+
+	int boss_velocity = boss->speedy();
+	const int boss_pace_left_y = 50;
+	const int boss_pace_right_y = 200;
+
+	if(!boss_right)
+		boss_velocity = -boss_velocity;
+
+	boss->m_y += boss_velocity;
+
+	if(boss_right && boss->m_y >= boss_pace_right_y)
+	{
+		boss->begin_animation("walk_up", this->ms);
+		boss_right = !boss_right;
+		boss->m_y = boss_pace_right_y;
+	}
+	else if(!boss_right && boss->m_y <= boss_pace_left_y)
+	{
+		boss->begin_animation("walk_down", this->ms);
+		boss_right = !boss_right;
+		boss->m_y = boss_pace_left_y;
+	}
+}
+
+if((it = this->entities.find("security")) != this->entities.end())
+{
+	static int security_right = true;
+	boost::shared_ptr<iq::entity> security = it->second;
+
+	int security_velocity = security->speedx();
+	int security_pace_left_x = 400;
+	int security_pace_right_x = 600;
+
+	if(!security_right)
+		security_velocity = -security_velocity;
+
+	security->m_x += security_velocity;
+
+	if(security_right && security->m_x >= security_pace_right_x)
+	{
+		security->begin_animation("walk_left", this->ms);
+		security_right = !security_right;
+		security->m_x = security_pace_right_x;
+	}
+	else if(!security_right && security->m_x <= security_pace_left_x)
+	{
+		security->begin_animation("walk_right", this->ms);
+		security_right = !security_right;
+		security->m_x = security_pace_left_x;
+	}
+}
+
+	horizontal_collision(this->player->m_x, this->player->m_y, this->player->w(), tilecoord);
+	vertical_collision(this->player->m_x, this->player->m_y, this->player->h(), tilecoord);
+
+		std::sort(this->drawn_entities.begin(), this->drawn_entities.end(), iq::entity::y_comparer());
 
 		IQ_APP_TRACE("} //iq::app::logic_gameplay()");
+		
 	}
 
 	void app::logic_scripted(void)
@@ -457,14 +650,15 @@ else if(this->player->current_animation()->second->playing())
 
 	void app::set_state(gamestate state)
 	{
+std::map<std::string, iq::entity_ptr>::iterator it;
 		this->state = state;
 
 /*
  * h4x: just demonstrating animations. This should be removed eventually
  * (unless it turns out to be correct :P).
  */
-iq::uint j=0;
-const char *anim[] = {"walk_left", "walk_down", "walk_right"};
+//iq::uint j=0;
+//const char *anim[] = {"walk_left", "walk_down", "walk_right"};
 
 		switch(state)
 		{
@@ -482,8 +676,14 @@ const char *anim[] = {"walk_left", "walk_down", "walk_right"};
  * h4x: just demonstrating animations. This should be removed eventually
  * (unless it turns out to be correct :P).
  */
-for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end() && j<sizeof(anim); i++, j++)
-	i->second->begin_animation(anim[j], this->ms);
+//for(std::map<std::string, iq::entity_ptr>::iterator i=this->entities.begin(); i != this->entities.end() && j<sizeof(anim); i++, j++)
+	//i->second->begin_animation(anim[j], this->ms);
+
+this->player->begin_animation("walk_left", this->ms); // h4x: had to start player animation or things crash. Fix this.
+if((it = this->entities.find("boss")) != this->entities.end())
+	it->second->begin_animation("walk_down", this->ms);
+if((it = this->entities.find("security")) != this->entities.end())
+	it->second->begin_animation("walk_left", this->ms);
 
 			this->m_drawptr = &app::draw_gameplay;
 			this->m_logicptr = &app::logic_gameplay;

@@ -2,17 +2,19 @@
 #ifndef IQ_TIMER_HPP
 	#define IQ_TIMER_HPP
 
-namespace iq
-{
-	class timer;
-}
-
 	#include <allegro.h>
 	#include <boost/shared_ptr.hpp>
 	#include <cstdio>
 	#include <iostream>
 	#include <string>
 	#include <sstream>
+
+namespace iq
+{
+	class timer;
+	typedef boost::shared_ptr<timer> timer_ptr;
+}
+
 	#include <types.hpp>
 
 	/*
@@ -32,8 +34,6 @@ namespace iq
 
 namespace iq
 {
-	typedef boost::shared_ptr<timer> timer_ptr;
-
 	class timer
 	{
 	private:

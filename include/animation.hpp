@@ -2,22 +2,22 @@
 #ifndef IQ_ANIMATION_HPP
 	#define IQ_ANIMATION_HPP
 
-namespace iq
-{
-	class animation;
-}
-
 	#include <boost/shared_ptr.hpp>
-	#include <spritesheet.hpp>
 	#include <stdexcept>
 	#include <tinyxml.h>
-	#include <types.hpp>
 	#include <vector>
 
 namespace iq
 {
+	class animation;
 	typedef boost::shared_ptr<animation> animation_ptr;
+}
 
+	#include <spritesheet.hpp>
+	#include <types.hpp>
+
+namespace iq
+{
 	class animation
 	{
 	private:
@@ -49,7 +49,7 @@ namespace iq
 		void load(const spritesheet_ptr, const iq::uint, const iq::uint);
 		void load(const spritesheet_ptr, const iq::uint, const iq::uint, const iq::uint);
 		void load(const spritesheet_ptr, const iq::uint, const iq::uint, const iq::uint, const iq::uint);
-		void load(const TiXmlElement*, spritesheet_ptr, iq::uint, uint_ptr, uint_ptr, uint_ptr);
+		void load(const TiXmlElement*, iq::spritesheet_ptr, iq::uint, iq::uint_ptr, iq::uint_ptr, iq::uint_ptr);
 		const iq::BITMAP_ptr next(const iq::uint);
 		void pause(void);
 		const bool playing(void) const;

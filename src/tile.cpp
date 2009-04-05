@@ -3,9 +3,9 @@
 
 namespace iq
 {
-	tile::tile(iq::BITMAP_ptr img)
+	tile::tile(const iq::BITMAP_ptr bitmap)
 	{
-		this->tileImage = img;
+		this->bitmap = bitmap;
 	}
 }
 

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<MAP>
+  <MAP_TEXTURE>
+    <FileName>map/example.tileset</FileName>
+    <Width>64</Width>
+    <Height>96</Height>
+  </MAP_TEXTURE>
+  <MAP_DIMENSIONS>
+    <Tile_Size>32</Tile_Size>
+    <Layers>1</Layers>
+    <Width>10</Width>
+    <Height>10</Height>
+  </MAP_DIMENSIONS>
+  <TERRAINS>
+    <TotalTerrains>0</TotalTerrains>
+  </TERRAINS>
+  <LAYOUT>
+    <Layer Id="0">
+      <RowInfo>3,3,3,3,3,3,3,3,3,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,1,1,1,1,1,1,1,1,3</RowInfo>
+      <RowInfo>3,3,3,3,3,3,3,3,3,3</RowInfo>
+    </Layer>
+    <CollisionLayer>
+      <RowInfo>0,0,0,0,0,0,0,0,0,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,1,1,1,1,1,1,1,1,0</RowInfo>
+      <RowInfo>0,0,0,0,0,0,0,0,0,0</RowInfo>
+    </CollisionLayer>
+    <TerrainLayer>
+      <TerrainRowInfo>0,0,0,0,0,0,0,0,0,0</TerrainRowInfo>
+      <TerrainRowInfo>0,0,0,0,0,0,0,0,0,0</TerrainRowInfo>
+      <TerrainRowInfo>0,0,0,0,0,0,0,0,0,0</TerrainRowInfo>
+      <TerrainRowInfo>0,0,0,0,0,0,0,0,0,0</TerrainRowInfo>
+      <TerrainRowInfo>0,0,0,0,0,0,0,0,0,0</TerrainRowInfo>
+      <TerrainRowInfo>0,0,0,0,0,0,0,0,0,0</TerrainRowInfo>
+      <TerrainRowInfo>0,0,0,0,0,0,0,0,0,0</TerrainRowInfo>
+      <TerrainRowInfo>0,0,0,0,0,0,0,0,0,0</TerrainRowInfo>
+      <TerrainRowInfo>0,0,0,0,0,0,0,0,0,0</TerrainRowInfo>
+      <TerrainRowInfo>0,0,0,0,0,0,0,0,0,0</TerrainRowInfo>
+    </TerrainLayer>
+  </LAYOUT>
+</MAP>
+

@@ -2,22 +2,25 @@
 #ifndef IQ_APP_HPP
 	#define IQ_APP_HPP
 
-namespace iq
-{
-	class app;
-}
-
 	#include <allegro.h>
 	#include <boost/shared_ptr.hpp>
-	#include <entity.hpp>
 	#include <iostream>
-	#include <timer.hpp>
-	#include <map>
 	#include <semaphore.h>
 	#include <stdexcept>
 	#include <string>
-	#include <tilemap.hpp>
 	#include <tinyxml.h>
+
+namespace iq
+{
+	class app;
+	typedef boost::shared_ptr<app> app_ptr;
+}
+
+	#include <entity.hpp>
+	#include <timer.hpp>
+	#include <map>
+	#include <select_value.hpp>
+	#include <tilemap.hpp>
 
 	#ifdef IQ_APP_TRACE
 		#error OMFG, IQ_APP_TRACE already exists! \o/
@@ -39,14 +42,13 @@ namespace iq
 */
 
 	#define BLUE makecol(0, 0, 255)
+	#define LIGHTGREEN makecol(155, 255, 155)
 	#define NUM_DIMENSIONS 2
 	#define RED makecol(255, 0, 0)
 	#define WHITE makecol(255, 255, 255)
 
 namespace iq
 {
-	typedef boost::shared_ptr<app> app_ptr;
-
 	/**
 	 * \brief An application class to hold application state data.
 	 * \details Intended to be passed around the application to avoid
@@ -75,9 +77,10 @@ namespace iq
 		enum gamestate {SETUP, GAMEPLAY, SCRIPTED, CREDITS};
 
 		iq::string_map argv;
-		iq::tilemap_ptr demo_map;
 		std::map<std::string, iq::entity_ptr> entities;
+		std::vector<iq::entity_ptr> drawn_entities;
 		iq::uint fts; // frames this second.
+		iq::tilemap_ptr map;
 		iq::uint ms;
 		bool os_cursor;
 		iq::entity_ptr player;
@@ -85,13 +88,14 @@ namespace iq
 		iq::sem_t_ptr sem;
 		gamestate state;
 		iq::uint target_fps;
+		std::map<std::string, iq::tile_ptr> tiles;
 		iq::timer_ptr timer;
 		iq::uint total_frames;
 		bool verbose;
 
 		static bool close_button_pressed;
 
-		app(int, char *[]);
+		app(const char * const, int, char *[]);
 		~app(void);
 
 		void deinitialize(void);
@@ -106,6 +110,9 @@ namespace iq
 		void logic(void);
 		void logic_setup(void);
 		void logic_gameplay(void);
+		bool horizontal_collision(int x, int y, int w, int &tilecoordy); //hax
+		bool vertical_collision(int x, int y, int h, int &tilecoordx); //hax
+
 		void logic_scripted(void);
 		void logic_credits(void);
 		void parse_args(int, char *[]);

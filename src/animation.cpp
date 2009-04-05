@@ -63,7 +63,10 @@ namespace iq
 
 		this->m_playing = true;
 
-		return this->m_frames[0];
+		if(this->m_frames.size() > 1)
+			return this->m_frames[this->m_last_frame = 1];
+		else
+			return this->m_frames[this->m_last_frame = 0];
 	}
 
 	const iq::BITMAP_ptr animation::begin(const iq::uint ms_per_frame, const iq::uint ms)
@@ -73,7 +76,10 @@ namespace iq
 
 		this->m_playing = true;
 
-		return this->m_frames[0];
+		if(this->m_frames.size() > 1)
+			return this->m_frames[this->m_last_frame = 1];
+		else
+			return this->m_frames[this->m_last_frame = 0];
 	}
 
 	const iq::BITMAP_ptr animation::frame(const iq::uint i) const
@@ -129,6 +135,9 @@ namespace iq
 
 			stretch_blit(sheet->bitmap.get(), frame.get(), x, y, sprite_w, sprite_h, 0, 0, w, h);
 
+//for(iq::uint k=0; k<3; k++)
+//rect(frame.get(), 0+k, 0+k, frame->w-k-1, frame->h-k-1, makecol(155, 255, 155));
+
 			this->m_frames[j] = frame;
 		}
 	}
@@ -175,7 +184,7 @@ namespace iq
 		past = (ms - this->m_last_ms) / this->m_ms_per_frame;
 		i = (this->m_last_frame + past) % this->m_frames.size();
 
-printf("ms=%d    last_ms=%d    past=%d    i=%d\n", ms, this->m_last_ms, past, i);
+//printf("ms=%d    last_ms=%d    past=%d    i=%d\n", ms, this->m_last_ms, past, i);
 
 		if(i != this->m_last_frame)
 		{

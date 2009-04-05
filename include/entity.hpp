@@ -2,25 +2,27 @@
 #ifndef IQ_ENTITY_HPP
 	#define IQ_ENTITY_HPP
 
-namespace iq
-{
-	class entity;
-}
-
-	#include <animation.hpp>
 	#include <boost/algorithm/string/trim.hpp>
 	#include <boost/shared_ptr.hpp>
 	#include <map>
-	#include <spritesheet.hpp>
 	#include <string>
 	#include <tinyxml.h>
-	#include <types.hpp>
 	#include <vector>
 
 namespace iq
 {
+	class entity;
 	typedef boost::shared_ptr<entity> entity_ptr;
+}
 
+	#include <animation.hpp>
+	#include <entity_y_comparer.hpp>
+	#include <spritesheet.hpp>
+	#include <tilemap.hpp>
+	#include <types.hpp>
+
+namespace iq
+{
 	class entity
 	{
 	private:
@@ -28,6 +30,7 @@ namespace iq
 		typedef std::map<std::string, boost::shared_ptr<iq::animation> > animation_map;
 	public:
 		enum facing_direction { FACING_UP, FACING_RIGHT, FACING_LEFT, FACING_DOWN };
+		typedef iq::entity_y_comparer y_comparer;
 
 		entity(const std::string &);
 		entity(const TiXmlElement * const);
@@ -45,12 +48,15 @@ namespace iq
 		const std::string name(void) const;
 		void pause_animation(void);
 		void reset_animation(void);
-		const iq::uint screen_x(void) const;
-		const iq::uint screen_y(void) const;
-		const iq::uint speed(void) const;
+		const int screen_x(const iq::BITMAP_ptr, const iq::entity_ptr) const;
+		const int screen_y(const iq::BITMAP_ptr, const iq::entity_ptr) const;
+		const iq::uint speedx(void) const;
+		const iq::uint speedy(void) const;
 		const iq::uint w(void) const;
-		const iq::uint x(void) const;
-		const iq::uint y(void) const;
+		const int x(void) const;
+		const int y(void) const;
+
+		int m_x, m_y;
 	protected:
 		const static facing_direction DEFAULT_FACING;
 		const static iq::uint DEFAULT_SPEED;
@@ -59,9 +65,9 @@ namespace iq
 		boost::shared_ptr< std::map<std::string, iq::animation_ptr> > m_animations;
 		facing_direction m_facing;
 		std::string m_name;
-		iq::uint m_speed;
+		iq::uint m_speedx;
+		iq::uint m_speedy;
 		iq::uint m_h, m_w;
-		iq::uint m_x, m_y;
 
 		void load_animation(const iq::uint, const TiXmlElement * const, const iq::spritesheet_ptr, const iq::uint_ptr, const iq::uint_ptr, const iq::uint_ptr);
 		void load_animations(const TiXmlElement * const);

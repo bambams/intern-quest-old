@@ -7,36 +7,36 @@ namespace iq
 	const iq::uint entity::DEFAULT_SPEED = 18;
 
 	entity::entity(const std::string &path):
+		m_x(0),
+		m_y(0),
 		m_animations(new std::map<std::string, iq::animation_ptr>()),
 		m_facing(entity::DEFAULT_FACING),
 		m_h(0),
-		m_w(0),
-		m_x(0),
-		m_y(0)
+		m_w(0)
 	{
 		this->m_current_animation_iterator = this->m_animations->end();
 		this->load(path);
 	}
 
 	entity::entity(const TiXmlElement * const entity):
+		m_x(0),
+		m_y(0),
 		m_animations(new std::map<std::string, iq::animation_ptr>()),
 		m_facing(entity::DEFAULT_FACING),
 		m_h(0),
-		m_w(0),
-		m_x(0),
-		m_y(0)
+		m_w(0)
 	{
 		this->m_current_animation_iterator = this->m_animations->end();
 		this->load(entity);
 	}
 
 	entity::entity(const std::string &path, const iq::uint w, const iq::uint h):
+		m_x(0),
+		m_y(0),
 		m_animations(new std::map<std::string, iq::animation_ptr>()),
 		m_facing(entity::DEFAULT_FACING),
 		m_h(h),
-		m_w(w),
-		m_x(0),
-		m_y(0)
+		m_w(w)
 	{
 		this->m_current_animation_iterator = this->m_animations->end();
 		this->load(path);
@@ -118,8 +118,11 @@ namespace iq
 
 		this->m_name = str;
 		entity->Attribute("height", (int *)&this->m_h);
-		entity->Attribute("width", (int *)&m_w);
-		entity->Attribute("speed", (int *)&m_speed);
+		entity->Attribute("width", (int *)&this->m_w);
+		entity->Attribute("speed", (int *)&this->m_speedx);
+		entity->Attribute("speed", (int *)&this->m_speedy);
+
+//		printf("this->name: %s this->speedx: %d this->speedy: %d\n", this->m_name.c_str(), this->m_speedx, this->m_speedy);
 
 		if((element = entity->FirstChildElement("animations")) == NULL)
 			throw std::runtime_error("Entity XML animations element missing spritesheet element.");
@@ -210,19 +213,24 @@ namespace iq
 		this->current_animation()->second->reset();
 	}
 
-	const iq::uint entity::screen_x(void) const
+	const int entity::screen_x(const iq::BITMAP_ptr scrbuf, const iq::entity_ptr player) const
 	{
-		throw std::logic_error("iq::entity::screen_x not implemented yet.");
+		return iq::tilemap::screen_x(scrbuf, player) + this->m_x;
 	}
 
-	const iq::uint entity::screen_y(void) const
+	const int entity::screen_y(const iq::BITMAP_ptr scrbuf, const iq::entity_ptr player) const
 	{
-		throw std::logic_error("iq::entity::screen_y not implemented yet.");
+		return iq::tilemap::screen_y(scrbuf, player) + this->m_y;
 	}
 
-	const iq::uint entity::speed(void) const
+	const iq::uint entity::speedx(void) const
 	{
-		return this->m_speed;
+		return this->m_speedx;
+	}
+	
+	const iq::uint entity::speedy(void) const
+	{
+		return this->m_speedy;
 	}
 
 	const iq::uint entity::w(void) const
@@ -230,12 +238,12 @@ namespace iq
 		return this->m_w;
 	}
 
-	const iq::uint entity::x(void) const
+	const int entity::x(void) const
 	{
 		return this->m_x;
 	}
 
-	const iq::uint entity::y(void) const
+	const int entity::y(void) const
 	{
 		return this->m_y;
 	}

@@ -23,7 +23,7 @@ X11_ICON_C = $(SRCDIR)/allegro_icon.c
 X11_ICON_O = $(OBJDIR)/allegro_icon.o
 
 # List all .o files here.
-OBJECTS += $(OBJDIR)/animation.o $(OBJDIR)/app.o $(OBJDIR)/entity.o $(OBJDIR)/main.o $(OBJDIR)/spritesheet.o $(OBJDIR)/tile.o $(OBJDIR)/tilemap.o $(OBJDIR)/timer.o
+OBJECTS += $(OBJDIR)/animation.o $(OBJDIR)/app.o $(OBJDIR)/entity.o $(OBJDIR)/entity_y_comparer.o $(OBJDIR)/main.o $(OBJDIR)/select_value.o $(OBJDIR)/spritesheet.o $(OBJDIR)/tile.o $(OBJDIR)/tilemap.o $(OBJDIR)/timer.o
 
 # Some conditional stuff stolen from the SpeedHack Makefile.
 ifndef WINDOWS
@@ -77,7 +77,13 @@ $(OBJDIR)/app.o: $(SRCDIR)/app.cpp $(INCDIR)/app.hpp
 $(OBJDIR)/entity.o: $(SRCDIR)/entity.cpp $(INCDIR)/entity.hpp 
 	$(CXX_COMPILE) -o $@ $<
 
+$(OBJDIR)/entity_y_comparer.o: $(SRCDIR)/entity_y_comparer.cpp $(INCDIR)/entity_y_comparer.hpp 
+	$(CXX_COMPILE) -o $@ $<
+
 $(OBJDIR)/main.o: $(SRCDIR)/main.cpp $(INCDIR)/main.hpp
+	$(CXX_COMPILE) -o $@ $<
+
+$(OBJDIR)/select_value.o: $(SRCDIR)/select_value.cpp $(INCDIR)/select_value.hpp
 	$(CXX_COMPILE) -o $@ $<
 
 $(OBJDIR)/spritesheet.o: $(SRCDIR)/spritesheet.cpp $(INCDIR)/spritesheet.hpp
