@@ -12,7 +12,7 @@ namespace iq
 {
 	struct entity_y_comparer
 	{
-		bool operator()(iq::entity_ptr, iq::entity_ptr);
+		bool operator()(const iq::entity_ptr, const iq::entity_ptr) const;
 	};
 }
 

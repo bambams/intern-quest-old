@@ -2,7 +2,7 @@
 
 namespace iq
 {
-	bool entity_y_comparer::operator()(iq::entity_ptr first, iq::entity_ptr second)
+	bool entity_y_comparer::operator()(const iq::entity_ptr first, const iq::entity_ptr second) const
 	{
 		return first->y() < second->y();
 	}
