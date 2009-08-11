@@ -2,17 +2,17 @@
 
 function append_contents
 {
-	FILE=$1
-	ORIG=$1.orig
+	FILE="$1"
+	ORIG="$1.orig"
 
-	cat $ORIG >> $FILE
+	cat "$ORIG" >> "$FILE"
 	check_status_fatal $? "Failed to append original contents."
 }
 
 function backup_orig
 {
-	FILE=$1
-	ORIG=${FILE}.orig
+	FILE="$1"
+	ORIG="${FILE}.orig"
 
 	mv "$FILE" "$ORIG"
 	check_status_fatal $? "Failed to move \'$FILE\' to \'$ORIG\'"
@@ -20,7 +20,7 @@ function backup_orig
 
 function begin_with_copyright
 {
-	FILE=$1
+	FILE="$1"
 
 	echo "/*" 1>"$FILE" && \
 		echo " * Intern's Quest is an adventure game." 1>>"$FILE" && \
@@ -48,8 +48,8 @@ function begin_with_copyright
 
 function check_args
 {
-	COMMAND=$1
-	FILE=$2
+	COMMAND="$1"
+	FILE="$2"
 
 	if [ "$FILE" == "" ]; then
 		echo "Usage: $COMMAND FILE" 1>&2
@@ -59,29 +59,29 @@ function check_args
 
 function check_status
 {
-	STATUS=$1
-	ERRMSG=$2
+	STATUS="$1"
+	ERRMSG="$2"
 
 	if [ "$STATUS" != '0' ]; then
-		echo "$MSG" 1>&2
+		echo "$ERRMSG" 1>&2
 	fi
 }
 
 function check_status_fatal
 {
-	STATUS=$1
-	ERRMSG=$2
+	STATUS="$1"
+	ERRMSG="$2"
 
 	if [ "$STATUS" != '0' ]; then
-		echo "$MSG" 1>&2
+		echo "$ERRMSG" 1>&2
 		exit 1
 	fi
 }
 
 function main
 {
-	COMMAND=$1
-	FILE=$2
+	COMMAND="$1"
+	FILE="$2"
 
 	check_args "$@"
 	backup_orig "$FILE"
@@ -92,12 +92,11 @@ function main
 
 function remove_backup
 {
-	BACKUP=$1.orig
+	BACKUP="$1.orig"
 
 	rm "$BACKUP"
 
 	check_status $? "Failed to remove backup \'$BACKUP\'"
 }
 
-main $0 "$@"
-
+main "$0" "$@"
