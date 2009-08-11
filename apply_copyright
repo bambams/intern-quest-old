@@ -41,7 +41,7 @@ function begin_with_copyright
 		echo " * You should have received a copy of the GNU General Public License" 1>>"$FILE" && \
 		echo " * along with Intern's Quest.  If not, see <http://www.gnu.org/licenses/>." 1>>"$FILE" && \
 		echo " */" 1>>"$FILE" && \
-		echo 1>>$FILE
+		echo 1>>"$FILE"
 
 	check_status_fatal $? "Failed to initialize \'$FILE\' with copyright."
 }
