@@ -22,6 +22,8 @@
 #ifndef IQ_ANIMATION_HPP
 	#define IQ_ANIMATION_HPP
 
+	#define TIXML_USE_STL
+
 	#include <boost/shared_ptr.hpp>
 	#include <stdexcept>
 	#include <tinyxml.h>

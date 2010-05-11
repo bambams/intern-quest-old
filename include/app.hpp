@@ -22,6 +22,8 @@
 #ifndef IQ_APP_HPP
 	#define IQ_APP_HPP
 
+	#define TIXML_USE_STL
+
 	#include <allegro.h>
 	#include <boost/shared_ptr.hpp>
 	#include <iostream>
