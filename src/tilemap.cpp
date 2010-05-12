@@ -144,7 +144,7 @@ this->m_h = h;
 		std::vector<bool> passable_row;
 		std::stringstream ss;
 
-		if((node = rowinfo->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
+		if((node = rowinfo->FirstChild()) == NULL || node->Type() != TiXmlNode::TINYXML_TEXT)
 			throw std::runtime_error("CollisionLayer RowInfo XML is invalid.");
 
 		ss.clear();
@@ -179,7 +179,7 @@ this->m_h = h;
 		if((element = dimensions->FirstChildElement("Tile_Size")) == NULL)
 			throw std::runtime_error("MAP_DIMENSIONS XML is missing the Tile_Size element.");
 
-		if((node = element->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
+		if((node = element->FirstChild()) == NULL || node->Type() != TiXmlNode::TINYXML_TEXT)
 			throw std::runtime_error("Tile_Size XML is invalid.");
 
 		ss.clear();
@@ -191,7 +191,7 @@ this->m_h = h;
 		if((element = element->NextSiblingElement("Layers")) == NULL)
 			throw std::runtime_error("MAP_DIMENSIONS XML is missing Layers element.");
 
-		if((node = element->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
+		if((node = element->FirstChild()) == NULL || node->Type() != TiXmlNode::TINYXML_TEXT)
 			throw std::runtime_error("Layers XML element is invalid.");
 
 		ss.clear();
@@ -203,7 +203,7 @@ this->m_h = h;
 		if((element = element->NextSiblingElement("Width")) == NULL)
 			throw std::runtime_error("MAP_DIMENSIONS XML is missing Width element.");
 
-		if((node = element->FirstChild()) == NULL || node->Type() != TiXmlElement::TEXT)
+		if((node = element->FirstChild()) == NULL || node->Type() != TiXmlElement::TINYXML_TEXT)
 			throw std::runtime_error("Width XML element is invalid.");
 
 		ss.clear();
@@ -215,7 +215,7 @@ this->m_h = h;
 		if((element = element->NextSiblingElement("Height")) == NULL)
 			throw std::runtime_error("MAP_DIMENSIONS XML is missing Height element.");
 
-		if((node = element->FirstChild()) == NULL || node->Type() != TiXmlElement::TEXT)
+		if((node = element->FirstChild()) == NULL || node->Type() != TiXmlElement::TINYXML_TEXT)
 			throw std::runtime_error("Height XML element is invalid.");
 
 		ss.clear();
@@ -262,7 +262,7 @@ this->m_h = h;
 		std::stringstream ss;
 		std::vector<iq::tile_ptr> tilerow;
 
-		if((node = rowinfo->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
+		if((node = rowinfo->FirstChild()) == NULL || node->Type() != TiXmlNode::TINYXML_TEXT)
 			throw std::runtime_error("Layer RowInfo XML is invalid.");
 
 		ss.clear();
@@ -361,7 +361,7 @@ createtile:
 		if((element = texture->FirstChildElement("FileName")) == NULL)
 			throw std::runtime_error("MAP_TEXTURE XML is missing FileName element.");
 
-		if((node = element->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
+		if((node = element->FirstChild()) == NULL || node->Type() != TiXmlNode::TINYXML_TEXT)
 			throw std::runtime_error("FileName XML is missing it's text value.");
 
 		path = node->ToText()->ValueStr();

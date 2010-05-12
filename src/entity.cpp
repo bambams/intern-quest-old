@@ -202,7 +202,7 @@ namespace iq
 			if(element == NULL)
 				throw std::runtime_error("Entity XML spritesheet element missing animation element(s).");
 
-			if((node = element->FirstChild()) == NULL || node->Type() != TiXmlNode::TEXT)
+			if((node = element->FirstChild()) == NULL || node->Type() != TiXmlNode::TINYXML_TEXT)
 				throw std::runtime_error("Entity XML animation node missing key (name) as text node.");
 
 			value = node->ToText()->Value();
