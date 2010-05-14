@@ -4,7 +4,7 @@
 # platforms.
 CXX = g++
 CXX_CFLAGS = -g3 -Iinclude -pg -Wall
-CXX_COMPILE = $(CXX) -c $(CXX_CFLAGS)
+CXX_COMPILE = $(CXX) -c $(CXX_CFLAGS) -DTIXML_USE_STL
 #CXX_LINK = $(CXX) $(CXX_CFLAGS) $(LIBS)
 DOCSDIRS = docs/html docs/latex docs/man docs/xml
 DOXYGEN = doxygen
