@@ -22,8 +22,6 @@
 #ifndef IQ_ENTITY_HPP
 	#define IQ_ENTITY_HPP
 
-	#define TIXML_USE_STL
-
 	#include <boost/algorithm/string/trim.hpp>
 	#include <boost/shared_ptr.hpp>
 	#include <map>
