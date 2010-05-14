@@ -25,6 +25,11 @@ X11_ICON_O = $(OBJDIR)/allegro_icon.o
 # List all .o files here.
 OBJECTS += $(OBJDIR)/animation.o $(OBJDIR)/app.o $(OBJDIR)/entity.o $(OBJDIR)/entity_y_comparer.o $(OBJDIR)/main.o $(OBJDIR)/select_value.o $(OBJDIR)/spritesheet.o $(OBJDIR)/tile.o $(OBJDIR)/tilemap.o $(OBJDIR)/timer.o
 
+# h4x for Tinyxml.
+ifdef IQ_TIXML_NODETYPE_NOPREFIX
+	CXX_CFLAGS += -DIQ_TIXML_NODETYPE_NOPREFIX
+endif
+
 # Some conditional stuff stolen from the SpeedHack Makefile.
 ifndef WINDOWS
 	ifdef MINGDIR

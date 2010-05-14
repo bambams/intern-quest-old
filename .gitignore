@@ -1,4 +1,6 @@
 docs
+gmon.out
 iq
+Makefile
 obj
 

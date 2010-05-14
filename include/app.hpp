@@ -28,7 +28,7 @@
 	#include <semaphore.h>
 	#include <stdexcept>
 	#include <string>
-	#include <tinyxml.h>
+	#include <tinyxml_wrapper.hpp>
 
 namespace iq
 {

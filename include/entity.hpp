@@ -26,7 +26,7 @@
 	#include <boost/shared_ptr.hpp>
 	#include <map>
 	#include <string>
-	#include <tinyxml.h>
+	#include <tinyxml_wrapper.hpp>
 	#include <vector>
 
 namespace iq
