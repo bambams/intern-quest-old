@@ -3,4 +3,5 @@ gmon.out
 iq
 Makefile
 obj
+src/allegro_icon.c
 
