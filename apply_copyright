@@ -54,7 +54,7 @@ function copyright_exists
 {
     file="$1";
 
-    [ "`head -n \"${cr_lines}\" \"${file}\"`" != "`cat COPYRIGHT`" ];
+    [ "`head -n \"${cr_lines}\" \"${file}\"`" == "`cat COPYRIGHT`" ];
 
     return ${?};
 }
@@ -66,7 +66,7 @@ function main
     for file in `find -name \*.c -o -name \*.cpp -o -name \*.h \
             -o -name \*.hpp`;
     do
-        if copyright_exists "${file}"; then
+        if ! copyright_exists "${file}"; then
         	backup_orig "${file}";
         	begin_with_copyright "${file}";
         	append_contents "${file}";
